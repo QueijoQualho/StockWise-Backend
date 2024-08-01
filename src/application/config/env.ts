@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -20,7 +20,7 @@ const env = {
     username: String(TYPEORM_USERNAME),
     password: String(TYPEORM_PASSWORD),
     database: String(TYPEORM_DATABASE),
-    port: Number(TYPEORM_PORT)
+    port: Number(TYPEORM_PORT),
   },
 };
 
