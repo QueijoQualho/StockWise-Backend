@@ -1,5 +1,5 @@
-import { Item } from '@model/item';
-import { IItemService } from '@interfaces/service/itemServiceInterface';
+import { Item } from '@model/item.js';
+import { IItemService } from '@interfaces/service/itemServiceInterface.js';
 
 export class ItemService implements IItemService {
   getItem(): Item[] {

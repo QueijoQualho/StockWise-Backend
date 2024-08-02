@@ -1,28 +1,30 @@
 {
-    "compilerOptions": {
-      "target": "ES2022",
-      "lib": ["ES2023"],
-      "module": "CommonJS",
-      "outDir": "./dist",
-      "esModuleInterop": true,
-      "forceConsistentCasingInFileNames": true,
-      "strict": true,
-      "strictNullChecks": false,
-      "skipLibCheck": true,
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "baseUrl": "./",
-      "paths": {
-        "@config/*": ["src/application/config/*"],
-        "@controller/*": ["src/application/controller/*"],
-        "@routes/*": ["src/application/routes/*"],
-        "@service/*": ["src/application/service/*"],
-        "@utils/*": ["src/application/utils/*"],
-        "@interfaces/*": ["src/application/utils/interfaces/*"],
-        "@infra/*": ["src/infra/*"],
-        "@model/*": ["src/model/*"]
-      }
-    },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules", "dist"]
-  }
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    "module": "Node16",
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "strictNullChecks": false,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "removeComments": true,
+    "baseUrl": "./",
+    "allowJs": true,
+    "paths": {
+      "@config/*": ["src/application/config/*"],
+      "@controller/*": ["src/application/controller/*"],
+      "@routes/*": ["src/application/routes/*"],
+      "@service/*": ["src/application/service/*"],
+      "@utils/*": ["src/application/utils/*"],
+      "@interfaces/*": ["src/application/utils/interfaces/*"],
+      "@infra/*": ["src/infra/*"],
+      "@model/*": ["src/model/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

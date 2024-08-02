@@ -1,8 +1,8 @@
 // src/controllers/itemController.ts
 import { Request, Response } from 'express';
-import { Item } from '@model/item';
-import { IItemController } from '@interfaces/controller/itemControllerInterface';
-import { IItemService } from '@interfaces/service/itemServiceInterface';
+import { Item } from '@model/item.js';
+import { IItemController } from '@interfaces/controller/itemControllerInterface.js';
+import { IItemService } from '@interfaces/service/itemServiceInterface.js';
 
 export class ItemController implements IItemController {
   private itemService: IItemService;

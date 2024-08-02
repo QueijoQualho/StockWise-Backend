@@ -1,8 +1,10 @@
 import 'reflect-metadata';
-import logger from './application/config/logger';
-import app from './application/config/app';
-import env from './application/config/env';
-import Database from './application/service/database';
+import 'module-alias/register'; // Certifique-se de que isto é importado antes de outras importações
+
+import app from '@config/app'; // Note que você não precisa usar a extensão .js
+import env from '@config/env';
+import logger from '@config/logger';
+import Database from '@service/database';
 
 async function startServer() {
   try {

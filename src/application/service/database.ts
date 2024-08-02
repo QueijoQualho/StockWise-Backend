@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
-import { AppDataSource } from '@infra/dataSource';
-import logger from '@config/logger';
+import { AppDataSource } from '@infra/dataSource.js';
+import logger from '@config/logger.js';
 
 class Database {
   private static instance: Database;
