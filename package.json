@@ -49,9 +49,10 @@
     "@controller": "./dist/application/controller",
     "@routes": "./dist/application/routes",
     "@service": "./dist/application/service",
-    "@utils": "./dist/application/utils",
+    "@factory": "./dist/application/utils/factory",
     "@interfaces": "./dist/application/utils/interfaces",
     "@infra": "./dist/infra",
-    "@model": "./dist/model"
+    "@model": "./dist/domain/model",
+    "@repository": "./dist/domain/repository"
   }
 }

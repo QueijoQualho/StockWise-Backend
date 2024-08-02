@@ -1,9 +1,9 @@
-import { Item } from '../../../../model/item.js';
+import { Item } from "@model/itemEntity";
 
 export interface IItemService {
-  getItem(): Item[];
-  getItemByID(id: number): Item;
-  createItem(item: Item): void;
-  updateItem(id: number, item: Item): void;
-  deleteItem(id: number): void;
+  getItem(): Promise<Item[]>;
+  getItemByID(id: number): Promise<Item>;
+  createItem(item: Item): Promise<void>;
+  updateItem(id: number, item: Item): Promise<void>;
+  deleteItem(id: number): Promise<void>;
 }
