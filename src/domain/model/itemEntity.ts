@@ -6,26 +6,23 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('Items')
+@Entity('items')
 export class Item {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ name: 'nome' })
   name: string;
 
-  @Column('text', { nullable: true })
-  description?: string;
+  @Column({ name: 'localização' })
+  location: string;
 
-  @Column('int')
-  quantity: number;
+  @Column({ name: 'data' })
+  date: Date;
 
-  @Column('decimal', { precision: 10, scale: 2 })
-  price: number;
-
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 }

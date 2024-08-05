@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "tsc-watch --onSuccess \"node dist/index.js\"",
+    "start": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
     "lint": "eslint . --fix",
-    "format": "prettier --config .prettierrc 'src/**/*.{js,ts}' --write"
+    "format": "prettier --config .prettierrc 'src/**/*.{js,ts}' --write",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "typeorm:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/infra/dataSource.ts migration:run",
+    "typeorm:revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/infra/dataSource.ts migration:revert",
+    "typeorm:generate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/infra/dataSource.ts migration:generate ./src/infra/migrations/default"
   },
   "keywords": [],
   "author": "",
@@ -28,7 +32,7 @@
     "module-alias": "^2.2.3",
     "prettier": "^3.3.3",
     "reflect-metadata": "^0.2.2",
-    "tsc-watch": "^6.2.0",
+    "ts-node-dev": "^2.0.0",
     "typeorm": "^0.3.20",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.0.0"
@@ -42,17 +46,6 @@
     "express": "^4.19.2",
     "helmet": "^7.1.0",
     "pg": "^8.12.0",
-    "ts-templete": "file:"
-  },
-  "_moduleAliases": {
-    "@config": "./dist/application/config",
-    "@controller": "./dist/application/controller",
-    "@routes": "./dist/application/routes",
-    "@service": "./dist/application/service",
-    "@factory": "./dist/application/utils/factory",
-    "@interfaces": "./dist/application/utils/interfaces",
-    "@infra": "./dist/infra",
-    "@model": "./dist/domain/model",
-    "@repository": "./dist/domain/repository"
+    "tsconfig-paths": "^4.2.0"
   }
 }

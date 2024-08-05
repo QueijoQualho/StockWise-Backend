@@ -1,7 +1,7 @@
 import 'reflect-metadata';
-import 'module-alias/register'; // Certifique-se de que isto é importado antes de outras importações
+import 'tsconfig-paths/register';
 
-import app from '@config/app'; // Note que você não precisa usar a extensão .js
+import app from '@config/app';
 import env from '@config/env';
 import logger from '@config/logger';
 import Database from '@service/database';
