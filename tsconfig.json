@@ -19,11 +19,11 @@
       "@controller/*": ["src/application/controller/*"],
       "@routes/*": ["src/application/routes/*"],
       "@service/*": ["src/application/service/*"],
-      "@factory/*": ["src/application/utils/factory/*"],
       "@interfaces/*": ["src/application/utils/interfaces/*"],
       "@infra/*": ["src/infra/*"],
       "@model/*": ["src/domain/model/*"],
-      "@repository/*": ["src/domain/repository/*"]
+      "@repository/*": ["src/domain/repository/*"],
+      "@utils/*": ["src/application/utils/*"],
     }
   },
   "include": ["src/**/*"],
