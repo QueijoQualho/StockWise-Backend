@@ -1,4 +1,4 @@
-import { ItemControllerFactory } from '@factory/ItemControllerFactory';
+import { ItemControllerFactory } from '@utils/factory/ItemControllerFactory';
 import { Router } from 'express';
 
 export default (router: Router): void => {
