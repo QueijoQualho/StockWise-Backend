@@ -19,8 +19,8 @@ export class Item {
   @Column({ name: 'data_de_incorporacao' })
   dataDeIncorporacao: Date;
 
-  @ManyToOne(() => Sala, sala => sala.items)
-  sala: Sala
+  @ManyToOne(() => Sala, sala => sala.items, { nullable: true })
+  sala?: Sala;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;
