@@ -1,10 +1,10 @@
-import 'reflect-metadata';
-import 'tsconfig-paths/register';
+import "reflect-metadata";
+import "tsconfig-paths/register";
 
-import app from '@config/app';
-import env from '@config/env';
-import logger from '@config/logger';
-import Database from '@service/database';
+import app from "@config/app";
+import env from "@config/env";
+import logger from "@config/logger";
+import Database from "@service/database";
 
 async function startServer() {
   try {
@@ -12,10 +12,10 @@ async function startServer() {
     await database.initialize();
 
     app.listen(env.port, () => {
-      logger.info('Servidor na porta', env.port);
+      logger.info("Servidor na porta", env.port);
     });
   } catch (error) {
-    logger.error('Falha ao abrir o servidor', error);
+    logger.error("Falha ao abrir o servidor", error);
   }
 }
 

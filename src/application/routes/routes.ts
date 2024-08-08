@@ -1,8 +1,8 @@
-import { Express, Router } from 'express';
-import itemRouter from './itemRouter';
+import { Express, Router } from "express";
+import itemRouter from "./itemRouter";
 
 export default (app: Express): void => {
   const router = Router();
   itemRouter(router);
-  app.use('/api', router);
+  app.use("/api", router);
 };

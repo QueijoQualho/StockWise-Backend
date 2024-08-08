@@ -1,11 +1,11 @@
-import bunyan from 'bunyan';
-import BunyanFormat from 'bunyan-format';
+import bunyan from "bunyan";
+import BunyanFormat from "bunyan-format";
 
 const logger = bunyan.createLogger({
-  name: 'typeorm-template',
+  name: "typeorm-template",
   streams: [
     {
-      stream: BunyanFormat({ outputMode: 'long' }),
+      stream: BunyanFormat({ outputMode: "long" }),
     },
   ],
 });

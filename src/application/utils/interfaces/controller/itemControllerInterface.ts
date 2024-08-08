@@ -1,5 +1,4 @@
-// src/controllers/itemControllerInterface.ts
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 
 export interface IItemController {
   getItem(req: Request, res: Response): void;

@@ -1,6 +1,6 @@
-import { DataSource } from 'typeorm';
-import { AppDataSource } from '@infra/dataSource';
-import logger from '@config/logger';
+import { DataSource } from "typeorm";
+import { AppDataSource } from "@infra/dataSource";
+import logger from "@config/logger";
 
 class Database {
   private static instance: Database;
@@ -21,10 +21,10 @@ class Database {
     try {
       if (!this.dataSource.isInitialized) {
         await this.dataSource.initialize();
-        logger.info('Typeorm Iniciado');
+        logger.info("Typeorm Iniciado");
       }
     } catch (error) {
-      logger.error('Deu erro no Typeorm', error);
+      logger.error("Deu erro no Typeorm", error);
       throw error;
     }
   }
