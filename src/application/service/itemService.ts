@@ -1,6 +1,7 @@
 import { IItemService } from '@interfaces/service/itemServiceInterface';
 import { Item } from '@model/itemEntity';
 import { getUserRepository } from '@repository/itemRepository';
+import { NotFoundError } from '@utils/errors';
 import { Repository } from 'typeorm';
 
 export class ItemService implements IItemService {
@@ -17,7 +18,7 @@ export class ItemService implements IItemService {
   async getItemByID(id: number): Promise<Item> {
     const item = await this.repository.findOneBy({ id });
     if (!item) {
-      throw new Error('Item not found.');
+      throw new NotFoundError('Item not found.');
     }
     return item;
   }
@@ -29,7 +30,7 @@ export class ItemService implements IItemService {
   async updateItem(id: number, item: Item): Promise<void> {
     const existingItem = await this.getItemByID(id);
     if (!existingItem) {
-      throw new Error('Item not found.');
+      throw new NotFoundError('Item not found.');
     }
     await this.repository.update(id, item);
   }
@@ -37,7 +38,7 @@ export class ItemService implements IItemService {
   async deleteItem(id: number): Promise<void> {
     const existingItem = await this.getItemByID(id);
     if (!existingItem) {
-      throw new Error('Item not found.');
+      throw new NotFoundError('Item not found.');
     }
     await this.repository.delete(id);
   }
