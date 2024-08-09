@@ -8,10 +8,10 @@ import {
 } from "typeorm";
 import { Sala } from "./salaEntity";
 
-enum Status {
-  DISPONIVEL = 'Disponivel',
-  BAIXA = 'Baixa',
-  EM_MANUTENCAO = 'Em manutenção'
+export enum Status {
+  DISPONIVEL = "Disponivel",
+  BAIXA = "Baixa",
+  EM_MANUTENCAO = "Em manutenção",
 }
 
 @Entity("items")
@@ -25,18 +25,18 @@ export class Item {
   @Column({ name: "data_de_incorporacao" })
   dataDeIncorporacao: Date;
 
-  @ManyToOne(() => Sala, (sala) => sala.items, { nullable: true })
-  sala?: Sala;
-
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: Status,
-    default: Status.DISPONIVEL
+    default: Status.DISPONIVEL,
   })
   status: Status;
 
-  @Column()
-  url: string
+  @Column({ nullable: true })
+  url?: string;
+
+  @ManyToOne(() => Sala, (sala) => sala.items, { nullable: true })
+  sala?: Sala;
 
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;

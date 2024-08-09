@@ -14,7 +14,7 @@ export const serverError = (res: Response, error: Error): void => {
     .json({ error: new ServerError(error.stack as string).message });
 };
 
-export const created = (res: Response, data: unknown): void => {
+export const created = (res: Response, data: any): void => {
   res.status(201).json(data);
 };
 
@@ -22,7 +22,7 @@ export const noContent = (res: Response): void => {
   res.status(204).send();
 };
 
-export const ok = (res: Response, data: unknown): void => {
+export const ok = (res: Response, data: any): void => {
   res.status(200).json(data);
 };
 
