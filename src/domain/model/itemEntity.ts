@@ -35,6 +35,9 @@ export class Item {
   })
   status: Status;
 
+  @Column()
+  url: string
+
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;
 
