@@ -8,6 +8,12 @@ import {
 } from "typeorm";
 import { Sala } from "./salaEntity";
 
+enum Status {
+  DISPONIVEL = 'Disponivel',
+  BAIXA = 'Baixa',
+  EM_MANUTENCAO = 'Em manutenção'
+}
+
 @Entity("items")
 export class Item {
   @PrimaryGeneratedColumn("increment")
@@ -21,6 +27,13 @@ export class Item {
 
   @ManyToOne(() => Sala, (sala) => sala.items, { nullable: true })
   sala?: Sala;
+
+  @Column({
+    type: 'enum',
+    enum: Status,
+    default: Status.DISPONIVEL
+  })
+  status: Status;
 
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;
