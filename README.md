@@ -47,5 +47,7 @@ Antes de começar, verifique se você tem as seguintes ferramentas instaladas:
 
 # Diagramas
 ## Diagrama de Classes
+  ![Diagrama de Classes](https://github.com/user-attachments/assets/262d00be-0bff-4b13-924d-1f577936b24e)
 
 ## Caso de Uso
+  ![Caso de Uso](https://github.com/user-attachments/assets/e53533be-2f66-49b2-a02c-d0fd6d650077)
