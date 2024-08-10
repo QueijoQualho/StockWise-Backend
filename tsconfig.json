@@ -27,7 +27,8 @@
 
       "@model/*": ["src/domain/model/*"],
       "@repository/*": ["src/domain/repository/*"],
-      "@dto/*": ["src/domain/dto/*"]
+      "@dto/*": ["src/domain/dto/*"],
+
     }
   },
   "include": ["src/**/*"],

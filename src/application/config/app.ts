@@ -3,6 +3,7 @@ import compression from "compression";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
+import { setupSwagger } from "./swagger";
 
 const app = express();
 
@@ -13,5 +14,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 routes(app);
+setupSwagger(app);
 
 export default app;

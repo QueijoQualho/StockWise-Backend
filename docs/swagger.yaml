@@ -1,0 +1,159 @@
+openapi: 3.0.0
+info:
+  title: Item API
+  description: API for managing items
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Local server
+paths:
+  /items:
+    get:
+      summary: Retrieve all items
+      tags:
+        - Items
+      responses:
+        "200":
+          description: List of items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+    post:
+      summary: Create a new item
+      tags:
+        - Items
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItemDTO"
+      responses:
+        "201":
+          description: Item created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemDTO"
+        "400":
+          description: Validation error or file upload error
+  /items/{id}:
+    get:
+      summary: Get item by ID
+      tags:
+        - Items
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Item ID
+      responses:
+        "200":
+          description: Item data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "404":
+          description: Item not found
+    patch:
+      summary: Update an existing item
+      tags:
+        - Items
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Item ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItemUpdateDTO"
+      responses:
+        "204":
+          description: Item updated successfully
+        "400":
+          description: Validation error or file upload error
+        "404":
+          description: Item not found
+    delete:
+      summary: Delete an item by ID
+      tags:
+        - Items
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Item ID
+      responses:
+        "204":
+          description: Item deleted successfully
+        "404":
+          description: Item not found
+components:
+  schemas:
+    Item:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        nome:
+          type: string
+        dataDeIncorporacao:
+          type: string
+        status:
+          type: string
+          enum:
+            - DISPONIVEL
+            - BAIXA
+            - EM_MANUTENCAO
+        url:
+          type: string
+        salaId:
+          type: integer
+    ItemDTO:
+      type: object
+      properties:
+        nome:
+          type: string
+        dataDeIncorporacao:
+          type: string
+        status:
+          type: string
+          enum:
+            - DISPONIVEL
+            - BAIXA
+            - EM_MANUTENCAO
+        url:
+          type: string
+        salaId:
+          type: integer
+    ItemUpdateDTO:
+      type: object
+      properties:
+        nome:
+          type: string
+        dataDeIncorporacao:
+          type: string
+        status:
+          type: string
+          enum:
+            - DISPONIVEL
+            - BAIXA
+            - EM_MANUTENCAO
+        url:
+          type: string
+        salaId:
+          type: integer
