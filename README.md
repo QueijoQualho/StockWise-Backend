@@ -1,6 +1,6 @@
 # StockWise
 
-StockWise é um sistema para realizar o inventario do SENAI Ricardo Lener de maneira mais facilitada
+StockWise é um sistema para realizar o inventario do SENAI Ricardo Lerner de maneira mais facilitada
 
 ## Tecnologias Utilizadas
 
@@ -14,14 +14,14 @@ StockWise é um sistema para realizar o inventario do SENAI Ricardo Lener de man
 Antes de começar, verifique se você tem as seguintes ferramentas instaladas:
 
 - [Docker](https://docs.docker.com/get-docker/)
-- [Node.js](https://nodejs.org/) (recomendado versão LTS)
+- [Node.js](https://nodejs.org/) 
 
 ## Configuração do Ambiente de Desenvolvimento
 
 1. **Clone o Repositório**
 
     ```bash
-    git clone https://github.com/seu-usuario/seu-repositorio.git
+    git clone https://github.com/QueijoQualho/TCC-Senai.git
     cd seu-repositorio
     ```
 
