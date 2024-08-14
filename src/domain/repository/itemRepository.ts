@@ -5,14 +5,14 @@ import { EntityManager, Repository } from "typeorm";
 export type ItemRepositoryType = Repository<Item>;
 const databaseInstance = Database.getInstance();
 
-const UserRepository: ItemRepositoryType = databaseInstance
+const ItemRepository: ItemRepositoryType = databaseInstance
   .getDataSource()
   .getRepository(Item)
   .extend({});
 
-export function getUserRepository(manager?: EntityManager): Repository<Item> {
+export function getItemRepository(manager?: EntityManager): Repository<Item> {
   if (manager) {
-    return manager.withRepository(UserRepository);
+    return manager.withRepository(ItemRepository);
   }
-  return UserRepository;
+  return ItemRepository;
 }

@@ -12,149 +12,151 @@ import { IItemController, IItemService } from "@interfaces/index";
 import { ItemDTO } from "@dto/item/ItemDTO";
 import { ItemUpdateDTO } from "@dto/index";
 import { ValidationError } from "class-validator";
-import fs from 'fs';
+import fs from 'fs'
 
 export class ItemController implements IItemController {
   constructor(private readonly itemService: IItemService) { }
 
+  // ======================================
+  // = CRUD =
+  // ======================================
+
   async getItem(_: Request, res: Response): Promise<void> {
     try {
       const items = await this.itemService.findAll();
-      ok(res, items);
+      return ok(res, items);
     } catch (error: any) {
-      serverError(res, error);
+      return serverError(res, error);
     }
   }
 
   async getItemByID(req: Request, res: Response): Promise<void> {
     const itemId = this.extractItemId(req.params.id);
-
-    if (itemId === null) {
-      return badRequest(res, new BadRequestError("Invalid item ID"));
-    }
+    if (!itemId) return badRequest(res, new BadRequestError("Invalid item ID"));
 
     try {
       const item = await this.itemService.findOne(itemId);
-      if (!item) {
-        return notFound(res, new NotFoundError("Item not found"));
-      }
-      ok(res, item);
+      return item ? ok(res, item) : notFound(res, new NotFoundError("Item not found"));
     } catch (error: any) {
-      serverError(res, error);
+      return serverError(res, error);
     }
   }
 
   async createItem(req: Request, res: Response): Promise<void> {
     const itemDTO = Object.assign(new ItemDTO(), req.body);
-    let fileUrl: string | null = null;
 
     try {
-      const validationErrors = await this.itemService.validateItemDTO(itemDTO);
-      if (validationErrors.length > 0) {
-        if (req.file) {
-          fs.unlinkSync(req.file.path);
-        }
-        return badRequest(
-          res,
-          new BadRequestError(this.formatValidationErrors(validationErrors))
-        );
-      }
-
-      if (req.file) {
-        fileUrl = await this.itemService.handleFileUpload(req.file);
-        if (!fileUrl) {
-          return badRequest(res, new BadRequestError('Erro ao processar o arquivo.'));
-        }
-        itemDTO.url = fileUrl;
-      }
+      const validationErrors = await this.validateAndHandleFile(req, itemDTO);
+      if (validationErrors) return badRequest(res, validationErrors);
 
       await this.itemService.create(itemDTO);
-      created(res, itemDTO);
+      return created(res, itemDTO);
     } catch (error: any) {
-      if (fileUrl) {
-        await this.itemService.deleteFile(fileUrl);
-      }
-      serverError(res, error);
+      return this.handleServerError(res, error, itemDTO.url);
     }
   }
 
   async updateItem(req: Request, res: Response): Promise<void> {
     const itemId = this.extractItemId(req.params.id);
-
-    if (!itemId) {
-      return badRequest(res, new BadRequestError("Invalid item ID"));
-    }
+    if (!itemId) return badRequest(res, new BadRequestError("Invalid item ID"));
 
     const updatedItemDTO = Object.assign(new ItemUpdateDTO(), req.body);
-    let fileUrl: string | null = null;
 
     try {
-      const validationErrors = await this.itemService.validateItemDTO(updatedItemDTO);
-      if (validationErrors.length > 0) {
-        if (req.file) {
-          fs.unlinkSync(req.file.path);
-        }
-        return badRequest(res, new BadRequestError(this.formatValidationErrors(validationErrors)));
-      }
-
-      const existingItem = await this.itemService.findOne(itemId);
-      if (!existingItem) {
-        return notFound(res, new NotFoundError("Item not found"));
-      }
-
-      if (req.file) {
-        fileUrl = await this.itemService.handleFileUpload(req.file);
-        if (!fileUrl) {
-          return badRequest(res, new BadRequestError('Erro ao processar o arquivo.'));
-        }
-
-        if (existingItem.url) {
-          await this.itemService.deleteFile(existingItem.url);
-        }
-        updatedItemDTO.url = fileUrl;
-      }
+      const validationErrors = await this.validateAndHandleFile(req, updatedItemDTO, itemId);
+      if (validationErrors) return badRequest(res, validationErrors);
 
       await this.itemService.update(itemId, updatedItemDTO);
-      noContent(res);
+      return noContent(res);
     } catch (error: any) {
-      if (fileUrl) {
-        await this.itemService.deleteFile(fileUrl);
-      }
-      serverError(res, error);
+      return this.handleServerError(res, error, updatedItemDTO.url);
     }
   }
 
   async deleteItem(req: Request, res: Response): Promise<void> {
     const itemId = this.extractItemId(req.params.id);
-
-    if (itemId === null) {
-      return badRequest(res, new BadRequestError("Invalid item ID"));
-    }
+    if (!itemId) return badRequest(res, new BadRequestError("Invalid item ID"));
 
     try {
       const item = await this.itemService.findOne(itemId);
-      if (!item) {
-        return notFound(res, new NotFoundError("Item not found"));
-      }
+      if (!item) return notFound(res, new NotFoundError("Item not found"));
 
-      if (item.url) {
-        await this.itemService.deleteFile(item.url);
-      }
+      await Promise.all([
+        this.deleteFileIfExists(item.url),
+        this.itemService.delete(itemId)
+      ]);
 
-      await this.itemService.delete(itemId);
-      noContent(res);
+      return noContent(res);
     } catch (error: any) {
-      serverError(res, error);
+      return serverError(res, error);
     }
   }
 
-  /* Helper methods */
-  private extractItemId(id: string): number | null {
-    const itemId = parseInt(id, 10);
-    return isNaN(itemId) ? null : itemId;
+  // ======================================
+  // = HELPER METHODS =
+  // ======================================
+
+  private extractItemId = (id: string): number | null =>
+    !isNaN(Number(id)) ? parseInt(id, 10) : null;
+
+  private formatValidationErrors = (errors: ValidationError[]): string =>
+    errors.flatMap(err => Object.values(err.constraints || {})).join("; ");
+
+  private async validateAndHandleFile(
+    req: Request,
+    itemDTO: ItemDTO | ItemUpdateDTO,
+    itemId?: number
+  ): Promise<BadRequestError | null> {
+    const validationErrors = await this.itemService.validateItemDTO(itemDTO);
+    if (validationErrors.length > 0) {
+      this.deleteUploadedFile(req.file?.path);
+      return new BadRequestError(this.formatValidationErrors(validationErrors));
+    }
+
+    const fileUrlOrError = await this.processFileHandling(req.file, itemId);
+    if (fileUrlOrError instanceof Error) return fileUrlOrError;
+
+    itemDTO.url = fileUrlOrError as string;
+    return null;
   }
 
-  private formatValidationErrors(errors: ValidationError[]): string {
-    return `${errors.map((err) => Object.values(err.constraints || {}).join(", ")).join("; ")}`;
+  private async processFileHandling(
+    file: Express.Multer.File | undefined,
+    itemId?: number
+  ): Promise<string | BadRequestError | NotFoundError | null> {
+    if (!file) return null;
+
+    const fileUrl = await this.itemService.handleFileUpload(file);
+    if (!fileUrl) return new BadRequestError("Erro ao processar o arquivo.");
+
+    if (itemId) {
+      const existingItem = await this.itemService.findOne(itemId);
+      if (!existingItem) return new NotFoundError("Item não encontrado");
+
+      await this.deleteFileIfExists(existingItem.url);
+    }
+
+    return fileUrl;
+  }
+
+  private deleteUploadedFile(filePath?: string): void {
+    if (filePath) {
+      try {
+        fs.unlinkSync(filePath);
+      } catch (error) {
+        console.error("Error deleting file:", error);
+      }
+    }
+  }
+
+  private async deleteFileIfExists(fileUrl?: string): Promise<void> {
+    if (fileUrl) {
+      await this.itemService.deleteFile(fileUrl);
+    }
+  }
+
+  private async handleServerError(res: Response, error: any, fileUrl?: string): Promise<void> {
+    if (fileUrl) await this.itemService.deleteFile(fileUrl);
+    return serverError(res, error);
   }
 }
