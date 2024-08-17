@@ -1,4 +1,4 @@
-export class NotFoundError extends Error {
+export class ForbiddenError extends Error {
   public details: { field: string; message: string }[] = [];
 
   constructor(message: string, details?: { field: string; message: string }[]) {

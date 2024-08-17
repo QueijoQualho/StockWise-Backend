@@ -1,6 +1,8 @@
 export class BadRequestError extends Error {
-  constructor(paramName: string) {
-    super(`Bad request:${paramName}`);
-    this.name = "BadRequestError";
+  public details: { field: string; message: string }[] = [];
+
+  constructor(message: string, details?: { field: string; message: string }[]) {
+    super(message);
+    this.details = details || [];
   }
 }
