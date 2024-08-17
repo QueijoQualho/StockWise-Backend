@@ -62,8 +62,8 @@ const deleteTemporaryFile = (filePath: string) => {
 
 const formatValidationErrors = (errors: ValidationError[]) => {
   return errors.flatMap((err) =>
-    Object.entries(err.constraints || {}).map(([field, message]) => ({
-      field,
+    Object.entries(err.constraints || {}).map(([ message]) => ({
+      field: err.property,
       message,
     })),
   );
