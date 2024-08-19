@@ -19,9 +19,12 @@ export class ItemController {
   // = CRUD =
   // ======================================
 
-  async getItem(_: Request, res: Response): Promise<void> {
+  async getItem(req: Request, res: Response): Promise<void> {
     try {
-      const items = await this.itemService.findAll();
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+
+      const items = await this.itemService.getPaginatedItems(page, limit);
       return ok(res, items);
     } catch (error: any) {
       return serverError(res, error);

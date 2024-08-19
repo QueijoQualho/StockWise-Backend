@@ -8,7 +8,7 @@ export class ItemService {
   constructor(
     private readonly repository: Repository<Item>,
     private readonly fileService: FileService,
-  ) {}
+  ) { }
 
   async findAll(): Promise<Item[]> {
     return this.repository.find();
@@ -60,5 +60,19 @@ export class ItemService {
       this.fileService.deleteFile(item.url),
       this.repository.delete(id),
     ]);
+  }
+
+  async getPaginatedItems(page: number, limit: number) {
+    const [items, total] = await this.repository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+    })
+
+    return {
+      data: items,
+      totalItems: total,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+    }
   }
 }
