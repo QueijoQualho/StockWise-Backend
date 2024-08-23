@@ -1,5 +1,5 @@
 import { Item } from "@model/itemEntity";
-import Database from "@service/database";
+import Database from "src/domain/singleton/database";
 import { EntityManager, Repository } from "typeorm";
 
 export type ItemRepositoryType = Repository<Item>;
