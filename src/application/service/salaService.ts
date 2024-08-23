@@ -15,7 +15,11 @@ export class SalaService {
   }
 
   async create(salaDTO: SalaDTO): Promise<SalaDTO> {
-    await this.repository.save(salaDTO);
+    const sala = new Sala()
+
+    Object.assign(sala, salaDTO)
+
+    await this.repository.save(sala);
     return salaDTO;
   }
 
@@ -38,6 +42,10 @@ export class SalaService {
       skip: (page - 1) * limit,
       take: limit,
     });
+
+    if(!salas){
+      throw new NotFoundError("No items found")
+    }
 
     return {
       data: salas,

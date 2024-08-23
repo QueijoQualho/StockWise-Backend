@@ -27,6 +27,7 @@ export class ItemController {
       const items = await this.itemService.getPaginatedItems(page, limit);
       return ok(res, items);
     } catch (error: any) {
+      if (error instanceof NotFoundError) return noContent(res);
       return serverError(res, error);
     }
   }

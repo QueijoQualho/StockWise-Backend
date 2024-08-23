@@ -3,11 +3,13 @@ import { Item } from "@model/itemEntity";
 import { Repository } from "typeorm";
 import { FileService } from "@service/fileService";
 import { BadRequestError, NotFoundError } from "@utils/errors";
+import { Sala } from "@model/salaEntity";
 
 export class ItemService {
   constructor(
     private readonly repository: Repository<Item>,
     private readonly fileService: FileService,
+    private readonly salaRepository: Repository<Sala>,
   ) { }
 
   async findAll(): Promise<Item[]> {
@@ -22,11 +24,24 @@ export class ItemService {
     itemDTO: ItemDTO,
     file: Express.Multer.File | undefined,
   ): Promise<ItemDTO> {
+    const item = new Item();
+
+    Object.assign(item, itemDTO);
+
+    if (itemDTO.salaId) {
+      const sala = await this.salaRepository.findOne({ where: { localizacao: itemDTO.salaId } });
+      if (!sala) {
+        throw new BadRequestError('Sala not found');
+      }
+      item.sala = sala;
+    }
+
     const fileUrlOrError = await this.fileService.processFileHandling(file);
     if (fileUrlOrError instanceof BadRequestError) throw fileUrlOrError;
 
-    itemDTO.url = fileUrlOrError as string;
-    await this.repository.save(itemDTO);
+    item.url = fileUrlOrError as string;
+
+    await this.repository.save(item);
     return itemDTO;
   }
 
@@ -48,7 +63,7 @@ export class ItemService {
     );
     if (fileUrlOrError instanceof BadRequestError) throw fileUrlOrError;
 
-    updatedItemDTO.url = fileUrlOrError as string;
+    item.url = fileUrlOrError as string;
     await this.repository.update(id, updatedItemDTO);
   }
 
@@ -67,6 +82,12 @@ export class ItemService {
       skip: (page - 1) * limit,
       take: limit,
     })
+
+    console.log("sada");
+
+    if(items.length == 0){
+      throw new NotFoundError("")
+    }
 
     return {
       data: items,
