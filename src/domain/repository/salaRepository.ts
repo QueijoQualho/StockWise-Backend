@@ -10,7 +10,7 @@ const SalaRepository: SalaRepositoryType = databaseInstance
   .getRepository(Sala)
   .extend({});
 
-export function getItemRepository(manager?: EntityManager): Repository<Sala> {
+export function getSalaRepository(manager?: EntityManager): Repository<Sala> {
   if (manager) {
     return manager.withRepository(SalaRepository);
   }

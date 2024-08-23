@@ -26,6 +26,7 @@ export class SalaController {
       const salas = await this.salaService.getPaginatedSalas(page, limit);
       return ok(res, salas);
     } catch (error: any) {
+      if (error instanceof NotFoundError) return noContent(res);
       return serverError(res, error);
     }
   }

@@ -1,6 +1,4 @@
-import { IsNotEmpty, IsString, IsArray, ValidateNested, IsOptional } from "class-validator";
-import { Type } from "class-transformer";
-import { ItemDTO } from "@dto/item/ItemDTO";
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class SalaUpdateDTO {
 
@@ -8,10 +6,4 @@ export class SalaUpdateDTO {
   @IsString()
   @IsNotEmpty()
   nome?: string;
-
-  @IsOptional()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => ItemDTO)
-  items?: ItemDTO[];
 }
