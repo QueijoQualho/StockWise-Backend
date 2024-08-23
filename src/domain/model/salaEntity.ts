@@ -1,17 +1,13 @@
-import {
-  AfterLoad,
-  Column,
-  CreateDateColumn,
-  Entity,
-  OneToMany,
-  PrimaryColumn,
-  UpdateDateColumn,
-} from "typeorm";
-import { Item } from "./itemEntity";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+
+import { Item } from './itemEntity';
 
 @Entity("sala")
 export class Sala {
-  @PrimaryColumn({ name: "localizacao" })
+  @PrimaryGeneratedColumn('increment')
+  id: number;
+
+  @Column({ name: "localizacao", unique:true })
   localizacao: number;
 
   @Column({ name: "nome" })
@@ -28,11 +24,4 @@ export class Sala {
 
   @UpdateDateColumn({ name: "updated_at", type: "timestamp" })
   updatedAt: Date;
-
-  @AfterLoad()
-  private updateQuantidadeDeItens() {
-    if (this.items) {
-      this.quantidadeDeItens = this.items.length;
-    }
-  }
 }
