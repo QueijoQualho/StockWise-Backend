@@ -5,10 +5,14 @@ import { validateCreateSala } from "@validation/salaValidation";
 import { Router, Request, Response } from "express";
 
 export default (router: Router): void => {
-  const salaController = salaControllerFactory()
+  const salaController = salaControllerFactory();
 
-  router.get("/salas", (req: Request, res: Response) => salaController.getSala(req, res));
-  router.get("/salas/:id", (req: Request, res: Response) => salaController.getSalaByID(req, res));
+  router.get("/salas", (req: Request, res: Response) =>
+    salaController.getSala(req, res),
+  );
+  router.get("/salas/:id", (req: Request, res: Response) =>
+    salaController.getSalaByID(req, res),
+  );
 
   router.post(
     "/salas",
@@ -24,5 +28,7 @@ export default (router: Router): void => {
     (req: Request, res: Response) => salaController.updateSala(req, res),
   );
 
-  router.delete("/salas/:id", (req: Request, res: Response) => salaController.deleteSala(req, res));
-}
+  router.delete("/salas/:id", (req: Request, res: Response) =>
+    salaController.deleteSala(req, res),
+  );
+};
