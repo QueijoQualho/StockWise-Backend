@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 import { FileService } from "@service/fileService";
 import { BadRequestError, NotFoundError } from "@utils/errors";
 import { Sala } from "@model/salaEntity";
+import { ItemResponseDTO } from "@dto/item/ItemResponseDTO";
 
 export class ItemService {
   constructor(
@@ -23,19 +24,25 @@ export class ItemService {
   async create(
     itemDTO: ItemDTO,
     file: Express.Multer.File | undefined,
-  ): Promise<ItemDTO> {
+  ): Promise<ItemResponseDTO> {
     const item = new Item();
 
     Object.assign(item, itemDTO);
 
-    if (itemDTO.salaId) {
+    let salaData;
+    if (itemDTO.salaLocalizacao) {
       const sala = await this.salaRepository.findOne({
-        where: { localizacao: itemDTO.salaId },
+        where: { localizacao: itemDTO.salaLocalizacao as number },
       });
       if (!sala) {
         throw new BadRequestError("Sala not found");
       }
       item.sala = sala;
+      salaData = {
+        id: sala.id,
+        nome: sala.nome,
+        localizacao: sala.localizacao,
+      }
     }
 
     const fileUrlOrError = await this.fileService.processFileHandling(file);
@@ -44,7 +51,13 @@ export class ItemService {
     item.url = fileUrlOrError as string;
 
     await this.repository.save(item);
-    return itemDTO;
+
+    const responseData: ItemResponseDTO = {
+      ...item,
+      sala: salaData
+    }
+
+    return responseData;
   }
 
   async update(
@@ -84,8 +97,6 @@ export class ItemService {
       skip: (page - 1) * limit,
       take: limit,
     });
-
-    console.log("sada");
 
     if (items.length == 0) {
       throw new NotFoundError("");

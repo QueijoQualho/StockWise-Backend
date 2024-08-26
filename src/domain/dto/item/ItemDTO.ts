@@ -27,5 +27,5 @@ export class ItemDTO {
   @IsOptional()
   @IsInt({ message: "O ID da sala deve ser um número inteiro" })
   @Type(() => Number)
-  salaId?: number;
+  salaLocalizacao?: number;
 }
