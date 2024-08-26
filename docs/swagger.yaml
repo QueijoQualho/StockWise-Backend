@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: Item API
-  description: API for managing items
+  title: Item and Sala API
+  description: API for managing items and salas
   version: 1.0.0
 servers:
   - url: http://localhost:3000/api
@@ -101,6 +101,100 @@ paths:
           description: Item deleted successfully
         "404":
           description: Item not found
+  /salas:
+    get:
+      summary: Retrieve all salas
+      tags:
+        - Salas
+      responses:
+        "200":
+          description: List of salas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Sala"
+    post:
+      summary: Create a new sala
+      tags:
+        - Salas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SalaDTO"
+      responses:
+        "201":
+          description: Sala created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SalaDTO"
+        "400":
+          description: Validation error
+  /salas/{id}:
+    get:
+      summary: Get sala by ID
+      tags:
+        - Salas
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Sala ID
+      responses:
+        "200":
+          description: Sala data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Sala"
+        "404":
+          description: Sala not found
+    patch:
+      summary: Update an existing sala
+      tags:
+        - Salas
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Sala ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SalaUpdateDTO"
+      responses:
+        "204":
+          description: Sala updated successfully
+        "400":
+          description: Validation error
+        "404":
+          description: Sala not found
+    delete:
+      summary: Delete a sala by ID
+      tags:
+        - Salas
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Sala ID
+      responses:
+        "204":
+          description: Sala deleted successfully
+        "404":
+          description: Sala not found
 components:
   schemas:
     Item:
@@ -157,3 +251,22 @@ components:
           type: string
         salaId:
           type: integer
+    Sala:
+      type: object
+      properties:
+        localizacao:
+          type: integer
+        nome:
+          type: string
+    SalaDTO:
+      type: object
+      properties:
+        localizacao:
+          type: integer
+        nome:
+          type: string
+    SalaUpdateDTO:
+      type: object
+      properties:
+        nome:
+          type: string

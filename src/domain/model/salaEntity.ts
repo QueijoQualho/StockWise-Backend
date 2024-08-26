@@ -6,21 +6,25 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+
 import { Item } from "./itemEntity";
 
 @Entity("sala")
 export class Sala {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn("increment")
   id: number;
 
-  @Column({ name: "localizacao" })
-  localizacao: string;
+  @Column({ name: "localizacao", unique: true })
+  localizacao: number;
 
-  @Column({ name: "quantidade" })
-  quantidade: number;
+  @Column({ name: "nome" })
+  nome: string;
+
+  @Column({ name: "quantidadeDeItens", default: 0 })
+  quantidadeDeItens: number;
 
   @OneToMany(() => Item, (item) => item.sala)
-  items: Item[];
+  items?: Item[];
 
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;

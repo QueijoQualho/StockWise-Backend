@@ -4,7 +4,7 @@ import "tsconfig-paths/register";
 import app from "@config/app";
 import env from "@config/env";
 import logger from "@config/logger";
-import Database from "@service/database";
+import Database from "src/domain/singleton/database";
 
 async function startServer() {
   try {
