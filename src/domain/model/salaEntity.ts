@@ -20,7 +20,7 @@ export class Sala {
   @Column({ name: "nome" })
   nome: string;
 
-  @Column({ name: "quantidadeDeItens", default: 0 })
+  @Column({ name: "qtd_itens", default: 0 })
   quantidadeDeItens: number;
 
   @OneToMany(() => Item, (item) => item.sala)
