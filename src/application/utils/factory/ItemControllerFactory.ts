@@ -8,6 +8,10 @@ export const itemControllerFactory = () => {
   const itemRepository = getItemRepository();
   const salaRepository = getSalaRepository();
   const fileService = new FileService();
-  const itemService = new ItemService(itemRepository, fileService, salaRepository);
+  const itemService = new ItemService(
+    itemRepository,
+    fileService,
+    salaRepository,
+  );
   return new ItemController(itemService);
 };

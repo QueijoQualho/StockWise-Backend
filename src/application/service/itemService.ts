@@ -10,7 +10,7 @@ export class ItemService {
     private readonly repository: Repository<Item>,
     private readonly fileService: FileService,
     private readonly salaRepository: Repository<Sala>,
-  ) { }
+  ) {}
 
   async findAll(): Promise<Item[]> {
     return this.repository.find();
@@ -29,9 +29,11 @@ export class ItemService {
     Object.assign(item, itemDTO);
 
     if (itemDTO.salaId) {
-      const sala = await this.salaRepository.findOne({ where: { localizacao: itemDTO.salaId } });
+      const sala = await this.salaRepository.findOne({
+        where: { localizacao: itemDTO.salaId },
+      });
       if (!sala) {
-        throw new BadRequestError('Sala not found');
+        throw new BadRequestError("Sala not found");
       }
       item.sala = sala;
     }
@@ -81,12 +83,12 @@ export class ItemService {
     const [items, total] = await this.repository.findAndCount({
       skip: (page - 1) * limit,
       take: limit,
-    })
+    });
 
     console.log("sada");
 
-    if(items.length == 0){
-      throw new NotFoundError("")
+    if (items.length == 0) {
+      throw new NotFoundError("");
     }
 
     return {
@@ -94,6 +96,6 @@ export class ItemService {
       totalItems: total,
       totalPages: Math.ceil(total / limit),
       currentPage: page,
-    }
+    };
   }
 }

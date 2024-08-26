@@ -5,6 +5,6 @@ import salaRouter from "./salaRouter";
 export default (app: Express): void => {
   const router = Router();
   itemRouter(router);
-  salaRouter(router)
+  salaRouter(router);
   app.use("/api", router);
 };
