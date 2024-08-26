@@ -1,13 +1,20 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
-import { Item } from './itemEntity';
+import { Item } from "./itemEntity";
 
 @Entity("sala")
 export class Sala {
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn("increment")
   id: number;
 
-  @Column({ name: "localizacao", unique:true })
+  @Column({ name: "localizacao", unique: true })
   localizacao: number;
 
   @Column({ name: "nome" })

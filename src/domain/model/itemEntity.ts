@@ -1,6 +1,13 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
-import { Sala } from './salaEntity';
+import { Sala } from "./salaEntity";
 
 export enum Status {
   DISPONIVEL = "Disponivel",

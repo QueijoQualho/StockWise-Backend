@@ -15,9 +15,9 @@ export class SalaService {
   }
 
   async create(salaDTO: SalaDTO): Promise<SalaDTO> {
-    const sala = new Sala()
+    const sala = new Sala();
 
-    Object.assign(sala, salaDTO)
+    Object.assign(sala, salaDTO);
 
     await this.repository.save(sala);
     return salaDTO;
@@ -43,8 +43,8 @@ export class SalaService {
       take: limit,
     });
 
-    if(!salas){
-      throw new NotFoundError("No items found")
+    if (!salas) {
+      throw new NotFoundError("No items found");
     }
 
     return {
