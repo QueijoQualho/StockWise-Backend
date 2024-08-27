@@ -9,7 +9,7 @@ import {
 
 import { Item } from "./itemEntity";
 
-@Entity("sala")
+@Entity("salas")
 export class Sala {
   @PrimaryGeneratedColumn("increment")
   id: number;

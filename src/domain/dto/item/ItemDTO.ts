@@ -10,6 +10,10 @@ import { IsDateFormat } from "../../decorator/isDateFormat";
 import { Status } from "@model/itemEntity";
 
 export class ItemDTO {
+  @IsInt()
+  @IsNotEmpty()
+  id: number;
+
   @IsString({ message: "O nome deve ser uma string" })
   @IsNotEmpty({ message: "O nome não pode estar vazio" })
   nome: string;
@@ -25,7 +29,7 @@ export class ItemDTO {
   status?: Status;
 
   @IsOptional()
-  @IsInt({ message: "O ID da sala deve ser um número inteiro" })
+  @IsInt({ message: "A localização da sala deve ser um número inteiro" })
   @Type(() => Number)
-  salaLocalizacao?: number;
+  salaLocalizacao: number;
 }

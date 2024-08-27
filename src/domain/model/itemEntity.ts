@@ -4,7 +4,7 @@ import {
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
+  UpdateDateColumn
 } from "typeorm";
 
 import { Sala } from "./salaEntity";
@@ -17,13 +17,16 @@ export enum Status {
 
 @Entity("items")
 export class Item {
-  @PrimaryGeneratedColumn("increment")
+  @PrimaryGeneratedColumn('increment')
   id: number;
+
+  @Column({ name: 'external_id', nullable: true })
+  externalId?: string;
 
   @Column({ name: "nome" })
   nome: string;
 
-  @Column({ name: "data_de_incorporacao" })
+  @Column({ name: "data_de_incorporacao", type: 'date' })
   dataDeIncorporacao: Date;
 
   @Column({
@@ -36,8 +39,8 @@ export class Item {
   @Column({ nullable: true })
   url?: string;
 
-  @ManyToOne(() => Sala, (sala) => sala.items, { nullable: true })
-  sala?: Sala;
+  @ManyToOne(() => Sala, (sala) => sala.items)
+  sala: Sala;
 
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;
