@@ -1,16 +1,16 @@
 import { ItemDTO, ItemUpdateDTO } from "@dto/index";
+import { ItemResponseDTO } from "@dto/item/ItemResponseDTO";
 import { Item } from "@model/itemEntity";
-import { Repository } from "typeorm";
+import { ItemRepositoryType } from "@repository/itemRepository";
+import { SalaRepositoryType } from "@repository/salaRepository";
 import { FileService } from "@service/fileService";
 import { BadRequestError, NotFoundError } from "@utils/errors";
-import { Sala } from "@model/salaEntity";
-import { ItemResponseDTO } from "@dto/item/ItemResponseDTO";
 
 export class ItemService {
   constructor(
-    private readonly repository: Repository<Item>,
+    private readonly repository: ItemRepositoryType,
     private readonly fileService: FileService,
-    private readonly salaRepository: Repository<Sala>,
+    private readonly salaRepository: SalaRepositoryType,
   ) {}
 
   async findAll(): Promise<Item[]> {
