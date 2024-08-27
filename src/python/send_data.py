@@ -1,7 +1,9 @@
 import json
 import requests
+import os
 
-# Função para enviar dados para a API
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
 def enviar_dados_para_api(key, data):
     url = f'http://localhost:3000/api/salas/seed'
     payload = {key: data}
@@ -16,8 +18,8 @@ def enviar_dados_para_api(key, data):
         print(f'Erro ao enviar dados para a sala {key}: {e}')
 
 def main():
-    with open('c:/Users/Pedro/Desktop/Seila/TCC-Senai/src/python/data.json', 'r', encoding='utf-8') as file:
-        dados = json.load(file)
+    with open(os.path.join(current_dir, 'data.json'), 'r', encoding='utf-8') as file:
+      dados = json.load(file)
 
     for sala_id, dados_sala in dados.items():
         enviar_dados_para_api(sala_id, dados_sala)
