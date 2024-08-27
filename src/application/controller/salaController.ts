@@ -12,7 +12,7 @@ import { SalaService } from "@service/salaService";
 import { SalaDTO, SalaUpdateDTO } from "@dto/index";
 
 export class SalaController {
-  constructor(private readonly salaService: SalaService) {}
+  constructor(private readonly salaService: SalaService) { }
 
   // ======================================
   // = CRUD =
@@ -83,6 +83,21 @@ export class SalaController {
     } catch (error: any) {
       if (error instanceof NotFoundError) return notFound(res, error);
       return serverError(res, error);
+    }
+  }
+
+
+  async saveSala(req: Request, res: Response): Promise<Response> {
+    try {
+      const dados = req.body;
+
+      for (const key in dados) {
+        await this.salaService.saveSala(dados[key]);
+      }
+
+      return res.status(201).json({ message: 'Salas salvas com sucesso!' });
+    } catch (error: any) {
+      return res.status(500).json({ error: 'Erro ao salvar as salas', details: error.message });
     }
   }
 

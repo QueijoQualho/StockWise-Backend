@@ -31,4 +31,8 @@ export default (router: Router): void => {
   router.delete("/salas/:id", (req: Request, res: Response) =>
     salaController.deleteSala(req, res),
   );
+
+  router.post("/salas/seed", (req: Request, res: Response) =>
+    salaController.saveSala(req, res),
+  );
 };
