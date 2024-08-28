@@ -86,21 +86,6 @@ export class SalaController {
     }
   }
 
-
-  async saveSala(req: Request, res: Response): Promise<Response> {
-    try {
-      const dados = req.body;
-
-      for (const key in dados) {
-        await this.salaService.saveSala(dados[key]);
-      }
-
-      return res.status(201).json({ message: 'Salas salvas com sucesso!' });
-    } catch (error: any) {
-      return res.status(500).json({ error: 'Erro ao salvar as salas', details: error.message });
-    }
-  }
-
   // ======================================
   // = HELPER METHODS =
   // ======================================
