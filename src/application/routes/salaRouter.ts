@@ -1,11 +1,11 @@
 import upload from "@config/multer";
-import { salaControllerFactory } from "@utils/factory/SalaControllerFactory";
+import { controllerFactory } from "@utils/factory/ControllerFactory";
 import { validateUpdateItem } from "@validation/ItemValidation";
 import { validateCreateSala } from "@validation/salaValidation";
 import { Router, Request, Response } from "express";
 
 export default (router: Router): void => {
-  const salaController = salaControllerFactory();
+  const salaController = controllerFactory.createSalaController();
 
   router.get("/salas", (req: Request, res: Response) =>
     salaController.getSala(req, res),
@@ -30,9 +30,5 @@ export default (router: Router): void => {
 
   router.delete("/salas/:id", (req: Request, res: Response) =>
     salaController.deleteSala(req, res),
-  );
-
-  router.post("/salas/seed", (req: Request, res: Response) =>
-    salaController.saveSala(req, res),
   );
 };
