@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+import os
 
 # Função para limpar os dados dos itens
 def clean_data_itens(df):
@@ -52,9 +53,14 @@ def processar_dados(df_items, df_salas):
     return result
 
 def main():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path_items = os.path.join(current_dir, 'data', 'PATRIMONIO 12 2023.xlsx')
+    file_path_salas = os.path.join(current_dir, 'data', 'CÓDIGO AMBIENTE SIG 2023.xlsx')
+
     # Carregando os arquivos Excel
-    df_items = pd.read_excel('./data/PATRIMONIO 12 2023.xlsx')
-    df_salas = pd.read_excel("./data/CÓDIGO AMBIENTE SIG 2023.xlsx")
+    df_items = pd.read_excel(file_path_items)
+
+    df_salas = pd.read_excel(file_path_salas)
 
     # Limpando os dados
     df_items = clean_data_itens(df_items.copy())
@@ -64,7 +70,9 @@ def main():
     dados = processar_dados(df_items, df_salas)
 
     # Convertendo os dados para JSON
-    return json.dumps(dados, indent=4, default=str)
+    jsonPrint = json.dumps(dados, indent=4, default=str)
+
+    print(jsonPrint)
 
 if __name__ == "__main__":
-    main()
+   main()

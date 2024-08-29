@@ -1,3 +1,4 @@
+import logger from '@config/logger';
 import { Sala } from '@model/salaEntity';
 import { ItemRepositoryType } from '@repository/itemRepository';
 import { SalaRepositoryType } from '@repository/salaRepository';
@@ -23,7 +24,7 @@ export class SeedService {
         return await this.itemRespository.save(item);
       })
     });
-
+    logger.info(`sala ${newSala.nome}`)
     return await this.salaRepository.save(newSala);
   }
 }
