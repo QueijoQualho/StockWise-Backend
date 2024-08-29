@@ -1,5 +1,5 @@
 import upload from "@config/multer";
-import { itemControllerFactory } from "@utils/factory/ItemControllerFactory";
+import { controllerFactory } from "@utils/factory/ControllerFactory";
 import {
   validateCreateItem,
   validateUpdateItem,
@@ -7,7 +7,7 @@ import {
 import { Router, Request, Response } from "express";
 
 export default (router: Router): void => {
-  const itemController = itemControllerFactory();
+  const itemController = controllerFactory.createItemController();
 
   router.get("/items", (req: Request, res: Response) =>
     itemController.getItem(req, res),

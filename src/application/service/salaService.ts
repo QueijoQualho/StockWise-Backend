@@ -1,13 +1,11 @@
 import { Sala } from "@model/salaEntity";
 import { SalaDTO, SalaUpdateDTO } from "@dto/index";
 import { NotFoundError } from "@utils/errors";
-import { ItemRepositoryType } from "@repository/itemRepository";
 import { SalaRepositoryType } from "@repository/salaRepository";
 
 export class SalaService {
   constructor(
     private readonly repository: SalaRepositoryType,
-    private readonly itemRespository: ItemRepositoryType
   ) { }
 
   async findAll(): Promise<Sala[]> {
@@ -59,22 +57,4 @@ export class SalaService {
     };
   }
 
-  async saveSala(data: any): Promise<Sala> {
-    const newSala = this.repository.create({
-      localizacao: data.localizacao,
-      quantidadeDeItens: data['quantidade de itens'],
-      nome: data.Sala,
-      items: data.items.map(async (itemData: any) => {
-
-        const item = this.itemRespository.create({
-          externalId: itemData.id,
-          nome: itemData.denominacao,
-          dataDeIncorporacao: itemData.dataDeIncorporacao as Date,
-        });
-        return await this.itemRespository.save(item);
-      })
-    });
-
-    return await this.repository.save(newSala);
-  }
 }
