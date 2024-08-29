@@ -1,16 +1,8 @@
-import { Request, Response } from "express";
-import {
-  ok,
-  serverError,
-  notFound,
-  created,
-  noContent,
-  badRequest,
-} from "@utils/httpErrors";
-import { NotFoundError, BadRequestError } from "@utils/errors";
-import { ItemDTO } from "@dto/item/ItemDTO";
-import { ItemUpdateDTO } from "@dto/index";
-import { ItemService } from "@service/itemService";
+import { ItemUpdateDTO } from '@dto/index';
+import { ItemService } from '@service/itemService';
+import { BadRequestError, NotFoundError } from '@utils/errors';
+import { badRequest, noContent, notFound, ok, serverError } from '@utils/httpErrors';
+import { Request, Response } from 'express';
 
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
@@ -46,17 +38,17 @@ export class ItemController {
     }
   }
 
-  async createItem(req: Request, res: Response): Promise<void> {
-    const itemDTO = Object.assign(new ItemDTO(), req.body);
+  // async createItem(req: Request, res: Response): Promise<void> {
+  //   const itemDTO = Object.assign(new ItemDTO(), req.body);
 
-    try {
-      const result = await this.itemService.create(itemDTO, req.file);
-      return created(res, result);
-    } catch (error: any) {
-      if (error instanceof BadRequestError) return badRequest(res, error);
-      return serverError(res, error);
-    }
-  }
+  //   try {
+  //     const result = await this.itemService.create(itemDTO, req.file);
+  //     return created(res, result);
+  //   } catch (error: any) {
+  //     if (error instanceof BadRequestError) return badRequest(res, error);
+  //     return serverError(res, error);
+  //   }
+  // }
 
   async updateItem(req: Request, res: Response): Promise<void> {
     const itemId = this.extractItemId(req.params.id);

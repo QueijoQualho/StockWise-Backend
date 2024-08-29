@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { SeedService } from "@service/seedService";
 import runPythonScript from "@utils/functions/runPythonScript";
 import path from "path";
+import { ok, serverError } from "@utils/httpErrors";
 
 interface Item {
   id: number;
@@ -22,7 +23,7 @@ type Output = Record<string, Sala>;
 export class SeedController {
   constructor(private readonly seedService: SeedService) { }
 
-  async seedSalas(req: Request, res: Response): Promise<Response> {
+  async seedSalas(_: Request, res: Response): Promise<void> {
     try {
       const scriptPath = path.resolve(__dirname + "../../../../python/seeder.py");
       const requirementsPath = path.resolve(__dirname + "../../../../python/requirements.txt");
@@ -36,10 +37,9 @@ export class SeedController {
         }
       }
 
-      return res.status(200).json({ message: 'Salas processadas com sucesso!', output });
+      ok(res, "Salas criadas com sucesso!");
     } catch (error: any) {
-      // Retornar uma resposta de erro
-      return res.status(500).json({ error: 'Erro ao processar as salas', details: error.message });
+      serverError(res, error)
     }
   }
 }

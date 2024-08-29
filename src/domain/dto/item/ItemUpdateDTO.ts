@@ -12,7 +12,7 @@ export class ItemUpdateDTO {
   @IsDateFormat("DD-MM-YYYY", {
     message: "A dataDeIncorporacao deve estar no formato DD-MM-YYYY",
   })
-  dataDeIncorporacao?: string;
+  dataDeIncorporacao?: Date;
 
   @IsOptional()
   @IsEnum(Status, { message: "O status deve ser um dos valores permitidos" })
