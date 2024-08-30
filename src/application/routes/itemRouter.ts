@@ -16,12 +16,12 @@ export default (router: Router): void => {
     itemController.getItemByID(req, res),
   );
 
-  router.post(
-    "/items",
-    upload.single("file"),
-    validateCreateItem,
-    (req: Request, res: Response) => itemController.createItem(req, res),
-  );
+  // router.post(
+  //   "/items",
+  //   upload.single("file"),
+  //   validateCreateItem,
+  //   (req: Request, res: Response) => itemController.createItem(req, res),
+  // );
 
   router.patch(
     "/items/:id",
