@@ -14,17 +14,26 @@ export class SeedService {
       localizacao: data.localizacao,
       quantidadeDeItens: data['quantidade de itens'],
       nome: data.Sala,
-      items: data.items.map(async (itemData: any) => {
+    });
 
+    const savedSala = await this.salaRepository.save(newSala);
+
+    const items = await Promise.all(
+      data.items.map(async (itemData: any) => {
         const item = this.itemRespository.create({
           externalId: itemData.id,
           nome: itemData.denominacao,
           dataDeIncorporacao: itemData.dataDeIncorporacao as Date,
+          sala: savedSala,
         });
         return await this.itemRespository.save(item);
       })
-    });
-    logger.info(`sala ${newSala.nome}`)
-    return await this.salaRepository.save(newSala);
+    );
+
+    savedSala.itens = items;
+
+    logger.info(`Sala ${savedSala.nome} criada com sucesso.`);
+
+    return savedSala;
   }
 }

@@ -86,6 +86,18 @@ export class SalaController {
     }
   }
 
+  async getItensSala(req: Request, res: Response) {
+    const salaLocalizacao = this.extractSalaId(req.params.id);
+    if (!salaLocalizacao) return badRequest(res, new BadRequestError("Invalid sala ID"));
+    try {
+      const itens = await this.salaService.getItensSala(salaLocalizacao);
+      return ok(res, itens);
+    } catch (error: any) {
+      if (error instanceof NotFoundError) return notFound(res, error);
+      return serverError(res, error);
+    }
+  }
+
   // ======================================
   // = HELPER METHODS =
   // ======================================

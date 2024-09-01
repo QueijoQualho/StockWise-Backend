@@ -2,6 +2,7 @@ import { Sala } from "@model/salaEntity";
 import { SalaDTO, SalaUpdateDTO } from "@dto/index";
 import { NotFoundError } from "@utils/errors";
 import { SalaRepositoryType } from "@repository/salaRepository";
+import { Item } from "@model/itemEntity";
 
 export class SalaService {
   constructor(
@@ -56,5 +57,17 @@ export class SalaService {
       currentPage: page,
     };
   }
+
+  async getItensSala(localizacao: number): Promise<Item[]> {
+    const sala = await this.repository.findOne({
+      where: { localizacao },
+      relations: ['itens'],
+    });
+
+    if (!sala) throw new NotFoundError("Sala not found");
+
+    return sala.itens;
+  }
+
 
 }

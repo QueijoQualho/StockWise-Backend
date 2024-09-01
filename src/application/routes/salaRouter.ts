@@ -10,9 +10,14 @@ export default (router: Router): void => {
   router.get("/salas", (req: Request, res: Response) =>
     salaController.getSala(req, res),
   );
+
   router.get("/salas/:id", (req: Request, res: Response) =>
     salaController.getSalaByID(req, res),
   );
+
+  router.get("/salas/:id/itens", (req: Request, res: Response) =>
+    salaController.getItensSala(req, res)
+  )
 
   router.post(
     "/salas",

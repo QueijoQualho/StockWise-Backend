@@ -15,7 +15,7 @@ export enum Status {
   EM_MANUTENCAO = "Em manutenção",
 }
 
-@Entity("items")
+@Entity("itens")
 export class Item {
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -39,7 +39,7 @@ export class Item {
   @Column({ nullable: true })
   url?: string;
 
-  @ManyToOne(() => Sala, (sala) => sala.items)
+  @ManyToOne(() => Sala, (sala) => sala.itens)
   sala: Sala;
 
   @CreateDateColumn({ name: "created_at", type: "timestamp" })

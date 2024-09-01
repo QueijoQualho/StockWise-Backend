@@ -24,7 +24,7 @@ export class Sala {
   quantidadeDeItens: number;
 
   @OneToMany(() => Item, (item) => item.sala)
-  items?: Item[];
+  itens: Item[];
 
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;
