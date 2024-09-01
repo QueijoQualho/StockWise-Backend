@@ -8,28 +8,28 @@ import { Request, Response, Router } from "express";
 export default (router: Router): void => {
   const itemController = controllerFactory.createItemController();
 
-  router.get("/items", (req: Request, res: Response) =>
+  router.get("/itens", (req: Request, res: Response) =>
     itemController.getItem(req, res),
   );
-  router.get("/items/:id", (req: Request, res: Response) =>
+  router.get("/itens/:id", (req: Request, res: Response) =>
     itemController.getItemByID(req, res),
   );
 
   // router.post(
-  //   "/items",
+  //   "/itens",
   //   upload.single("file"),
   //   validateCreateItem,
   //   (req: Request, res: Response) => itemController.createItem(req, res),
   // );
 
   router.patch(
-    "/items/:id",
+    "/itens/:id",
     upload.single("file"),
     validateUpdateItem,
     (req: Request, res: Response) => itemController.updateItem(req, res),
   );
 
-  router.delete("/items/:id", (req: Request, res: Response) =>
+  router.delete("/itens/:id", (req: Request, res: Response) =>
     itemController.deleteItem(req, res),
   );
 };
