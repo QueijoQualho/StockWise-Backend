@@ -1,8 +1,7 @@
-import { Sala } from "@model/salaEntity";
 import { SalaDTO, SalaUpdateDTO } from "@dto/index";
-import { NotFoundError } from "@utils/errors";
+import { Sala } from "@model/salaEntity";
 import { SalaRepositoryType } from "@repository/salaRepository";
-import { Item } from "@model/itemEntity";
+import { NotFoundError } from "@utils/errors";
 
 export class SalaService {
   constructor(
@@ -58,7 +57,7 @@ export class SalaService {
     };
   }
 
-  async getItensSala(localizacao: number): Promise<Item[]> {
+  async getPaginatedItensSala(localizacao: number, page: number, limit: number) {
     const sala = await this.repository.findOne({
       where: { localizacao },
       relations: ['itens'],
@@ -66,7 +65,20 @@ export class SalaService {
 
     if (!sala) throw new NotFoundError("Sala not found");
 
-    return sala.itens;
+    const itens = sala.itens;
+    const totalItens = itens.length;
+
+    const startIndex = (page - 1) * limit;
+    const endIndex = Math.min(startIndex + limit, totalItens);
+
+    const itensPagina = itens.slice(startIndex, endIndex);
+
+    return {
+      data: itensPagina,
+      totalItems: totalItens,
+      totalPages: Math.ceil(totalItens / limit),
+      currentPage: page,
+    };
   }
 
 

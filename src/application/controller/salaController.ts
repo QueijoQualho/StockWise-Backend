@@ -1,15 +1,15 @@
-import { Request, Response } from "express";
+import { SalaDTO, SalaUpdateDTO } from "@dto/index";
+import { SalaService } from "@service/salaService";
+import { BadRequestError, NotFoundError } from "@utils/errors";
 import {
-  ok,
-  serverError,
-  notFound,
+  badRequest,
   created,
   noContent,
-  badRequest,
+  notFound,
+  ok,
+  serverError,
 } from "@utils/httpErrors";
-import { NotFoundError, BadRequestError } from "@utils/errors";
-import { SalaService } from "@service/salaService";
-import { SalaDTO, SalaUpdateDTO } from "@dto/index";
+import { Request, Response } from "express";
 
 export class SalaController {
   constructor(private readonly salaService: SalaService) { }
@@ -90,7 +90,11 @@ export class SalaController {
     const salaLocalizacao = this.extractSalaId(req.params.id);
     if (!salaLocalizacao) return badRequest(res, new BadRequestError("Invalid sala ID"));
     try {
-      const itens = await this.salaService.getItensSala(salaLocalizacao);
+
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+
+      const itens = await this.salaService.getPaginatedItensSala(salaLocalizacao, page, limit);
       return ok(res, itens);
     } catch (error: any) {
       if (error instanceof NotFoundError) return notFound(res, error);
