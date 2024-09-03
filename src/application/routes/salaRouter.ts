@@ -16,8 +16,8 @@ export default (router: Router): void => {
   );
 
   router.get("/salas/:id/itens", (req: Request, res: Response) =>
-    salaController.getItensSala(req, res)
-  )
+    salaController.getItensSala(req, res),
+  );
 
   router.post(
     "/salas",

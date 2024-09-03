@@ -4,7 +4,7 @@ import {
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
 } from "typeorm";
 
 import { Sala } from "./salaEntity";
@@ -17,16 +17,16 @@ export enum Status {
 
 @Entity("itens")
 export class Item {
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn("increment")
   id: number;
 
-  @Column({ name: 'external_id', nullable: true })
+  @Column({ name: "external_id", nullable: true })
   externalId?: string;
 
   @Column({ name: "nome" })
   nome: string;
 
-  @Column({ name: "data_de_incorporacao", type: 'date' })
+  @Column({ name: "data_de_incorporacao", type: "date" })
   dataDeIncorporacao: Date;
 
   @Column({

@@ -5,7 +5,7 @@ export class ItemResponseDTO {
     readonly dataDeIncorporacao: Date,
     readonly status: string,
     readonly url?: string,
-    readonly sala?: SalaResponseDto
+    readonly sala?: SalaResponseDto,
   ) {}
 }
 

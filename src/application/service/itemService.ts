@@ -1,9 +1,11 @@
-import { ItemUpdateDTO } from '@dto/index';
-import { Item } from '@model/itemEntity';
-import { ItemRepositoryType } from '@repository/itemRepository';
-import { SalaRepositoryType } from '@repository/salaRepository';
-import { FileService } from '@service/fileService';
-import { BadRequestError, NotFoundError } from '@utils/errors';
+import { ItemUpdateDTO } from "@dto/index";
+import { Item } from "@model/itemEntity";
+import { Sala } from "@model/salaEntity";
+import { ItemRepositoryType } from "@repository/itemRepository";
+import { SalaRepositoryType } from "@repository/salaRepository";
+import { FileService } from "@service/fileService";
+import { BadRequestError, NotFoundError } from "@utils/errors";
+import { Pageable, PaginationParams } from "@utils/interfaces";
 
 export class ItemService {
   constructor(
@@ -20,113 +22,84 @@ export class ItemService {
     return this.repository.findOneBy({ id }) || null;
   }
 
-  // async create(
-  //   itemDTO: ItemDTO,
-  //   file: Express.Multer.File | undefined,
-  // ): Promise<ItemResponseDTO> {
-  //   const item = new Item();
-
-  //   Object.assign(item, itemDTO);
-
-  //   let salaData;
-  //   if (itemDTO.salaLocalizacao) {
-  //     const sala = await this.salaRepository.findOne({
-  //       where: { localizacao: itemDTO.salaLocalizacao as number },
-  //     });
-  //     if (!sala) {
-  //       throw new BadRequestError("Sala not found");
-  //     }
-  //     item.sala = sala;
-  //     salaData = {
-  //       id: sala.id,
-  //       nome: sala.nome,
-  //       localizacao: sala.localizacao,
-  //     }
-  //   }
-
-  //   const fileUrlOrError = await this.fileService.processFileHandling(file);
-  //   if (fileUrlOrError instanceof BadRequestError) throw fileUrlOrError;
-
-  //   item.url = fileUrlOrError as string;
-
-  //   await this.repository.save(item);
-
-  //   const responseData: ItemResponseDTO = {
-  //     ...item,
-  //     sala: salaData
-  //   }
-
-  //   return responseData;
-  // }
-
   async update(
     id: number,
     updatedItemDTO: ItemUpdateDTO,
-    file: Express.Multer.File | undefined,
+    file?: Express.Multer.File,
   ): Promise<void> {
-    const item = await this.findOne(id);
-    if (!item) {
-      if (file && file.path) await this.fileService.deleteFile(file.path);
-      throw new NotFoundError("Item not found");
-    }
-
-    if (file) {
-      const fileUrlOrError = await this.fileService.processFileHandling(file, id, this);
-      if (fileUrlOrError instanceof BadRequestError) throw fileUrlOrError;
-
-      if (fileUrlOrError !== item.url) {
-        item.url = fileUrlOrError as string;
-      }
-    }
+    const item = await this.getItemOrThrow(id);
+    await this.handleFileUpdate(file, item);
 
     if (updatedItemDTO.salaId && item.sala.id !== updatedItemDTO.salaId) {
-      const newSala = await this.salaRepository.findOne({ where: { id: updatedItemDTO.salaId } });
-      if (!newSala) throw new NotFoundError("Sala not found");
-
-      item.sala = newSala;
+      item.sala = await this.getSalaOrThrow(updatedItemDTO.salaId);
     }
 
-    this.checkForUpdates(item, updatedItemDTO);
-
-    Object.assign(item, updatedItemDTO);
+    this.updateItemFields(item, updatedItemDTO);
     await this.repository.save(item);
-
   }
 
-
   async delete(id: number): Promise<void> {
-    const item = await this.findOne(id);
-    if (!item) throw new NotFoundError("Item not found");
-
+    const item = await this.getItemOrThrow(id);
     await Promise.all([
       this.fileService.deleteFile(item.url),
       this.repository.delete(id),
     ]);
   }
 
-  async getPaginatedItems(page: number, limit: number) {
+  async getPaginatedItems(pagination: PaginationParams): Promise<Pageable<Item>> {
+    const { page, limit } = pagination;
     const [items, total] = await this.repository.findAndCount({
-      skip: (page - 1) * limit,
+      skip: this.calculateOffset(page, limit),
       take: limit,
     });
 
-    if (items.length == 0) {
-      throw new NotFoundError("");
-    }
+    if (items.length === 0) throw new NotFoundError("No items found");
 
-    return {
-      data: items,
-      totalItems: total,
-      totalPages: Math.ceil(total / limit),
-      currentPage: page,
-    };
+    return this.createPageable(items, total, page, limit);
   }
 
-  private checkForUpdates(item: Item, updatedItemDTO: ItemUpdateDTO): boolean {
-    return (
-      (updatedItemDTO.nome && item.nome !== updatedItemDTO.nome) ||
-      (updatedItemDTO.dataDeIncorporacao && item.dataDeIncorporacao !== updatedItemDTO.dataDeIncorporacao) ||
-      (updatedItemDTO.status && item.status !== updatedItemDTO.status)
-    );
+  // Métodos privados
+
+  private async getItemOrThrow(id: number): Promise<Item> {
+    const item = await this.findOne(id);
+    if (!item) throw new NotFoundError("Item not found");
+    return item;
+  }
+
+  private async handleFileUpdate(
+    file: Express.Multer.File | undefined,
+    item: Item,
+  ): Promise<void> {
+    if (!file) return;
+
+    const fileUrlOrError = await this.fileService.processFileHandling(file, item.id, this);
+    if (fileUrlOrError instanceof BadRequestError) throw fileUrlOrError;
+
+    if (fileUrlOrError !== item.url) {
+      item.url = fileUrlOrError as string;
+    }
+  }
+
+  private async getSalaOrThrow(salaId: number): Promise<Sala> {
+    const sala = await this.salaRepository.findOne({ where: { id: salaId } });
+    if (!sala) throw new NotFoundError("Sala not found");
+    return sala;
+  }
+
+  private updateItemFields(item: Item, updatedItemDTO: ItemUpdateDTO): void {
+    Object.assign(item, updatedItemDTO);
+  }
+
+  private calculateOffset(page: number, limit: number): number {
+    return (page - 1) * limit;
+  }
+
+  private createPageable<T>(data: T[], totalItems: number, currentPage: number, limit: number): Pageable<T> {
+    return {
+      data,
+      totalItems,
+      totalPages: Math.ceil(totalItems / limit),
+      currentPage,
+    };
   }
 }

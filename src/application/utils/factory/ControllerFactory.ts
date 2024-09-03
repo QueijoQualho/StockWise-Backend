@@ -14,7 +14,11 @@ class ControllerFactory {
   private fileService = new FileService();
 
   createItemController(): ItemController {
-    const itemService = new ItemService(this.itemRepository, this.fileService, this.salaRepository);
+    const itemService = new ItemService(
+      this.itemRepository,
+      this.fileService,
+      this.salaRepository,
+    );
     return new ItemController(itemService);
   }
 
@@ -24,7 +28,10 @@ class ControllerFactory {
   }
 
   createSeedController(): SeedController {
-    const seedService = new SeedService(this.itemRepository, this.salaRepository);
+    const seedService = new SeedService(
+      this.itemRepository,
+      this.salaRepository,
+    );
     return new SeedController(seedService);
   }
 }

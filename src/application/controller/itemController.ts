@@ -1,8 +1,15 @@
-import { ItemUpdateDTO } from '@dto/index';
-import { ItemService } from '@service/itemService';
-import { BadRequestError, NotFoundError } from '@utils/errors';
-import { badRequest, noContent, notFound, ok, serverError } from '@utils/httpErrors';
-import { Request, Response } from 'express';
+import { ItemUpdateDTO } from "@dto/index";
+import { ItemService } from "@service/itemService";
+import { BadRequestError, NotFoundError } from "@utils/errors";
+import {
+  badRequest,
+  noContent,
+  notFound,
+  ok,
+  serverError,
+} from "@utils/httpErrors";
+import { PaginationParams } from "@utils/interfaces";
+import { Request, Response } from "express";
 
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
@@ -13,10 +20,12 @@ export class ItemController {
 
   async getItem(req: Request, res: Response): Promise<void> {
     try {
-      const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
+      const pagination: PaginationParams = {
+        page: parseInt(req.query.page as string, 10) || 1,
+        limit: parseInt(req.query.limit as string, 10) || 10,
+      };
 
-      const items = await this.itemService.getPaginatedItems(page, limit);
+      const items = await this.itemService.getPaginatedItems(pagination);
       return ok(res, items);
     } catch (error: any) {
       if (error instanceof NotFoundError) return noContent(res);

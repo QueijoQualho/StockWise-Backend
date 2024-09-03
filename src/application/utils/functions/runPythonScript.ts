@@ -11,7 +11,10 @@ async function installDependencies(requirementsPath: string): Promise<void> {
   }
 }
 
-export default async function runPythonScript(scriptPath: string, requirementsPath: string): Promise<any> {
+export default async function runPythonScript(
+  scriptPath: string,
+  requirementsPath: string,
+): Promise<any> {
   try {
     await installDependencies(requirementsPath);
 

@@ -9,6 +9,7 @@ import {
   ok,
   serverError,
 } from "@utils/httpErrors";
+import { PaginationParams } from "@utils/interfaces";
 import { Request, Response } from "express";
 
 export class SalaController {
@@ -20,10 +21,12 @@ export class SalaController {
 
   async getSala(req: Request, res: Response): Promise<void> {
     try {
-      const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
+      const pagination: PaginationParams = {
+        page: parseInt(req.query.page as string, 10) || 1,
+        limit: parseInt(req.query.limit as string, 10) || 10,
+      };
 
-      const salas = await this.salaService.getPaginatedSalas(page, limit);
+      const salas = await this.salaService.getPaginatedSalas(pagination);
       return ok(res, salas);
     } catch (error: any) {
       if (error instanceof NotFoundError) return noContent(res);
@@ -86,15 +89,20 @@ export class SalaController {
     }
   }
 
-  async getItensSala(req: Request, res: Response) {
+  async getItensSala(req: Request, res: Response): Promise<void> {
     const salaLocalizacao = this.extractSalaId(req.params.id);
-    if (!salaLocalizacao) return badRequest(res, new BadRequestError("Invalid sala ID"));
+    if (!salaLocalizacao)
+      return badRequest(res, new BadRequestError("Invalid sala ID"));
     try {
+      const pagination: PaginationParams = {
+        page: parseInt(req.query.page as string, 10) || 1,
+        limit: parseInt(req.query.limit as string, 10) || 10,
+      };
 
-      const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
-
-      const itens = await this.salaService.getPaginatedItensSala(salaLocalizacao, page, limit);
+      const itens = await this.salaService.getPaginatedItensSala(
+        salaLocalizacao,
+        pagination,
+      );
       return ok(res, itens);
     } catch (error: any) {
       if (error instanceof NotFoundError) return notFound(res, error);
