@@ -26,7 +26,7 @@ export const serverError = (res: Response, error: any): void => {
   logger.error({ error }, "Server Error");
   res.status(500).json({
     status: 500,
-    message: "Internal server error",
+    message: error.message,
   } as ErrorResponse);
 };
 

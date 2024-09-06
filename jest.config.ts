@@ -17,6 +17,7 @@ const config: Config = {
     '^@model/(.*)$': '<rootDir>/src/domain/model/$1',
     '^@repository/(.*)$': '<rootDir>/src/domain/repository/$1',
     '^@dto/(.*)$': '<rootDir>/src/domain/dto/$1',
+    '^@tests/(.*)$': '<rootDir>/src/tests/$1',
   },
   // collectCoverage: true,
   // collectCoverageFrom: ['src/**/*.{ts,js}', '!src/**/*.d.ts'],
