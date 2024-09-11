@@ -21,7 +21,7 @@ export class Item {
   id: number;
 
   @Column({ name: "external_id", nullable: true })
-  externalId?: string;
+  externalId?: number;
 
   @Column({ name: "nome" })
   nome: string;

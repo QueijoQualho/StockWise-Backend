@@ -19,7 +19,7 @@ export class ItemService {
   }
 
   async findOne(id: number): Promise<Item | null> {
-    return this.repository.findOneBy({ id }) || null;
+    return this.repository.findOneBy({ externalId: id }) || null;
   }
 
   async update(
