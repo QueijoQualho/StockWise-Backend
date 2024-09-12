@@ -1,13 +1,12 @@
-import { SalaDTO, SalaUpdateDTO } from "@dto/index";
+import { SalaUpdateDTO } from "@dto/index";
 import { SalaService } from "@service/salaService";
 import { BadRequestError, NotFoundError } from "@utils/errors";
 import {
   badRequest,
-  created,
   noContent,
   notFound,
   ok,
-  serverError,
+  serverError
 } from "@utils/httpErrors";
 import { PaginationParams } from "@utils/interfaces";
 import { Request, Response } from "express";
@@ -48,17 +47,17 @@ export class SalaController {
     }
   }
 
-  async createSala(req: Request, res: Response): Promise<void> {
-    const salaDTO = Object.assign(new SalaDTO(), req.body);
+  // async createSala(req: Request, res: Response): Promise<void> {
+  //   const salaDTO = Object.assign(new SalaDTO(), req.body);
 
-    try {
-      const result = await this.salaService.create(salaDTO);
-      return created(res, result);
-    } catch (error: any) {
-      if (error instanceof BadRequestError) return badRequest(res, error);
-      return serverError(res, error);
-    }
-  }
+  //   try {
+  //     const result = await this.salaService.create(salaDTO);
+  //     return created(res, result);
+  //   } catch (error: any) {
+  //     if (error instanceof BadRequestError) return badRequest(res, error);
+  //     return serverError(res, error);
+  //   }
+  // }
 
   async updateSala(req: Request, res: Response): Promise<void> {
     const salaId = this.extractSalaId(req.params.id);

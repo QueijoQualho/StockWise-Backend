@@ -3,8 +3,8 @@ import { ItemRepositoryType } from "@repository/itemRepository";
 import { SalaRepositoryType } from "@repository/salaRepository";
 import { FileService } from "@service/fileService";
 import { ItemService } from "@service/itemService";
-import { expectErrorHandling } from "@tests/helpers/testUtils";
-import { mockFileService, mockItem, mockRepositories } from "@tests/mocks/mockData";
+import { expectErrorHandling } from "@tests/utils/helpers/testUtils";
+import { mockFileService, mockItem, mockRepositories } from "@tests/utils/mocks/mockData";
 import { BadRequestError, NotFoundError, ServerError } from "@utils/errors";
 import { Request, Response } from "express";
 

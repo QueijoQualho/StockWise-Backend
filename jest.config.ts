@@ -19,10 +19,10 @@ const config: Config = {
     '^@dto/(.*)$': '<rootDir>/src/domain/dto/$1',
     '^@tests/(.*)$': '<rootDir>/src/tests/$1',
   },
-  // collectCoverage: true,
-  // collectCoverageFrom: ['src/**/*.{ts,js}', '!src/**/*.d.ts'],
-  // coverageDirectory: 'coverage',
-  // coverageReporters: ['text', 'lcov'],
+  collectCoverage: true,
+  collectCoverageFrom: ['src/**/*.{ts,js}', '!src/**/*.d.ts'],
+  coverageDirectory: 'coverage',
+  coverageReporters: ['text', 'lcov'],
 };
 
 export default config;
