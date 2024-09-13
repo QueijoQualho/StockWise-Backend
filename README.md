@@ -14,7 +14,8 @@ StockWise é um sistema para realizar o inventario do SENAI Ricardo Lerner de ma
 Antes de começar, verifique se você tem as seguintes ferramentas instaladas:
 
 - [Docker](https://docs.docker.com/get-docker/)
-- [Node.js](https://nodejs.org/) 
+- [Node.js](https://nodejs.org/)
+- [Python](https://www.python.org/downloads/) 
 
 ## Configuração do Ambiente de Desenvolvimento
 
@@ -22,7 +23,7 @@ Antes de começar, verifique se você tem as seguintes ferramentas instaladas:
 
     ```bash
     git clone https://github.com/QueijoQualho/TCC-Senai.git
-    cd seu-repositorio
+    cd TCC-Senai
     ```
 
 2. **Instale as Dependências**
@@ -40,6 +41,7 @@ Antes de começar, verifique se você tem as seguintes ferramentas instaladas:
     Para Buildar o Docker e rodar o contêiner Docker:
 
     ```bash
+    cd docker
     docker-compose up --build
     ```
 
