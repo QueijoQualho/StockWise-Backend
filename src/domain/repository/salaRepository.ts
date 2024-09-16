@@ -1,6 +1,6 @@
 import { Sala } from "@model/salaEntity";
-import Database from "src/domain/singleton/database";
 import { EntityManager, Repository } from "typeorm";
+import Database from "../singleton/database";
 
 export type SalaRepositoryType = Repository<Sala>;
 const databaseInstance = Database.getInstance();

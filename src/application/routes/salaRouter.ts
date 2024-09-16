@@ -1,8 +1,7 @@
 import upload from "@config/multer";
 import { controllerFactory } from "@utils/factory/ControllerFactory";
 import { validateUpdateItem } from "@validation/ItemValidation";
-import { validateCreateSala } from "@validation/salaValidation";
-import { Router, Request, Response } from "express";
+import { Request, Response, Router } from "express";
 
 export default (router: Router): void => {
   const salaController = controllerFactory.createSalaController();
@@ -19,12 +18,12 @@ export default (router: Router): void => {
     salaController.getItensSala(req, res),
   );
 
-  router.post(
-    "/salas",
-    upload.single("file"),
-    validateCreateSala,
-    (req: Request, res: Response) => salaController.createSala(req, res),
-  );
+  // router.post(
+  //   "/salas",
+  //   upload.single("file"),
+  //   validateCreateSala,
+  //   (req: Request, res: Response) => salaController.createSala(req, res),
+  // );
 
   router.patch(
     "/salas/:id",

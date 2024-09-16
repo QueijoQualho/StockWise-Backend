@@ -1,6 +1,6 @@
 import { Item } from "@model/itemEntity";
-import Database from "src/domain/singleton/database";
 import { EntityManager, Repository } from "typeorm";
+import Database from "../singleton/database";
 
 export type ItemRepositoryType = Repository<Item>;
 const databaseInstance = Database.getInstance();

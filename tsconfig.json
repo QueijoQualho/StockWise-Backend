@@ -29,6 +29,7 @@
       "@repository/*": ["src/domain/repository/*"],
       "@dto/*": ["src/domain/dto/*"],
 
+      "@tests/*": ["src/tests/*"]
     }
   },
   "include": ["src/**/*"],

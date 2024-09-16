@@ -10,6 +10,7 @@ async function startServer() {
   try {
     const database = Database.getInstance();
     await database.initialize();
+    logger.info("Conexão com o banco de dados estabelecida.");
 
     app.listen(env.port, () => {
       logger.info("Servidor na porta", env.port);
