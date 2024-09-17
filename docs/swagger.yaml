@@ -7,7 +7,7 @@ servers:
   - url: http://localhost:3000/api
     description: Local server
 paths:
-  /items:
+  /itens:
     get:
       summary: Retrieve all items
       tags:
@@ -37,10 +37,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ItemDTO"
+                $ref: "#/components/schemas/Item"
         "400":
           description: Validation error or file upload error
-  /items/{id}:
+  /itens/{id}:
     get:
       summary: Get item by ID
       tags:
@@ -131,7 +131,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SalaDTO"
+                $ref: "#/components/schemas/Sala"
         "400":
           description: Validation error
   /salas/{id}:
@@ -207,6 +207,7 @@ components:
           type: string
         dataDeIncorporacao:
           type: string
+          format: date
         status:
           type: string
           enum:
@@ -219,11 +220,17 @@ components:
           type: integer
     ItemDTO:
       type: object
+      required:
+        - nome
+        - dataDeIncorporacao
+        - status
+        - salaId
       properties:
         nome:
           type: string
         dataDeIncorporacao:
           type: string
+          format: date
         status:
           type: string
           enum:
@@ -241,6 +248,7 @@ components:
           type: string
         dataDeIncorporacao:
           type: string
+          format: date
         status:
           type: string
           enum:
@@ -254,12 +262,18 @@ components:
     Sala:
       type: object
       properties:
+        id:
+          type: integer
+          example: 1
         localizacao:
           type: integer
         nome:
           type: string
     SalaDTO:
       type: object
+      required:
+        - localizacao
+        - nome
       properties:
         localizacao:
           type: integer

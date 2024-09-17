@@ -1,2 +1,24 @@
+# Node modules
 node_modules
-dist
+
+# Diretórios de cache
+*.log
+*.tmp
+*.cache
+
+# Diretórios do Python
+python/
+
+# Arquivos de configuração
+.env
+.env.example
+
+# Diretórios de build
+coverage/
+build/
+dist/
+
+# Arquivos específicos do Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
