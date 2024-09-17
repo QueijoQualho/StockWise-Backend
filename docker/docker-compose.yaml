@@ -27,6 +27,28 @@ services:
     networks:
       - banco_net
 
+  # app:
+  #   build:
+  #     context: ../
+  #     dockerfile: ./docker/Dockerfile
+  #   container_name: StockWise
+  #   depends_on:
+  #     - postgres
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - banco_net
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ../:/src
+  #   environment:
+  #     - NODE_ENV=production
+  #     - TYPEORM_HOST=postgres
+  #     - TYPEORM_PORT=5432
+  #     - TYPEORM_USERNAME=root
+  #     - TYPEORM_PASSWORD=root
+  #     - TYPEORM_DATABASE=postgres
+
 networks:
   banco_net:
     driver: bridge

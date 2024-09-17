@@ -1,0 +1,24 @@
+# Use a imagem base do Node.js
+FROM node:latest
+
+# Defina o diretório de trabalho
+WORKDIR /src
+
+# Copie os arquivos de configuração do Node.js
+COPY package*.json ./
+
+# Instale as dependências do Node.js
+RUN npm install
+
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip && \
+    apt-get clean
+
+# Copie o restante dos arquivos do projeto
+COPY . .
+
+# Exponha a porta que o aplicativo vai usar
+EXPOSE 3000
+
+# Comando para iniciar o aplicativo Node.js
+CMD ["npm", "run", "start"]
