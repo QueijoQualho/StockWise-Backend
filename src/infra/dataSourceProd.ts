@@ -11,7 +11,7 @@ const connectionOptions: DataSourceOptions = {
   entities: [__dirname + "/../domain/model/*.{js,ts}"],
   migrations: [__dirname + "/migrations/*.{js,ts}"],
   synchronize: false,
-  logging: true,
+  logging: false,
 };
 
 export default new DataSource({

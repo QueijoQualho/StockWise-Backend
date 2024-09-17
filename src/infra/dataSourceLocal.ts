@@ -8,7 +8,7 @@ const connectionOptions: DataSourceOptions = {
   password: "root",
   database: "tcc",
   synchronize: false,
-  logging: true,
+  logging: false,
   entities: [__dirname + "/../domain/model/*.{js,ts}"],
   migrations: [__dirname + "/migrations/*.{js,ts}"],
 };
