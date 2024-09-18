@@ -1,24 +1,15 @@
+import env from "@config/env";
 import { exec } from "child_process";
 import { promisify } from "util";
 
 const execPromise = promisify(exec);
 
-async function installDependencies(requirementsPath: string): Promise<void> {
-  try {
-    await execPromise(`pip install -r ${requirementsPath}`);
-  } catch (error: any) {
-    throw new Error(`Failed to install dependencies: ${error.message}`);
-  }
-}
-
 export default async function runPythonScript(
   scriptPath: string,
-  requirementsPath: string,
 ): Promise<any> {
   try {
-    await installDependencies(requirementsPath);
-
-    const { stdout, stderr } = await execPromise(`python ${scriptPath}`);
+    const comand = env.nodeEnv === "production" ? "/usr/src/app/python/venv/bin/python" : "python\\venv\\Scripts\\python"
+    const { stdout, stderr } = await execPromise(`${comand} ${scriptPath}`);
     if (stderr) {
       throw new Error(`stderr: ${stderr}`);
     }

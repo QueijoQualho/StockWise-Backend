@@ -26,10 +26,8 @@ export class SeedController {
   async seedSalas(_: Request, res: Response): Promise<void> {
     try {
       const scriptPath = path.resolve(__dirname + "../../../../python/seeder.py",);
-      const requirementsPath = path.resolve(__dirname + "../../../../python/requirements.txt",);
       const output: Output = await runPythonScript(
         scriptPath,
-        requirementsPath,
       );
 
       for (const sala_id in output) {

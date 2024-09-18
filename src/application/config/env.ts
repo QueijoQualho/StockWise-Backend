@@ -10,6 +10,7 @@ const {
   TYPEORM_PASSWORD,
   TYPEORM_DATABASE,
   TYPEORM_PORT,
+  TYPEORM_URL
 } = process.env;
 
 const env = {
@@ -21,6 +22,7 @@ const env = {
     password: String(TYPEORM_PASSWORD),
     database: String(TYPEORM_DATABASE),
     port: Number(TYPEORM_PORT),
+    url: String(TYPEORM_URL)
   },
 };
 
