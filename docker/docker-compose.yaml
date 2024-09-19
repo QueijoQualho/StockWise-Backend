@@ -15,27 +15,15 @@ services:
       - banco_net
     restart: unless-stopped
 
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: root@root.com
-      PGADMIN_DEFAULT_PASSWORD: root
-    ports:
-      - "8081:80"
-    depends_on:
-      - postgres
-    networks:
-      - banco_net
-
-  # app:
-  #   build:
-  #     context: ../
-  #     dockerfile: ./docker/Dockerfile
-  #   container_name: StockWise
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: root@root.com
+  #     PGADMIN_DEFAULT_PASSWORD: root
+  #   ports:
+  #     - "8081:80"
   #   depends_on:
   #     - postgres
-  #   ports:
-  #     - "3000:3000"
   #   networks:
   #     - banco_net
 
@@ -61,7 +49,7 @@ services:
       - TYPEORM_PASSWORD=root
       - TYPEORM_DATABASE=tcc
       - TYPEORM_PORT=5432
-      - TYPEORM_URL=aaa
+      - TYPEORM_URL=aa
 
 
 networks:
