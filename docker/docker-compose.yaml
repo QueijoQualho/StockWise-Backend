@@ -43,11 +43,14 @@ services:
       - ../:/src
     environment:
       - NODE_ENV=production
-      - TYPEORM_HOST=postgres
-      - TYPEORM_PORT=5432
+      - PORT=3000
+      - TYPEORM_HOST=localhost
       - TYPEORM_USERNAME=root
       - TYPEORM_PASSWORD=root
-      - TYPEORM_DATABASE=postgres
+      - TYPEORM_DATABASE=tcc
+      - TYPEORM_PORT=5432
+      - TYPEORM_URL=aaa
+
 
 networks:
   banco_net:
