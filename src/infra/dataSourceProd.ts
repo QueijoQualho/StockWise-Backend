@@ -1,5 +1,5 @@
-import env from '@config/env';
-import { DataSource, DataSourceOptions } from 'typeorm';
+import env from "@config/env";
+import { DataSource, DataSourceOptions } from "typeorm";
 
 const connectionOptions: DataSourceOptions = {
   type: "postgres",

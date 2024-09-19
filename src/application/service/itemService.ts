@@ -12,7 +12,7 @@ export class ItemService {
     private readonly repository: ItemRepositoryType,
     private readonly fileService: FileService,
     private readonly salaRepository: SalaRepositoryType,
-  ) { }
+  ) {}
 
   async findAll(): Promise<Item[]> {
     return this.repository.find();
@@ -46,7 +46,9 @@ export class ItemService {
     ]);
   }
 
-  async getPaginatedItems(pagination: PaginationParams): Promise<Pageable<Item>> {
+  async getPaginatedItems(
+    pagination: PaginationParams,
+  ): Promise<Pageable<Item>> {
     const { page, limit } = pagination;
     const [items, total] = await this.repository.findAndCount({
       skip: this.calculateOffset(page, limit),
@@ -72,7 +74,11 @@ export class ItemService {
   ): Promise<void> {
     if (!file) return;
 
-    const fileUrlOrError = await this.fileService.processFileHandling(file, item.id, this);
+    const fileUrlOrError = await this.fileService.processFileHandling(
+      file,
+      item.id,
+      this,
+    );
     if (fileUrlOrError instanceof BadRequestError) throw fileUrlOrError;
 
     if (fileUrlOrError !== item.url) {
@@ -94,7 +100,12 @@ export class ItemService {
     return (page - 1) * limit;
   }
 
-  private createPageable<T>(data: T[], totalItems: number, currentPage: number, limit: number): Pageable<T> {
+  private createPageable<T>(
+    data: T[],
+    totalItems: number,
+    currentPage: number,
+    limit: number,
+  ): Pageable<T> {
     return {
       data,
       totalItems,

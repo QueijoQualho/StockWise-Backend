@@ -38,16 +38,31 @@ services:
   #     - "3000:3000"
   #   networks:
   #     - banco_net
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ../:/src
-  #   environment:
-  #     - NODE_ENV=production
-  #     - TYPEORM_HOST=postgres
-  #     - TYPEORM_PORT=5432
-  #     - TYPEORM_USERNAME=root
-  #     - TYPEORM_PASSWORD=root
-  #     - TYPEORM_DATABASE=postgres
+
+  app:
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    container_name: StockWise
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+    networks:
+      - banco_net
+    restart: unless-stopped
+    volumes:
+      - ../:/src
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - TYPEORM_HOST=localhost
+      - TYPEORM_USERNAME=root
+      - TYPEORM_PASSWORD=root
+      - TYPEORM_DATABASE=tcc
+      - TYPEORM_PORT=5432
+      - TYPEORM_URL=aaa
+
 
 networks:
   banco_net:

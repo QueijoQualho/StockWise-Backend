@@ -1,10 +1,16 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import "reflect-metadata";
-import "tsconfig-paths/register";
+
+if (process.env.NODE_ENV === "production") {
+  require("module-alias/register");
+} else {
+  require("tsconfig-paths/register");
+}
 
 import app from "@config/app";
 import env from "@config/env";
 import logger from "@config/logger";
-import Database from "src/domain/singleton/database";
+import Database from "./domain/singleton/database";
 
 async function startServer() {
   try {

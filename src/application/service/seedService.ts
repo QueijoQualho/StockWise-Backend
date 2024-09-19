@@ -7,7 +7,7 @@ export class SeedService {
   constructor(
     private readonly itemRepository: ItemRepositoryType,
     private readonly salaRepository: SalaRepositoryType,
-  ) { }
+  ) {}
 
   async saveSala(data: any): Promise<Sala> {
     const newSala = this.createSala(data);
