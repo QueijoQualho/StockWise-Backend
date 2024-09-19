@@ -6,7 +6,7 @@ import { NotFoundError } from "@utils/errors";
 import { Pageable, PaginationParams } from "@utils/interfaces";
 
 export class SalaService {
-  constructor(private readonly repository: SalaRepositoryType) { }
+  constructor(private readonly repository: SalaRepositoryType) {}
 
   async findAll(): Promise<Sala[]> {
     return this.repository.find();
@@ -33,7 +33,9 @@ export class SalaService {
     await this.repository.delete(sala.id);
   }
 
-  async getPaginatedSalas(pagination: PaginationParams): Promise<Pageable<Sala>> {
+  async getPaginatedSalas(
+    pagination: PaginationParams,
+  ): Promise<Pageable<Sala>> {
     const { page, limit } = pagination;
     const [salas, total] = await this.repository.findAndCount({
       skip: this.calculateOffset(page, limit),
@@ -50,7 +52,12 @@ export class SalaService {
     const sala = await this.getSalaWithItemsOrThrow(localizacao);
     const itensPagina = this.paginateArray(sala.itens, pagination);
 
-    return this.createPageable(itensPagina, sala.itens.length, pagination.page, pagination.limit);
+    return this.createPageable(
+      itensPagina,
+      sala.itens.length,
+      pagination.page,
+      pagination.limit,
+    );
   }
 
   // ======================================
@@ -88,7 +95,12 @@ export class SalaService {
     return items.slice(startIndex, endIndex);
   }
 
-  private createPageable<T>(data: T[], totalItems: number, currentPage: number, limit: number): Pageable<T> {
+  private createPageable<T>(
+    data: T[],
+    totalItems: number,
+    currentPage: number,
+    limit: number,
+  ): Pageable<T> {
     return {
       data,
       totalItems,

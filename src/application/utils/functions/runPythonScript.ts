@@ -8,7 +8,10 @@ export default async function runPythonScript(
   scriptPath: string,
 ): Promise<any> {
   try {
-    const comand = env.nodeEnv === "production" ? "/usr/src/app/python/venv/bin/python" : "python\\venv\\Scripts\\python"
+    const comand =
+      env.nodeEnv === "production"
+        ? "/usr/src/app/python/venv/bin/python"
+        : "python\\venv\\Scripts\\python";
     const { stdout, stderr } = await execPromise(`${comand} ${scriptPath}`);
     if (stderr) {
       throw new Error(`stderr: ${stderr}`);

@@ -13,7 +13,7 @@ app.use(compression({ level: 9 }));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static(path.join(__dirname, '../../../uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "../../../uploads")));
 
 routes(app);
 setupSwagger(app);

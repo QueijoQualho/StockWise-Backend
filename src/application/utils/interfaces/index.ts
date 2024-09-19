@@ -4,8 +4,8 @@ export interface PaginationParams {
 }
 
 export interface Pageable<T> {
-  data: T[],
-  totalItems: number,
-  totalPages: number,
-  currentPage: number,
+  data: T[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
 }

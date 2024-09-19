@@ -6,13 +6,13 @@ import {
   noContent,
   notFound,
   ok,
-  serverError
+  serverError,
 } from "@utils/httpErrors";
 import { PaginationParams } from "@utils/interfaces";
 import { Request, Response } from "express";
 
 export class SalaController {
-  constructor(private readonly salaService: SalaService) { }
+  constructor(private readonly salaService: SalaService) {}
 
   // ======================================
   // = CRUD =

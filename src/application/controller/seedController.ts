@@ -21,14 +21,14 @@ interface Sala {
 type Output = Record<string, Sala>;
 
 export class SeedController {
-  constructor(private readonly seedService: SeedService) { }
+  constructor(private readonly seedService: SeedService) {}
 
   async seedSalas(_: Request, res: Response): Promise<void> {
     try {
-      const scriptPath = path.resolve(__dirname + "../../../../python/seeder.py",);
-      const output: Output = await runPythonScript(
-        scriptPath,
+      const scriptPath = path.resolve(
+        __dirname + "../../../../python/seeder.py",
       );
+      const output: Output = await runPythonScript(scriptPath);
 
       for (const sala_id in output) {
         if (output.hasOwnProperty(sala_id)) {
