@@ -1,17 +1,13 @@
-# Etapa de build para o Node.js
 FROM node:18-alpine AS build
 
 WORKDIR /app
 
 COPY package*.json ./
-
 RUN npm install
 
 COPY . .
-
 RUN npm run build
 
-# Etapa de execução
 FROM node:18-alpine
 
 RUN apk update && \
@@ -21,7 +17,6 @@ RUN apk update && \
 WORKDIR /app
 
 COPY package*.json ./
-
 RUN npm install --only=production
 
 COPY --from=build /app/dist ./dist
@@ -29,7 +24,8 @@ COPY docs ./docs
 COPY python ./python
 
 RUN /usr/src/app/python/venv/bin/pip install --upgrade pip && \
-    /usr/src/app/python/venv/bin/pip install -r python/requirements.txt
+    /usr/src/app/python/venv/bin/pip install -r python/requirements.txt && \
+    rm -rf /root/.cache
 
 EXPOSE 3000
 
