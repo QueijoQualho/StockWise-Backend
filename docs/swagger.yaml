@@ -23,26 +23,26 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Item"
-    post:
-      summary: Create a new item
-      tags:
-        - Items
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ItemDTO"
-      responses:
-        "201":
-          description: Item created successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Item"
-        "400":
-          description: Validation error or file upload error
-  /itens/{id}:
+    # post:
+    #   summary: Create a new item
+    #   tags:
+    #     - Items
+    #   requestBody:
+    #     required: true
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: "#/components/schemas/ItemDTO"
+    #   responses:
+    #     "201":
+    #       description: Item created successfully
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: "#/components/schemas/Item"
+    #     "400":
+    #       description: Validation error or file upload error
+  /itens/{externalId}:
     get:
       summary: Get item by ID
       tags:
@@ -117,26 +117,26 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Sala"
-    post:
-      summary: Create a new sala
-      tags:
-        - Salas
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/SalaDTO"
-      responses:
-        "201":
-          description: Sala created successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Sala"
-        "400":
-          description: Validation error
-  /salas/{id}:
+    # post:
+    #   summary: Create a new sala
+    #   tags:
+    #     - Salas
+    #   requestBody:
+    #     required: true
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: "#/components/schemas/SalaDTO"
+    #   responses:
+    #     "201":
+    #       description: Sala created successfully
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: "#/components/schemas/Sala"
+    #     "400":
+    #       description: Validation error
+  /salas/{localizacao}:
     get:
       summary: Get sala by ID
       tags:
@@ -197,6 +197,31 @@ paths:
           description: Sala deleted successfully
         "404":
           description: Sala not found
+  /salas/{localizacao}/itens:
+    get:
+      summary: Retrieve all items for a specific sala
+      tags:
+        - Salas
+      parameters:
+        - in: path
+          name: localizacao
+          required: true
+          schema:
+            type: integer
+          description: Localização da sala
+      responses:
+        "200":
+          description: List of items for the specified sala
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+        "404":
+          description: Sala not found
+        "400":
+          description: Invalid localizacao parameter
 components:
   schemas:
     Item:
