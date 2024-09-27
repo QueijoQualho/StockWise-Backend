@@ -9,8 +9,8 @@ const connectionOptions: DataSourceOptions = {
   password: env.typeorm.password,
   database: env.typeorm.database,
   entities: [__dirname + "/../domain/model/*.{js,ts}"],
-  migrations: [__dirname + "/migrations/*.{js,ts}"],
-  synchronize: false,
+  migrations: [__dirname + "/db/migrations/*.{js,ts}"],
+  synchronize: true,
   logging: false,
 };
 

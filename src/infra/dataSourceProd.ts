@@ -5,7 +5,7 @@ const connectionOptions: DataSourceOptions = {
   type: "postgres",
   url: env.typeorm.url,
   entities: [__dirname + "/../domain/model/*.{js,ts}"],
-  migrations: [__dirname + "/migrations/*.{js,ts}"],
+  migrations: [__dirname + "/db/migrations/*.{js,ts}"],
   synchronize: false,
   logging: false,
   ssl: true,
