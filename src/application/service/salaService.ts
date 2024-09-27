@@ -1,7 +1,7 @@
 import { SalaDTO, SalaUpdateDTO } from "@dto/index";
 import { Item } from "@model/itemEntity";
 import { Sala } from "@model/salaEntity";
-import { SalaRepositoryType } from "@repository/salaRepository";
+import { SalaRepositoryType } from "@infra/repository/salaRepository";
 import { NotFoundError } from "@utils/errors";
 import { Pageable, PaginationParams } from "@utils/interfaces";
 

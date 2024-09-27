@@ -1,5 +1,5 @@
 import { SalaController } from "@controller/salaController";
-import { SalaRepositoryType } from "@repository/salaRepository";
+import { SalaRepositoryType } from "@infra/repository/salaRepository";
 import { SalaService } from "@service/salaService";
 import { expectErrorHandling } from "@tests/utils/helpers/testUtils";
 import {

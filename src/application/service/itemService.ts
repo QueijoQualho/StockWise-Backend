@@ -1,8 +1,8 @@
 import { ItemUpdateDTO } from "@dto/index";
 import { Item } from "@model/itemEntity";
 import { Sala } from "@model/salaEntity";
-import { ItemRepositoryType } from "@repository/itemRepository";
-import { SalaRepositoryType } from "@repository/salaRepository";
+import { ItemRepositoryType } from "@infra/repository/itemRepository";
+import { SalaRepositoryType } from "@infra/repository/salaRepository";
 import { FileService } from "@service/fileService";
 import { BadRequestError, NotFoundError } from "@utils/errors";
 import { Pageable, PaginationParams } from "@utils/interfaces";

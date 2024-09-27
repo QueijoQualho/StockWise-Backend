@@ -1,7 +1,7 @@
 import logger from "@config/logger";
 import { Sala } from "@model/salaEntity";
-import { ItemRepositoryType } from "@repository/itemRepository";
-import { SalaRepositoryType } from "@repository/salaRepository";
+import { ItemRepositoryType } from "@infra/repository/itemRepository";
+import { SalaRepositoryType } from "@infra/repository/salaRepository";
 
 export class SeedService {
   constructor(

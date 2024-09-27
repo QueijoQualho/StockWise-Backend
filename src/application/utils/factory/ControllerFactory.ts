@@ -1,8 +1,8 @@
 import { ItemController } from "@controller/itemController";
 import { SalaController } from "@controller/salaController";
 import { SeedController } from "@controller/seedController";
-import { getItemRepository } from "@repository/itemRepository";
-import { getSalaRepository } from "@repository/salaRepository";
+import { getItemRepository } from "@infra/repository/itemRepository";
+import { getSalaRepository } from "@infra/repository/salaRepository";
 import { FileService } from "@service/fileService";
 import { ItemService } from "@service/itemService";
 import { SalaService } from "@service/salaService";
