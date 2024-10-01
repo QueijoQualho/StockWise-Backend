@@ -18,7 +18,18 @@ export class SalaController {
   // = CRUD =
   // ======================================
 
-  async getSala(req: Request, res: Response): Promise<void> {
+
+  async getSalas(req: Request, res: Response): Promise<void> {
+    try {
+      const salas = await this.salaService.findAll();
+      return ok(res, salas);
+    } catch (error: any) {
+      if (error instanceof NotFoundError) return noContent(res);
+      return serverError(res, error);
+    }
+  }
+
+  async getSalasPaginated(req: Request, res: Response): Promise<void> {
     try {
       const pagination: PaginationParams = {
         page: parseInt(req.query.page as string, 10) || 1,

@@ -18,7 +18,17 @@ export class ItemController {
   // = CRUD =
   // ======================================
 
-  async getItem(req: Request, res: Response): Promise<void> {
+  async getItens(req: Request, res: Response): Promise<void> {
+    try {
+      const items = await this.itemService.findAll();
+      return ok(res, items);
+    } catch (error: any) {
+      if (error instanceof NotFoundError) return noContent(res);
+      return serverError(res, error);
+    }
+  }
+
+  async getItemPaginated(req: Request, res: Response): Promise<void> {
     try {
       const pagination: PaginationParams = {
         page: parseInt(req.query.page as string, 10) || 1,

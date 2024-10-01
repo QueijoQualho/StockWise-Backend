@@ -92,7 +92,7 @@ describe("ItemController", () => {
         .spyOn(itemService, "getPaginatedItems")
         .mockResolvedValue(paginatedItems);
 
-      await itemController.getItem(req as Request, res as Response);
+      await itemController.getItemPaginated(req as Request, res as Response);
 
       expect(itemService.getPaginatedItems).toHaveBeenCalledWith({
         page: 1,
@@ -107,7 +107,7 @@ describe("ItemController", () => {
         .spyOn(itemService, "getPaginatedItems")
         .mockRejectedValue(new NotFoundError("No items found"));
 
-      await itemController.getItem(req as Request, res as Response);
+      await itemController.getItemPaginated(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(204);
       expect(res.send).toHaveBeenCalled();

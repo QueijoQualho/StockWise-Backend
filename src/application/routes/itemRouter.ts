@@ -6,9 +6,14 @@ import { Request, Response, Router } from "express";
 export default (router: Router): void => {
   const itemController = controllerFactory.createItemController();
 
+  // router.get("/itens", (req: Request, res: Response) =>
+  //   itemController.getItens(req, res),
+  // );
+
   router.get("/itens", (req: Request, res: Response) =>
-    itemController.getItem(req, res),
+    itemController.getItemPaginated(req, res),
   );
+
   router.get("/itens/:id", (req: Request, res: Response) =>
     itemController.getItemByID(req, res),
   );

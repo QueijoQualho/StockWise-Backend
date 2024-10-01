@@ -7,7 +7,11 @@ export default (router: Router): void => {
   const salaController = controllerFactory.createSalaController();
 
   router.get("/salas", (req: Request, res: Response) =>
-    salaController.getSala(req, res),
+    salaController.getSalas(req, res),
+  );
+
+  router.get("/salas/paged", (req: Request, res: Response) =>
+    salaController.getSalasPaginated(req, res),
   );
 
   router.get("/salas/:id", (req: Request, res: Response) =>

@@ -42,6 +42,7 @@ paths:
     #             $ref: "#/components/schemas/Item"
     #     "400":
     #       description: Validation error or file upload error
+
   /itens/{externalId}:
     get:
       summary: Get item by ID
@@ -103,6 +104,18 @@ paths:
           description: Item deleted successfully
         "404":
           description: Item not found
+  /itens/paged:
+    get:
+      summary: List paginated itens
+      tags:
+        - Itens
+      responses:
+        "200":
+          description: Item data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
   /salas:
     get:
       summary: Retrieve all salas
@@ -197,6 +210,18 @@ paths:
           description: Sala deleted successfully
         "404":
           description: Sala not found
+  /salas/paged:
+    get:
+      summary: List paginated salas
+      tags:
+        - Salas
+      responses:
+        "200":
+          description: Sala data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Sala"
   /salas/{localizacao}/itens:
     get:
       summary: Retrieve all items for a specific sala
