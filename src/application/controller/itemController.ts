@@ -1,15 +1,9 @@
 import { ItemUpdateDTO } from "@dto/index";
 import { ItemService } from "@service/itemService";
 import { BadRequestError, NotFoundError } from "@utils/errors";
-import {
-  badRequest,
-  noContent,
-  notFound,
-  ok,
-  serverError,
-} from "@utils/httpErrors";
+import { noContent, ok } from "@utils/httpErrors";
 import { PaginationParams } from "@utils/interfaces";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
@@ -18,17 +12,11 @@ export class ItemController {
   // = CRUD =
   // ======================================
 
-  async getItens(req: Request, res: Response): Promise<void> {
-    try {
-      const items = await this.itemService.findAll();
-      return ok(res, items);
-    } catch (error: any) {
-      if (error instanceof NotFoundError) return noContent(res);
-      return serverError(res, error);
-    }
-  }
-
-  async getItemPaginated(req: Request, res: Response): Promise<void> {
+  async getItem(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const pagination: PaginationParams = {
         page: parseInt(req.query.page as string, 10) || 1,
@@ -38,40 +26,33 @@ export class ItemController {
       const items = await this.itemService.getPaginatedItems(pagination);
       return ok(res, items);
     } catch (error: any) {
-      if (error instanceof NotFoundError) return noContent(res);
-      return serverError(res, error);
+      next(error);
     }
   }
 
-  async getItemByID(req: Request, res: Response): Promise<void> {
+  async getItemByID(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     const itemId = this.extractItemId(req.params.id);
-    if (!itemId) return badRequest(res, new BadRequestError("Invalid item ID"));
+    if (!itemId) return next(new BadRequestError("Invalid item ID"));
 
     try {
       const item = await this.itemService.findOne(itemId);
-      return item
-        ? ok(res, item)
-        : notFound(res, new NotFoundError("Item not found"));
+      return item ? ok(res, item) : next(new NotFoundError("Item not found"));
     } catch (error: any) {
-      return serverError(res, error);
+      next(error);
     }
   }
 
-  // async createItem(req: Request, res: Response): Promise<void> {
-  //   const itemDTO = Object.assign(new ItemDTO(), req.body);
-
-  //   try {
-  //     const result = await this.itemService.create(itemDTO, req.file);
-  //     return created(res, result);
-  //   } catch (error: any) {
-  //     if (error instanceof BadRequestError) return badRequest(res, error);
-  //     return serverError(res, error);
-  //   }
-  // }
-
-  async updateItem(req: Request, res: Response): Promise<void> {
+  async updateItem(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     const itemId = this.extractItemId(req.params.id);
-    if (!itemId) return badRequest(res, new BadRequestError("Invalid item ID"));
+    if (!itemId) return next(new BadRequestError("Invalid item ID"));
 
     const updatedItemDTO = Object.assign(new ItemUpdateDTO(), req.body);
 
@@ -79,22 +60,23 @@ export class ItemController {
       await this.itemService.update(itemId, updatedItemDTO, req.file);
       return noContent(res);
     } catch (error: any) {
-      if (error instanceof BadRequestError) return badRequest(res, error);
-      if (error instanceof NotFoundError) return notFound(res, error);
-      return serverError(res, error);
+      next(error);
     }
   }
 
-  async deleteItem(req: Request, res: Response): Promise<void> {
+  async deleteItem(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     const itemId = this.extractItemId(req.params.id);
-    if (!itemId) return badRequest(res, new BadRequestError("Invalid item ID"));
+    if (!itemId) return next(new BadRequestError("Invalid item ID"));
 
     try {
       await this.itemService.delete(itemId);
       return noContent(res);
     } catch (error: any) {
-      if (error instanceof NotFoundError) return notFound(res, error);
-      return serverError(res, error);
+      next(error);
     }
   }
 

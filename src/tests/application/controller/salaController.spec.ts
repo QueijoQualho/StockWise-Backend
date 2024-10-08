@@ -1,5 +1,5 @@
 import { SalaController } from "@controller/salaController";
-import { SalaRepositoryType } from "@repository/salaRepository";
+import { SalaRepositoryType } from "@infra/repository/salaRepository";
 import { SalaService } from "@service/salaService";
 import { expectErrorHandling } from "@tests/utils/helpers/testUtils";
 import {
@@ -39,14 +39,12 @@ describe("SalaController", () => {
     jest.spyOn(salaService, "findOne").mockResolvedValue(mockSala);
     jest.spyOn(salaService, "update").mockResolvedValue(undefined);
     jest.spyOn(salaService, "delete").mockResolvedValue(undefined);
-    jest
-      .spyOn(salaService, "getPaginatedItensSala")
-      .mockResolvedValue({
-        data: [],
-        totalItems: 0,
-        totalPages: 1,
-        currentPage: 1,
-      });
+    jest.spyOn(salaService, "getPaginatedItensSala").mockResolvedValue({
+      data: [],
+      totalItems: 0,
+      totalPages: 1,
+      currentPage: 1,
+    });
   });
 
   const callControllerMethod = async (

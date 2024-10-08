@@ -26,7 +26,7 @@
       "@infra/*": ["src/infra/*"],
 
       "@model/*": ["src/domain/model/*"],
-      "@repository/*": ["src/domain/repository/*"],
+      "@repository/*": ["src/infra/repository/*"],
       "@dto/*": ["src/domain/dto/*"],
 
       "@tests/*": ["src/tests/*"]

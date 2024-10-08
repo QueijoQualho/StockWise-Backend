@@ -1,8 +1,11 @@
+import { AuthController } from "@controller/authController";
 import { ItemController } from "@controller/itemController";
 import { SalaController } from "@controller/salaController";
 import { SeedController } from "@controller/seedController";
-import { getItemRepository } from "@repository/itemRepository";
-import { getSalaRepository } from "@repository/salaRepository";
+import { getItemRepository } from "@infra/repository/itemRepository";
+import { getSalaRepository } from "@infra/repository/salaRepository";
+import { getUserRepository } from "@infra/repository/userRepository";
+import { AuthService } from "@service/authService";
 import { FileService } from "@service/fileService";
 import { ItemService } from "@service/itemService";
 import { SalaService } from "@service/salaService";
@@ -11,6 +14,7 @@ import { SeedService } from "@service/seedService";
 class ControllerFactory {
   private itemRepository = getItemRepository();
   private salaRepository = getSalaRepository();
+  private userRepository = getUserRepository();
   private fileService = new FileService();
 
   createItemController(): ItemController {
@@ -33,6 +37,11 @@ class ControllerFactory {
       this.salaRepository,
     );
     return new SeedController(seedService);
+  }
+
+  createUserController(): AuthController {
+    const authService = new AuthService(this.userRepository);
+    return new AuthController(authService);
   }
 }
 

@@ -10,10 +10,9 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "typeorm:run:prod": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/infra/dataSourceProd.ts migration:run",
     "typeorm:revert:prod": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/infra/dataSourceProd.ts migration:revert",
-    "typeorm:generate:prod": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/infra/dataSourceProd.ts migration:generate ./src/infra/migrations/default",
     "typeorm:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/infra/dataSourceLocal.ts migration:run",
     "typeorm:revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/infra/dataSourceLocal.ts migration:revert",
-    "typeorm:generate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/infra/dataSourceLocal.ts migration:generate ./src/infra/migrations/default",
+    "typeorm:generate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/infra/dataSourceLocal.ts migration:generate ./src/infra/db/migrations/default",
     "test": "jest",
     "test:watch": "jest --watch"
   },
@@ -23,6 +22,7 @@
   "description": "",
   "devDependencies": {
     "@eslint/js": "^9.8.0",
+    "@types/bcrypt": "^5.0.2",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
     "@types/compression": "^1.7.5",
@@ -51,6 +51,7 @@
     "typescript-eslint": "^8.0.0"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
     "class-transformer": "^0.5.1",

@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === "production") {
 import app from "@config/app";
 import env from "@config/env";
 import logger from "@config/logger";
-import Database from "./domain/singleton/database";
+import Database from "./infra/singleton/database";
 
 async function startServer() {
   try {

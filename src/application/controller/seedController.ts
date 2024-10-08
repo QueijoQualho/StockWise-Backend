@@ -1,8 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 import { SeedService } from "@service/seedService";
 import runPythonScript from "@utils/functions/runPythonScript";
-import { ok, serverError } from "@utils/httpErrors";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import path from "path";
 
 interface Item {
@@ -23,7 +22,11 @@ type Output = Record<string, Sala>;
 export class SeedController {
   constructor(private readonly seedService: SeedService) {}
 
-  async seedSalas(_: Request, res: Response): Promise<void> {
+  async seedSalas(
+    _: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const scriptPath = path.resolve(
         __dirname + "../../../../python/seeder.py",
@@ -37,10 +40,8 @@ export class SeedController {
           await this.seedService.saveSala(dados_sala);
         }
       }
-
-      ok(res, "Salas criadas com sucesso!");
     } catch (error: any) {
-      serverError(res, error);
+      next(error);
     }
   }
 }

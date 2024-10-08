@@ -1,6 +1,6 @@
 import { ItemController } from "@controller/itemController";
-import { ItemRepositoryType } from "@repository/itemRepository";
-import { SalaRepositoryType } from "@repository/salaRepository";
+import { ItemRepositoryType } from "@infra/repository/itemRepository";
+import { SalaRepositoryType } from "@infra/repository/salaRepository";
 import { FileService } from "@service/fileService";
 import { ItemService } from "@service/itemService";
 import { expectErrorHandling } from "@tests/utils/helpers/testUtils";
