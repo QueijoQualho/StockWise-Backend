@@ -1,26 +1,29 @@
 import { LoginDTO } from "@dto/user/loginDTO";
-import { ok, serverError } from "@utils/httpErrors";
-import { Request, Response } from "express";
-
+import { SignupDTO } from "@dto/user/signupDTO";
+import { AuthService } from "@service/authService";
+import { ok } from "@utils/httpErrors";
+import { NextFunction, Request, Response } from "express";
 
 export class AuthController {
-  constructor(private readonly authService: AuthService ) {}
+  constructor(private readonly authService: AuthService) {}
 
-  async login(req: Request, res: Response) {
+  async login(req: Request, res: Response, next: NextFunction) {
     try {
       const loginDTO = Object.assign(new LoginDTO(), req.body);
-      const token = this.authService.login(loginDTO)
-      ok(res,token)
+      const token = await this.authService.login(loginDTO);
+      ok(res, token);
     } catch (e) {
-      serverError(res, e)
+      next(e);
     }
   }
 
-  async signup(req: Request, res: Response) {
+  async signup(req: Request, res: Response, next: NextFunction) {
     try {
-
-    } catch (error) {
-
+      const signupDTO = Object.assign(new SignupDTO(), req.body);
+      const user = await this.authService.signup(signupDTO);
+      ok(res, user);
+    } catch (e) {
+      next(e);
     }
   }
 }
