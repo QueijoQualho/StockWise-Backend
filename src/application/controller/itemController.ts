@@ -12,7 +12,7 @@ export class ItemController {
   // = CRUD =
   // ======================================
 
-  async getItem(
+  async getItemPaginated(
     req: Request,
     res: Response,
     next: NextFunction,

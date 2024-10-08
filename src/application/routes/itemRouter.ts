@@ -6,12 +6,8 @@ import { NextFunction, Request, Response, Router } from "express";
 export default (router: Router): void => {
   const itemController = controllerFactory.createItemController();
 
-  // router.get("/itens", (req: Request, res: Response) =>
-  //   itemController.getItens(req, res),
-  // );
-
   router.get("/itens", (req: Request, res: Response, next: NextFunction) =>
-    itemController.getItem(req, res, next),
+    itemController.getItemPaginated(req, res, next),
   );
 
   router.get("/itens/:id", (req: Request, res: Response, next: NextFunction) =>
