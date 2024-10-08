@@ -1,7 +1,7 @@
 import { LoginDTO } from "@dto/user/loginDTO";
 import { SignupDTO } from "@dto/user/signupDTO";
 import { AuthService } from "@service/authService";
-import { ok } from "@utils/httpErrors";
+import { ok } from "@utils/errors/httpErrors";
 import { NextFunction, Request, Response } from "express";
 
 export class AuthController {

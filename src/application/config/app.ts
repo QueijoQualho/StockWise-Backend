@@ -5,7 +5,7 @@ import express from "express";
 import helmet from "helmet";
 import { setupSwagger } from "./swagger";
 import path from "path";
-import { errorHandlerMiddleware } from "@utils/middleware/erroHandleMiddleware";
+import { errorHandlerMiddleware } from "@service/middleware/erroHandleMiddleware";
 
 const app = express();
 

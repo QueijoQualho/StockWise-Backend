@@ -19,9 +19,7 @@
       "@controller/*": ["src/application/controller/*"],
       "@routes/*": ["src/application/routes/*"],
       "@service/*": ["src/application/service/*"],
-      "@validation/*": ["src/application/validation/*"],
       "@utils/*": ["src/application/utils/*"],
-      "@interfaces/*": ["src/application/utils/interfaces/*"],
 
       "@infra/*": ["src/infra/*"],
 

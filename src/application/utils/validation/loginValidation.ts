@@ -1,16 +1,16 @@
 import { Request, Response, NextFunction } from "express";
 import { validate, ValidationError } from "class-validator";
 import { BadRequestError } from "@utils/errors";
-import { badRequest } from "@utils/httpErrors";
-import { SignupDTO } from "@dto/user/signupDTO";
+import { badRequest } from "@utils/errors/httpErrors";
+import { LoginDTO } from "@dto/user/loginDTO";
 
-export const validateCreateUser = async (
+export const validateLogin = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  const signupDTO = Object.assign(new SignupDTO(), req.body);
-  const validationErrors = await validate(signupDTO);
+  const loginDTO = Object.assign(new LoginDTO(), req.body);
+  const validationErrors = await validate(loginDTO);
 
   if (validationErrors.length > 0) {
     return badRequest(
@@ -22,7 +22,7 @@ export const validateCreateUser = async (
     );
   }
 
-  req.body = signupDTO;
+  req.body = loginDTO;
   next();
 };
 

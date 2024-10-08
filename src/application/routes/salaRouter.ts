@@ -1,5 +1,5 @@
-import { controllerFactory } from "@utils/factory/ControllerFactory";
-import { validateUpdateSala } from "@validation/salaValidation";
+import { controllerFactory } from "@service/factories/ControllerFactory";
+import { validateUpdateSala } from "@utils/validation/salaValidation";
 import { NextFunction, Request, Response, Router } from "express";
 
 export default (router: Router): void => {

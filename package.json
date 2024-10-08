@@ -51,6 +51,7 @@
     "typescript-eslint": "^8.0.0"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.25.0",
     "bcrypt": "^5.1.1",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
@@ -72,17 +73,15 @@
     "yamljs": "^0.3.0"
   },
   "_moduleAliases": {
-    "@config": "dist/application/config",
-    "@controller": "dist/application/controller",
-    "@routes": "dist/application/routes",
-    "@service": "dist/application/service",
-    "@validation": "dist/application/validation",
-    "@utils": "dist/application/utils",
-    "@interfaces": "dist/application/utils/interfaces",
-    "@infra": "dist/infra",
-    "@model": "dist/domain/model",
-    "@repository": "dist/domain/repository",
-    "@dto": "dist/domain/dto",
-    "@tests": "dist/tests"
+    "@config/*": "dist/application/config/*",
+    "@controller/*": "dist/application/controller/*",
+    "@routes/*": "dist/application/routes/*",
+    "@service/*": "dist/application/service/*",
+    "@utils/*": "dist/application/utils/*",
+    "@infra/*": "dist/infra/*",
+    "@model/*": "dist/domain/model/*",
+    "@repository/*": "dist/infra/repository/*",
+    "@dto/*": "dist/domain/dto/*",
+    "@tests/*": "dist/tests/*"
   }
 }

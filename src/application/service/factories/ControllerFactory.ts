@@ -6,7 +6,6 @@ import { getItemRepository } from "@infra/repository/itemRepository";
 import { getSalaRepository } from "@infra/repository/salaRepository";
 import { getUserRepository } from "@infra/repository/userRepository";
 import { AuthService } from "@service/authService";
-import { FileService } from "@service/fileService";
 import { ItemService } from "@service/itemService";
 import { SalaService } from "@service/salaService";
 import { SeedService } from "@service/seedService";
@@ -15,12 +14,10 @@ class ControllerFactory {
   private itemRepository = getItemRepository();
   private salaRepository = getSalaRepository();
   private userRepository = getUserRepository();
-  private fileService = new FileService();
 
   createItemController(): ItemController {
     const itemService = new ItemService(
       this.itemRepository,
-      this.fileService,
       this.salaRepository,
     );
     return new ItemController(itemService);

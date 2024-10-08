@@ -16,12 +16,6 @@ export class SalaService {
     return this.repository.findOneBy({ localizacao }) || null;
   }
 
-  // async create(salaDTO: SalaDTO): Promise<SalaDTO> {
-  //   const sala = this.mapDTOToEntity(new Sala(), salaDTO);
-  //   await this.repository.save(sala);
-  //   return salaDTO;
-  // }
-
   async update(id: number, updatedSalaDTO: SalaUpdateDTO): Promise<void> {
     const sala = await this.getSalaOrThrow(id);
     const updatedSala = this.mapDTOToEntity(sala, updatedSalaDTO);

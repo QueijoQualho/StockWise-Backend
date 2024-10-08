@@ -1,13 +1,11 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { BadRequestError, NotFoundError } from "@utils/errors";
-import { serverError, badRequest, notFound } from "@utils/httpErrors";
+import { serverError, badRequest, notFound } from "@utils/errors/httpErrors";
 
 export const errorHandlerMiddleware = (
   err: any,
   req: Request,
   res: Response,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _next: NextFunction,
 ) => {
   if (err instanceof BadRequestError) {
     return badRequest(res, err);
