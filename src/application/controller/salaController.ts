@@ -8,11 +8,21 @@ import { NextFunction, Request, Response } from "express";
 export class SalaController {
   constructor(private readonly salaService: SalaService) {}
 
-  async getSala(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  // ======================================
+  // = CRUD =
+  // ======================================
+
+
+  async getSalas(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const salas = await this.salaService.findAll();
+      return ok(res, salas);
+    } catch (error: any) {
+      next(error)
+    }
+  }
+
+  async getSalasPaginated(req: Request, res: Response, next: NextFunction ): Promise<void> {
     try {
       const pagination: PaginationParams = {
         page: parseInt(req.query.page as string, 10) || 1,

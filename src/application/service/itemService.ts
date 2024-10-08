@@ -15,7 +15,11 @@ export class ItemService {
   ) {}
 
   async findAll(): Promise<Item[]> {
-    return this.repository.find();
+    return this.repository.find({
+      order: {
+        nome: 'ASC',
+      },
+    });
   }
 
   async findOne(id: number): Promise<Item | null> {
@@ -50,15 +54,20 @@ export class ItemService {
     pagination: PaginationParams,
   ): Promise<Pageable<Item>> {
     const { page, limit } = pagination;
+
     const [items, total] = await this.repository.findAndCount({
       skip: this.calculateOffset(page, limit),
       take: limit,
+      order: {
+        id: 'ASC',
+      },
     });
 
     if (items.length === 0) throw new NotFoundError("No items found");
 
     return this.createPageable(items, total, page, limit);
   }
+
 
   // Métodos privados
 
