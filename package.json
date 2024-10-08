@@ -73,15 +73,15 @@
     "yamljs": "^0.3.0"
   },
   "_moduleAliases": {
-    "@config/*": "dist/application/config/*",
-    "@controller/*": "dist/application/controller/*",
-    "@routes/*": "dist/application/routes/*",
-    "@service/*": "dist/application/service/*",
-    "@utils/*": "dist/application/utils/*",
-    "@infra/*": "dist/infra/*",
-    "@model/*": "dist/domain/model/*",
-    "@repository/*": "dist/infra/repository/*",
-    "@dto/*": "dist/domain/dto/*",
-    "@tests/*": "dist/tests/*"
+    "@config": "dist/application/config",
+    "@controller": "dist/application/controller",
+    "@routes": "dist/application/routes",
+    "@service": "dist/application/service",
+    "@utils": "dist/application/utils",
+    "@infra": "dist/infra",
+    "@model": "dist/domain/model",
+    "@repository": "dist/infra/repository",
+    "@dto": "dist/domain/dto",
+    "@tests": "dist/tests"
   }
 }
