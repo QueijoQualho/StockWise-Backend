@@ -1,7 +1,7 @@
 import { SalaUpdateDTO } from "@dto/index";
 import { SalaService } from "@service/salaService";
 import { BadRequestError, NotFoundError } from "@utils/errors";
-import { noContent, ok } from "@utils/httpErrors";
+import { noContent, ok } from "@utils/errors/httpErrors";
 import { PaginationParams } from "@utils/interfaces";
 import { NextFunction, Request, Response } from "express";
 

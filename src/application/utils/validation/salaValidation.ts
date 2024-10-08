@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { validate, ValidationError } from "class-validator";
 import { BadRequestError } from "@utils/errors";
 import { SalaDTO, SalaUpdateDTO } from "@dto/index";
-import { badRequest } from "@utils/httpErrors";
+import { badRequest } from "@utils/errors/httpErrors";
 
 export const validateCreateSala = async (
   req: Request,

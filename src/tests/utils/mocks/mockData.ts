@@ -24,11 +24,6 @@ export const mockRepositories = {
   sala: { findOne: jest.fn() },
 };
 
-export const mockFileService = {
-  deleteFile: jest.fn(),
-  processFileHandling: jest.fn(),
-};
-
 export const mockSala: Sala = {
   id: 1,
   localizacao: 101,

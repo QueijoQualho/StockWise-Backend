@@ -1,11 +1,9 @@
 import { ItemController } from "@controller/itemController";
 import { ItemRepositoryType } from "@infra/repository/itemRepository";
 import { SalaRepositoryType } from "@infra/repository/salaRepository";
-import { FileService } from "@service/fileService";
 import { ItemService } from "@service/itemService";
 import { expectErrorHandling } from "@tests/utils/helpers/testUtils";
 import {
-  mockFileService,
   mockItem,
   mockRepositories,
 } from "@tests/utils/mocks/mockData";
@@ -21,7 +19,6 @@ describe("ItemController", () => {
   beforeEach(() => {
     itemService = new ItemService(
       mockRepositories.item as unknown as ItemRepositoryType,
-      mockFileService as unknown as FileService,
       mockRepositories.sala as unknown as SalaRepositoryType,
     );
 

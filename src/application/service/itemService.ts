@@ -3,14 +3,13 @@ import { Item } from "@model/itemEntity";
 import { Sala } from "@model/salaEntity";
 import { ItemRepositoryType } from "@infra/repository/itemRepository";
 import { SalaRepositoryType } from "@infra/repository/salaRepository";
-import { FileService } from "@service/fileService";
 import { BadRequestError, NotFoundError } from "@utils/errors";
 import { Pageable, PaginationParams } from "@utils/interfaces";
+import { deleteFromAzure, uploadToAzure } from "./azureBlobService";
 
 export class ItemService {
   constructor(
     private readonly repository: ItemRepositoryType,
-    private readonly fileService: FileService,
     private readonly salaRepository: SalaRepositoryType,
   ) {}
 
@@ -32,7 +31,11 @@ export class ItemService {
     file?: Express.Multer.File,
   ): Promise<void> {
     const item = await this.getItemOrThrow(id);
-    await this.handleFileUpdate(file, item);
+
+    if (file) {
+      const newFileUrl = await this.uploadFile(file, item.url);
+      item.url = newFileUrl;
+    }
 
     if (updatedItemDTO.salaId && item.sala.id !== updatedItemDTO.salaId) {
       item.sala = await this.getSalaOrThrow(updatedItemDTO.salaId);
@@ -45,7 +48,7 @@ export class ItemService {
   async delete(id: number): Promise<void> {
     const item = await this.getItemOrThrow(id);
     await Promise.all([
-      this.fileService.deleteFile(item.url),
+      deleteFromAzure(item.url), // Deleta o arquivo do Azure
       this.repository.delete(id),
     ]);
   }
@@ -77,21 +80,23 @@ export class ItemService {
     return item;
   }
 
-  private async handleFileUpdate(
-    file: Express.Multer.File | undefined,
-    item: Item,
-  ): Promise<void> {
-    if (!file) return;
+  private async uploadFile(
+    file: Express.Multer.File,
+    existingFileUrl?: string,
+  ): Promise<string> {
+    try {
+      // Faz o upload do novo arquivo para o Azure
+      const fileUrl = await uploadToAzure(file);
 
-    const fileUrlOrError = await this.fileService.processFileHandling(
-      file,
-      item.id,
-      this,
-    );
-    if (fileUrlOrError instanceof BadRequestError) throw fileUrlOrError;
+      // Se houver um arquivo existente, deleta ele
+      if (existingFileUrl) {
+        await deleteFromAzure(existingFileUrl);
+      }
 
-    if (fileUrlOrError !== item.url) {
-      item.url = fileUrlOrError as string;
+      return fileUrl;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error:any) {
+      throw new BadRequestError("Error processing file upload");
     }
   }
 
