@@ -1,7 +1,7 @@
 import { controllerFactory } from "@utils/factory/ControllerFactory";
-import { validateCreateItem } from "@validation/ItemValidation";
+import { validateCreateUser } from "@validation/createUserValidation";
 import { validateLogin } from "@validation/loginValidation";
-import { Router, Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 
 export default (router: Router): void => {
   const authController = controllerFactory.createUserController();
@@ -16,7 +16,7 @@ export default (router: Router): void => {
 
   router.post(
     "/auth/signup",
-    validateCreateItem,
+    validateCreateUser,
     (req: Request, res: Response, next: NextFunction) => {
       authController.signup(req, res, next);
     },

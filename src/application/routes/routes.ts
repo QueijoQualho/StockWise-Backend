@@ -2,7 +2,7 @@ import { Express, Router } from "express";
 import itemRouter from "./itemRouter";
 import salaRouter from "./salaRouter";
 import seedRouter from "./seedRouter";
-import userRouter from "./userRouter";
+import userRouter from "./authRouter";
 
 export default (app: Express): void => {
   const router = Router();

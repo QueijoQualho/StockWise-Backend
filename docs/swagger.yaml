@@ -23,25 +23,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Item"
-    # post:
-    #   summary: Create a new item
-    #   tags:
-    #     - Itens
-    #   requestBody:
-    #     required: true
-    #     content:
-    #       application/json:
-    #         schema:
-    #           $ref: "#/components/schemas/ItemDTO"
-    #   responses:
-    #     "201":
-    #       description: Item created successfully
-    #       content:
-    #         application/json:
-    #           schema:
-    #             $ref: "#/components/schemas/Item"
-    #     "400":
-    #       description: Validation error or file upload error
   /itens/{externalId}:
     get:
       summary: Get item by ID
@@ -117,25 +98,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Sala"
-    # post:
-    #   summary: Create a new sala
-    #   tags:
-    #     - Salas
-    #   requestBody:
-    #     required: true
-    #     content:
-    #       application/json:
-    #         schema:
-    #           $ref: "#/components/schemas/SalaDTO"
-    #   responses:
-    #     "201":
-    #       description: Sala created successfully
-    #       content:
-    #         application/json:
-    #           schema:
-    #             $ref: "#/components/schemas/Sala"
-    #     "400":
-    #       description: Validation error
   /salas/{localizacao}:
     get:
       summary: Get sala by ID
@@ -222,6 +184,52 @@ paths:
           description: Sala not found
         "400":
           description: Invalid localizacao parameter
+  /auth/login:
+    post:
+      summary: Realiza o login do usuário
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDTO'
+      responses:
+        "200":
+          description: Login bem-sucedido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Token JWT gerado para autenticação.
+                  user:
+                    $ref: '#/components/schemas/UserResponseDTO'
+        "400":
+          description: Requisição inválida (ex. validação falhou)
+  /auth/signup:
+    post:
+      summary: Realiza o cadastro de um novo usuário
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupDTO'
+      responses:
+        "201":
+          description: Cadastro realizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDTO'
+        "400":
+          description: Requisição inválida (ex. validação falhou)
 components:
   schemas:
     Item:
@@ -311,3 +319,67 @@ components:
       properties:
         nome:
           type: string
+
+    LoginDTO:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: usuario@exemplo.com
+          description: Email do usuário.
+        senha:
+          type: string
+          example: senha123
+          description: Senha do usuário.
+      required:
+        - email
+        - senha
+
+    SignupDTO:
+      type: object
+      properties:
+        nome:
+          type: string
+          example: João Silva
+          description: Nome do usuário.
+        email:
+          type: string
+          format: email
+          example: usuario@exemplo.com
+          description: Email do usuário.
+        senha:
+          type: string
+          example: senha123
+          description: Senha do usuário (mínimo 6 caracteres).
+        role:
+          type: string
+          enum:
+            - USER
+            - ADMIN
+          example: USER
+          description: Papel do usuário na aplicação (opcional).
+      required:
+        - nome
+        - email
+        - senha
+    UserResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: ID do usuário.
+        nome:
+          type: string
+          example: João Silva
+          description: Nome do usuário.
+        email:
+          type: string
+          example: usuario@exemplo.com
+          description: Email do usuário.
+        role:
+          type: string
+          example: USER
+          description: Papel do usuário na aplicação.
+
