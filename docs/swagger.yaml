@@ -254,6 +254,18 @@ paths:
                 $ref: '#/components/schemas/UserResponseDTO'
         "400":
           description: Requisição inválida (ex. validação falhou)
+  /users:
+    get:
+      summary: Retorna uma lista de usuários paginado
+      tags:
+        - Users
+      responses:
+        "201":
+          description: lista dos users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDTO'
 components:
   schemas:
     Item:
