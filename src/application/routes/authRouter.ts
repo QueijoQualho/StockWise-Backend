@@ -4,7 +4,7 @@ import { validateLogin } from "@utils/validation/loginValidation";
 import { NextFunction, Request, Response, Router } from "express";
 
 export default (router: Router): void => {
-  const authController = controllerFactory.createUserController();
+  const authController = controllerFactory.createAuthController();
 
   router.post(
     "/auth/login",
