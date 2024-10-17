@@ -44,6 +44,7 @@ paths:
                 $ref: "#/components/schemas/Item"
         "404":
           description: Item not found
+
     patch:
       summary: Update an existing item
       tags:
@@ -58,9 +59,17 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: "#/components/schemas/ItemUpdateDTO"
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Arquivo de imagem ou documento do item
+                item:
+                  type: object
+                  $ref: "#/components/schemas/ItemUpdateDTO"
       responses:
         "204":
           description: Item updated successfully
@@ -84,18 +93,6 @@ paths:
           description: Item deleted successfully
         "404":
           description: Item not found
-  # /itens/paged:
-  #   get:
-  #     summary: List paginated itens
-  #     tags:
-  #       - Itens
-  #     responses:
-  #       "200":
-  #         description: Item data
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: "#/components/schemas/Item"
   /salas:
     get:
       summary: Retrieve all salas
@@ -218,7 +215,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginDTO'
+              $ref: "#/components/schemas/LoginDTO"
       responses:
         "200":
           description: Login bem-sucedido
@@ -231,7 +228,7 @@ paths:
                     type: string
                     description: Token JWT gerado para autenticação.
                   user:
-                    $ref: '#/components/schemas/UserResponseDTO'
+                    $ref: "#/components/schemas/UserResponseDTO"
         "400":
           description: Requisição inválida (ex. validação falhou)
   /auth/signup:
@@ -244,14 +241,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SignupDTO'
+              $ref: "#/components/schemas/SignupDTO"
       responses:
         "201":
           description: Cadastro realizado com sucesso
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponseDTO'
+                $ref: "#/components/schemas/UserResponseDTO"
         "400":
           description: Requisição inválida (ex. validação falhou)
   /users:
@@ -265,7 +262,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponseDTO'
+                $ref: "#/components/schemas/UserResponseDTO"
 components:
   schemas:
     Item:
@@ -326,8 +323,6 @@ components:
             - DISPONIVEL
             - BAIXA
             - EM_MANUTENCAO
-        url:
-          type: string
         salaId:
           type: integer
     Sala:
@@ -418,4 +413,3 @@ components:
           type: string
           example: USER
           description: Papel do usuário na aplicação.
-
