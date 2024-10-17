@@ -14,7 +14,7 @@ export class AuthService {
 
     const userExists = await this.userRepository.findOneBy({ email });
     if (userExists) {
-      throw new BadRequestError("O e-mail já está em uso");
+      throw new BadRequestError("The email is already in use");
     }
 
     const hashedPassword = await bcrypt.hash(senha, 10);
@@ -35,12 +35,12 @@ export class AuthService {
 
     const user = await this.userRepository.findOneBy({ email });
     if (!user) {
-      throw new BadRequestError("Credenciais inválidas");
+      throw new BadRequestError("Invalid credentials");
     }
 
     const isPasswordValid = await bcrypt.compare(senha, user.senha);
     if (!isPasswordValid) {
-      throw new BadRequestError("Credenciais inválidas");
+      throw new BadRequestError("Invalid credentials");
     }
 
     const response = new UserResponseDTO(user);

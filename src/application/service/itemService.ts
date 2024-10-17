@@ -1,16 +1,17 @@
 import { ItemUpdateDTO } from "@dto/index";
-import { Item } from "@model/itemEntity";
-import { Sala } from "@model/salaEntity";
 import { ItemRepositoryType } from "@infra/repository/itemRepository";
 import { SalaRepositoryType } from "@infra/repository/salaRepository";
-import { BadRequestError, NotFoundError } from "@utils/errors";
+import { Item } from "@model/itemEntity";
+import { Sala } from "@model/salaEntity";
+import { NotFoundError } from "@utils/errors";
 import { Pageable, PaginationParams } from "@utils/interfaces";
-import { deleteFromAzure, uploadToAzure } from "./azureBlobService";
+import { UploadService } from "./uploadService"; // Importe o UploadService
 
 export class ItemService {
   constructor(
     private readonly repository: ItemRepositoryType,
     private readonly salaRepository: SalaRepositoryType,
+    private readonly uploadService: UploadService // Adicione o UploadService como dependência
   ) {}
 
   async findAll(): Promise<Item[]> {
@@ -25,30 +26,25 @@ export class ItemService {
     return this.repository.findOneBy({ externalId: id }) || null;
   }
 
-  async update(
-    id: number,
-    updatedItemDTO: ItemUpdateDTO,
-    file?: Express.Multer.File,
-  ): Promise<void> {
+  async update(id: number, updatedItemDTO: ItemUpdateDTO, file?: Express.Multer.File): Promise<void> {
     const item = await this.getItemOrThrow(id);
 
+    if (updatedItemDTO.salaLocalizacao && item.sala.id !== updatedItemDTO.salaLocalizacao) {
+      item.sala = await this.getSalaOrThrow(updatedItemDTO.salaLocalizacao);
+    }
+
     if (file) {
-      const newFileUrl = await this.uploadFile(file, item.url);
-      item.url = newFileUrl;
+      item.url = await this.uploadService.uploadFile(file, item.url);
     }
 
-    if (updatedItemDTO.salaId && item.sala.id !== updatedItemDTO.salaId) {
-      item.sala = await this.getSalaOrThrow(updatedItemDTO.salaId);
-    }
-
-    this.updateItemFields(item, updatedItemDTO);
+    Object.assign(item, updatedItemDTO);
     await this.repository.save(item);
   }
 
   async delete(id: number): Promise<void> {
     const item = await this.getItemOrThrow(id);
     await Promise.all([
-      deleteFromAzure(item.url), // Deleta o arquivo do Azure
+      this.uploadService.deleteFile(item.url),
       this.repository.delete(id),
     ]);
   }
@@ -71,7 +67,6 @@ export class ItemService {
     return this.createPageable(items, total, page, limit);
   }
 
-
   // Métodos privados
 
   private async getItemOrThrow(id: number): Promise<Item> {
@@ -80,34 +75,10 @@ export class ItemService {
     return item;
   }
 
-  private async uploadFile(
-    file: Express.Multer.File,
-    existingFileUrl?: string,
-  ): Promise<string> {
-    try {
-      // Faz o upload do novo arquivo para o Azure
-      const fileUrl = await uploadToAzure(file);
-
-      // Se houver um arquivo existente, deleta ele
-      if (existingFileUrl) {
-        await deleteFromAzure(existingFileUrl);
-      }
-
-      return fileUrl;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error:any) {
-      throw new BadRequestError("Error processing file upload");
-    }
-  }
-
-  private async getSalaOrThrow(salaId: number): Promise<Sala> {
-    const sala = await this.salaRepository.findOne({ where: { id: salaId } });
+  private async getSalaOrThrow(salaLocalizacao: number): Promise<Sala> {
+    const sala = await this.salaRepository.findOne({ where: { localizacao: salaLocalizacao } });
     if (!sala) throw new NotFoundError("Sala not found");
     return sala;
-  }
-
-  private updateItemFields(item: Item, updatedItemDTO: ItemUpdateDTO): void {
-    Object.assign(item, updatedItemDTO);
   }
 
   private calculateOffset(page: number, limit: number): number {

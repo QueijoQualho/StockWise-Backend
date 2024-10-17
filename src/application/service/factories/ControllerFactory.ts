@@ -10,6 +10,7 @@ import { AuthService } from "@service/authService";
 import { ItemService } from "@service/itemService";
 import { SalaService } from "@service/salaService";
 import { SeedService } from "@service/seedService";
+import { UploadService } from "@service/uploadService";
 import { UserService } from "@service/userService";
 
 class ControllerFactory {
@@ -18,9 +19,11 @@ class ControllerFactory {
   private userRepository = getUserRepository();
 
   createItemController(): ItemController {
+    const uploadService = new UploadService()
     const itemService = new ItemService(
       this.itemRepository,
       this.salaRepository,
+      uploadService
     );
     return new ItemController(itemService);
   }

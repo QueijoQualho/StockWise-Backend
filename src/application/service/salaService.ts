@@ -6,7 +6,7 @@ import { NotFoundError } from "@utils/errors";
 import { Pageable, PaginationParams } from "@utils/interfaces";
 
 export class SalaService {
-  constructor(private readonly repository: SalaRepositoryType) {}
+  constructor(private readonly repository: SalaRepositoryType) { }
 
   async findAll(): Promise<Sala[]> {
     return this.repository.find();
@@ -73,6 +73,9 @@ export class SalaService {
     const sala = await this.repository.findOne({
       where: { localizacao },
       relations: ["itens"],
+      order: {
+        id: 'ASC',
+      }
     });
     if (!sala) throw new NotFoundError("Sala not found");
     return sala;
