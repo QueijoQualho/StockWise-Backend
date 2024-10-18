@@ -1,10 +1,11 @@
 import { UserResponseDTO } from "@dto/user/userResponseDTO";
+import { UserUpdateDTO } from "@dto/user/userUpdateDTO";
 import { UserRepositoryType } from "@infra/repository/userRepository";
+import { NotFoundError } from "@utils/errors";
 import { Pageable, PaginationParams } from "@utils/interfaces";
 
 export class UserService {
-  constructor(private readonly userRepository: UserRepositoryType){}
-
+  constructor(private readonly userRepository: UserRepositoryType) { }
 
   async getUsersPaginated(pagination: PaginationParams): Promise<Pageable<UserResponseDTO>> {
     const { page, limit } = pagination;
@@ -13,14 +14,37 @@ export class UserService {
       take: limit,
     });
 
-    const listUserResponse = users.map(e => new UserResponseDTO(e))
+    const listUserResponse = users.map(e => new UserResponseDTO(e));
 
-    return this.createPageable(
-      listUserResponse,
-      total,
-      page,
-      limit
-    )
+    return this.createPageable(listUserResponse, total, page, limit);
+  }
+
+  async getUserById(userId: number): Promise<UserResponseDTO> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+    return new UserResponseDTO(user);
+  }
+
+  async updateUser(userId: number, updateData: UserUpdateDTO): Promise<void> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+
+    Object.assign(user, updateData);
+
+    await this.userRepository.save(user);
+  }
+
+  async deleteUser(userId: number): Promise<void> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+
+    await this.userRepository.remove(user);
   }
 
   private createPageable<T>(
