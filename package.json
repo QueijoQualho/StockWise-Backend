@@ -10,6 +10,7 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "typeorm:run:prod": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/infra/dataSourceProd.ts migration:run",
     "typeorm:revert:prod": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/infra/dataSourceProd.ts migration:revert",
+    "typeorm:generate:prod": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/infra/dataSourceProd.ts migration:generate ./src/infra/db/migrations/default",
     "typeorm:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/infra/dataSourceLocal.ts migration:run",
     "typeorm:revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/infra/dataSourceLocal.ts migration:revert",
     "typeorm:generate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/infra/dataSourceLocal.ts migration:generate ./src/infra/db/migrations/default",
