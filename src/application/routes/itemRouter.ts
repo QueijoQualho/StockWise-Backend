@@ -16,7 +16,6 @@ export default (router: Router): void => {
 
   router.patch(
     "/itens/:id",
-    upload.single("file"),
     validateUpdateItem,
     (req: Request, res: Response, next: NextFunction) =>
       itemController.updateItem(req, res, next),
@@ -27,4 +26,13 @@ export default (router: Router): void => {
     (req: Request, res: Response, next: NextFunction) =>
       itemController.deleteItem(req, res, next),
   );
+
+  router.post(
+    "/itens/:id/upload-image",
+    upload.single("file"),
+    (req: Request, res: Response, next: NextFunction) =>
+      itemController.uploadImageItem(req, res, next),
+  );
+
+
 };

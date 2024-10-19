@@ -5,13 +5,13 @@ import { Item } from "@model/itemEntity";
 import { Sala } from "@model/salaEntity";
 import { NotFoundError } from "@utils/errors";
 import { Pageable, PaginationParams } from "@utils/interfaces";
-import { UploadService } from "./uploadService"; // Importe o UploadService
+import { UploadService } from "./uploadService";
 
 export class ItemService {
   constructor(
     private readonly repository: ItemRepositoryType,
     private readonly salaRepository: SalaRepositoryType,
-    private readonly uploadService: UploadService // Adicione o UploadService como dependência
+    private readonly uploadService: UploadService
   ) {}
 
   async findAll(): Promise<Item[]> {
@@ -26,15 +26,11 @@ export class ItemService {
     return this.repository.findOneBy({ externalId: id }) || null;
   }
 
-  async update(id: number, updatedItemDTO: ItemUpdateDTO, file?: Express.Multer.File): Promise<void> {
+  async update(id: number, updatedItemDTO: ItemUpdateDTO): Promise<void> {
     const item = await this.getItemOrThrow(id);
 
     if (updatedItemDTO.salaLocalizacao && item.sala.id !== updatedItemDTO.salaLocalizacao) {
       item.sala = await this.getSalaOrThrow(updatedItemDTO.salaLocalizacao);
-    }
-
-    if (file) {
-      item.url = await this.uploadService.uploadFile(file, item.url);
     }
 
     Object.assign(item, updatedItemDTO);
@@ -65,6 +61,14 @@ export class ItemService {
     if (items.length === 0) throw new NotFoundError("No items found");
 
     return this.createPageable(items, total, page, limit);
+  }
+
+  async uploadImage(itemId: number, file: Express.Multer.File) : Promise<void> {
+    const item = await this.getItemOrThrow(itemId);
+
+    item.url = await this.uploadService.uploadFile(file, item.url);
+
+    await this.repository.save(item);
   }
 
   // Métodos privados

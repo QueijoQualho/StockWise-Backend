@@ -1,5 +1,5 @@
+import upload from "@config/multer";
 import { controllerFactory } from "@service/factories/ControllerFactory";
-import { validateUpdateSala } from "@utils/validation/salaValidation";
 import { NextFunction, Request, Response, Router } from "express";
 
 export default (router: Router): void => {
@@ -23,16 +23,23 @@ export default (router: Router): void => {
       salaController.getItensSala(req, res, next),
   );
 
-  router.patch(
-    "/salas/:id",
-    validateUpdateSala,
-    (req: Request, res: Response, next: NextFunction) =>
-      salaController.updateSala(req, res, next),
-  );
+  // router.patch(
+  //   "/salas/:id",
+  //   validateUpdateSala,
+  //   (req: Request, res: Response, next: NextFunction) =>
+  //     salaController.updateSala(req, res, next),
+  // );
 
-  router.delete(
-    "/salas/:id",
+  // router.delete(
+  //   "/salas/:id",
+  //   (req: Request, res: Response, next: NextFunction) =>
+  //     salaController.deleteSala(req, res, next),
+  // );
+
+  router.post(
+    "/salas/:id/upload-pdf",
+    upload.single("file"),
     (req: Request, res: Response, next: NextFunction) =>
-      salaController.deleteSala(req, res, next),
+      salaController.uploadPDF(req, res, next),
   );
 };
