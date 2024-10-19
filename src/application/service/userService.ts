@@ -12,6 +12,9 @@ export class UserService {
     const [users, total] = await this.userRepository.findAndCount({
       skip: this.calculateOffset(page, limit),
       take: limit,
+      order: {
+        id: 'ASC',
+      },
     });
 
     const listUserResponse = users.map(e => new UserResponseDTO(e));
