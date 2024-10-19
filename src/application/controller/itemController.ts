@@ -6,7 +6,7 @@ import { PaginationParams } from "@utils/interfaces";
 import { NextFunction, Request, Response } from "express";
 
 export class ItemController {
-  constructor(private readonly itemService: ItemService) {}
+  constructor(private readonly itemService: ItemService) { }
 
   // ======================================
   // = CRUD =
@@ -57,7 +57,7 @@ export class ItemController {
     const updatedItemDTO = Object.assign(new ItemUpdateDTO(), req.body);
 
     try {
-      await this.itemService.update(itemId, updatedItemDTO, req.file);
+      await this.itemService.update(itemId, updatedItemDTO);
       return noContent(res);
     } catch (error: any) {
       next(error);
@@ -75,6 +75,23 @@ export class ItemController {
     try {
       await this.itemService.delete(itemId);
       return noContent(res);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async uploadImageItem(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+
+    const itemId = this.extractItemId(req.params.id);
+    if (!itemId) return next(new BadRequestError("Invalid item ID"));
+
+    try {
+      await this.itemService.uploadImage(itemId, req.file);
+      return ok(res, "Image sent successfully");
     } catch (error: any) {
       next(error);
     }

@@ -1,37 +1,42 @@
-import { SalaDTO, SalaUpdateDTO } from "@dto/index";
+import { SalaDTO } from "@dto/index";
+import { SalaRepositoryType } from "@infra/repository/salaRepository";
 import { Item } from "@model/itemEntity";
 import { Sala } from "@model/salaEntity";
-import { SalaRepositoryType } from "@infra/repository/salaRepository";
 import { NotFoundError } from "@utils/errors";
 import { Pageable, PaginationParams } from "@utils/interfaces";
+import { UploadService } from "./uploadService";
 
 export class SalaService {
-  constructor(private readonly repository: SalaRepositoryType) {}
+
+  constructor(
+    private readonly salaRepository: SalaRepositoryType,
+    private readonly uploadService: UploadService
+  ) { }
 
   async findAll(): Promise<Sala[]> {
-    return this.repository.find();
+    return this.salaRepository.find();
   }
 
   async findOne(localizacao: number): Promise<Sala | null> {
-    return this.repository.findOneBy({ localizacao }) || null;
+    return this.salaRepository.findOneBy({ localizacao }) || null;
   }
 
-  async update(id: number, updatedSalaDTO: SalaUpdateDTO): Promise<void> {
-    const sala = await this.getSalaOrThrow(id);
-    const updatedSala = this.mapDTOToEntity(sala, updatedSalaDTO);
-    await this.repository.update(id, updatedSala);
-  }
+  // async update(id: number, updatedSalaDTO: SalaUpdateDTO): Promise<void> {
+  //   const sala = await this.getSalaOrThrow(id);
+  //   const updatedSala = this.mapDTOToEntity(sala, updatedSalaDTO);
+  //   await this.salaRepository.update(id, updatedSala);
+  // }
 
-  async delete(id: number): Promise<void> {
-    const sala = await this.getSalaOrThrow(id);
-    await this.repository.delete(sala.id);
-  }
+  // async delete(id: number): Promise<void> {
+  //   const sala = await this.getSalaOrThrow(id);
+  //   await this.salaRepository.delete(sala.id);
+  // }
 
   async getPaginatedSalas(
     pagination: PaginationParams,
   ): Promise<Pageable<Sala>> {
     const { page, limit } = pagination;
-    const [salas, total] = await this.repository.findAndCount({
+    const [salas, total] = await this.salaRepository.findAndCount({
       skip: this.calculateOffset(page, limit),
       take: limit,
     });
@@ -54,6 +59,14 @@ export class SalaService {
     );
   }
 
+  async uploadPDF(salaLocalizacao: number, file: Express.Multer.File) {
+    const sala = await this.getSalaOrThrow(salaLocalizacao);
+
+    sala.pdfUrl = await this.uploadService.uploadPdf(file, sala.pdfUrl)
+
+    await this.salaRepository.save(sala)
+  }
+
   // ======================================
   // = HELPER METHODS =
   // ======================================
@@ -70,9 +83,12 @@ export class SalaService {
   }
 
   private async getSalaWithItemsOrThrow(localizacao: number): Promise<Sala> {
-    const sala = await this.repository.findOne({
+    const sala = await this.salaRepository.findOne({
       where: { localizacao },
       relations: ["itens"],
+      order: {
+        id: 'ASC',
+      }
     });
     if (!sala) throw new NotFoundError("Sala not found");
     return sala;

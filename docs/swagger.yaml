@@ -44,6 +44,7 @@ paths:
                 $ref: "#/components/schemas/Item"
         "404":
           description: Item not found
+
     patch:
       summary: Update an existing item
       tags:
@@ -60,12 +61,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ItemUpdateDTO"
+              type: object
+              properties:
+                item:
+                  type: object
+                  $ref: "#/components/schemas/ItemUpdateDTO"
       responses:
         "204":
           description: Item updated successfully
         "400":
-          description: Validation error or file upload error
+          description: Validation error
         "404":
           description: Item not found
     delete:
@@ -84,18 +89,34 @@ paths:
           description: Item deleted successfully
         "404":
           description: Item not found
-  # /itens/paged:
-  #   get:
-  #     summary: List paginated itens
-  #     tags:
-  #       - Itens
-  #     responses:
-  #       "200":
-  #         description: Item data
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: "#/components/schemas/Item"
+  /itens/{externalId}/upload-image:
+    post:
+      summary: Upload Image
+      tags:
+        - Itens
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Item ID
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Arquivo de imagem ou documento do item
+      responses:
+        "200":
+          description: Upload Successful
+        "404":
+          description: Item not found
   /salas:
     get:
       summary: Retrieve all salas
@@ -110,6 +131,18 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Sala"
+  /salas/paged:
+    get:
+      summary: List paginated salas
+      tags:
+        - Salas
+      responses:
+        "200":
+          description: Sala data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Sala"
   /salas/{localizacao}:
     get:
       summary: Get sala by ID
@@ -131,58 +164,46 @@ paths:
                 $ref: "#/components/schemas/Sala"
         "404":
           description: Sala not found
-    patch:
-      summary: Update an existing sala
-      tags:
-        - Salas
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-          description: Sala ID
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/SalaUpdateDTO"
-      responses:
-        "204":
-          description: Sala updated successfully
-        "400":
-          description: Validation error
-        "404":
-          description: Sala not found
-    delete:
-      summary: Delete a sala by ID
-      tags:
-        - Salas
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-          description: Sala ID
-      responses:
-        "204":
-          description: Sala deleted successfully
-        "404":
-          description: Sala not found
-  /salas/paged:
-    get:
-      summary: List paginated salas
-      tags:
-        - Salas
-      responses:
-        "200":
-          description: Sala data
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Sala"
+    # patch:
+    #   summary: Update an existing sala
+    #   tags:
+    #     - Salas
+    #   parameters:
+    #     - in: path
+    #       name: id
+    #       required: true
+    #       schema:
+    #         type: integer
+    #       description: Sala ID
+    #   requestBody:
+    #     required: true
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: "#/components/schemas/SalaUpdateDTO"
+    #   responses:
+    #     "204":
+    #       description: Sala updated successfully
+    #     "400":
+    #       description: Validation error
+    #     "404":
+    #       description: Sala not found
+    # delete:
+    #   summary: Delete a sala by ID
+    #   tags:
+    #     - Salas
+    #   parameters:
+    #     - in: path
+    #       name: id
+    #       required: true
+    #       schema:
+    #         type: integer
+    #       description: Sala ID
+    #   responses:
+    #     "204":
+    #       description: Sala deleted successfully
+    #     "404":
+    #       description: Sala not found
   /salas/{localizacao}/itens:
     get:
       summary: Retrieve all items for a specific sala
@@ -204,10 +225,38 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Item"
-        "404":
-          description: Sala not found
         "400":
           description: Invalid localizacao parameter
+        "404":
+          description: Sala not found
+  /salas/{localizacao}/upload-pdf:
+    post:
+      summary: Upload Pdf
+      tags:
+        - Salas
+      parameters:
+        - in: path
+          name: localizacao
+          required: true
+          schema:
+            type: integer
+          description: Sala ID
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Arquivo de imagem ou documento do item
+      responses:
+        "200":
+          description: Upload Successful
+        "404":
+          description: Sala not found
   /auth/login:
     post:
       summary: Realiza o login do usuário
@@ -385,8 +434,6 @@ components:
             - DISPONIVEL
             - BAIXA
             - EM_MANUTENCAO
-        url:
-          type: string
         salaId:
           type: integer
     Sala:
