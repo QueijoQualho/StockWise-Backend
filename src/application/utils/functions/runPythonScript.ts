@@ -6,13 +6,15 @@ const execPromise = promisify(exec);
 
 export default async function runPythonScript(
   scriptPath: string,
+  filePath?: Express.Multer.File
 ): Promise<any> {
   try {
-    const comand =
+    const command =
       env.nodeEnv === "production"
         ? "/usr/src/app/python/venv/bin/python"
         : "python\\venv\\Scripts\\python";
-    const { stdout, stderr } = await execPromise(`${comand} ${scriptPath}`);
+    // Passa o arquivo como argumento para o script Python
+    const { stdout, stderr } = await execPromise(`${command} ${scriptPath} ${filePath ? filePath : ""}`);
     if (stderr) {
       throw new Error(`stderr: ${stderr}`);
     }
@@ -27,3 +29,4 @@ export default async function runPythonScript(
     throw new Error(`Error: ${error.message}`);
   }
 }
+
