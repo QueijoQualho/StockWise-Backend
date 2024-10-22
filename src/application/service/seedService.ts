@@ -22,45 +22,46 @@ export class SeedService {
     return savedSala;
   }
 
-  async addItemsToSala(data: any): Promise<Sala | null> {
-    // Busca a sala existente pelo localizacao
+  async addItemsToSala(data: any): Promise<{ salaNome: string; itemsAdded: number; message: string }> {
     const existingSala = await this.salaRepository.findOne({
       where: { localizacao: data.localizacao },
     });
+
     if (!existingSala) {
       logger.error(`Sala com localização ${data.localizacao} não encontrada.`);
-      return null;
+      return { salaNome: data.localizacao, itemsAdded: 0, message: 'Sala não encontrada.' };
     }
 
     // Filtra e salva apenas os itens que não possuem externalId duplicado
     const items = await this.saveUniqueItems(data.items, existingSala);
 
     if (items.length > 0) {
-      existingSala.itens = [...existingSala.itens, ...items];
       logger.info(`Itens adicionados à sala ${existingSala.nome} com sucesso.`);
+      return { salaNome: existingSala.nome, itemsAdded: items.length, message: 'Itens adicionados com sucesso.' };
     } else {
       logger.info(`Nenhum item novo foi adicionado à sala ${existingSala.nome}.`);
+      return { salaNome: existingSala.nome, itemsAdded: 0, message: 'Nenhum item novo para adicionar.' };
     }
-
-    return existingSala;
   }
+
 
   // Métodos privados
 
   private async saveUniqueItems(itemDataList: any[], sala: Sala): Promise<any[]> {
-    return Promise.all(
-      itemDataList
-        .filter(async (itemData) => {
-          const existingItem = await this.itemRepository.findOne({
-            where: { externalId: itemData.id },
-          });
-          return !existingItem;
-        })
-        .map(async (itemData) => {
-          const item = this.createItem(itemData, sala);
-          return await this.itemRepository.save(item);
-        }),
-    );
+    const uniqueItems = [];
+
+    for (const itemData of itemDataList) {
+      const existingItem = await this.itemRepository.findOne({
+        where: { externalId: itemData.id },
+      });
+
+      if (!existingItem) {
+        const newItem = this.createItem(itemData, sala);
+        uniqueItems.push(await this.itemRepository.save(newItem));
+      }
+    }
+
+    return uniqueItems;
   }
 
   private createSala(data: any): Sala {

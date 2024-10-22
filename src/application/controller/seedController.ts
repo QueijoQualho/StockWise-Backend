@@ -56,15 +56,18 @@ export class SeedController {
       const scriptPath = path.resolve(
         __dirname + "../../../../python/model.py",
       );
+
       const output: Output = await runPythonScript(scriptPath, req.file);
 
       for (const sala_id in output) {
         if (output.hasOwnProperty(sala_id)) {
           const dados_sala = output[sala_id];
 
-          await this.seedService.saveSala(dados_sala);
+          await this.seedService.addItemsToSala(dados_sala);
         }
       }
+
+      return created(res, "Itens criados com sucesso")
     } catch (error: any) {
       next(error);
     }
