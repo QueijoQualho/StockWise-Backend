@@ -1,3 +1,4 @@
+import upload from "@config/multer";
 import { controllerFactory } from "@service/factories/ControllerFactory";
 import { Router, Response, Request, NextFunction } from "express";
 
@@ -7,4 +8,11 @@ export default (router: Router): void => {
   router.get("/seed", (req: Request, res: Response, next: NextFunction) =>
     seedController.seedSalas(req, res, next),
   );
+
+  router.post("/seed/createItens",
+    upload.single("file"),
+    (req: Request, res: Response, next: NextFunction) =>
+      seedController.createItemsFromFile(req, res, next),
+  );
+
 };

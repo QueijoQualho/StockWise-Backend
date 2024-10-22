@@ -7,7 +7,7 @@ export class SeedService {
   constructor(
     private readonly itemRepository: ItemRepositoryType,
     private readonly salaRepository: SalaRepositoryType,
-  ) {}
+  ) { }
 
   async saveSala(data: any): Promise<Sala> {
     const newSala = this.createSala(data);
@@ -17,12 +17,52 @@ export class SeedService {
 
     savedSala.itens = items;
 
-    this.logSalaCreation(savedSala);
+    logger.info(`Sala ${savedSala.nome} criada com sucesso.`);
 
     return savedSala;
   }
 
+  async addItemsToSala(data: any): Promise<{ salaNome: string; itemsAdded: number; message: string }> {
+    const existingSala = await this.salaRepository.findOne({
+      where: { localizacao: data.localizacao },
+    });
+
+    if (!existingSala) {
+      logger.error(`Sala com localização ${data.localizacao} não encontrada.`);
+      return { salaNome: data.localizacao, itemsAdded: 0, message: 'Sala não encontrada.' };
+    }
+
+    // Filtra e salva apenas os itens que não possuem externalId duplicado
+    const items = await this.saveUniqueItems(data.items, existingSala);
+
+    if (items.length > 0) {
+      logger.info(`Itens adicionados à sala ${existingSala.nome} com sucesso.`);
+      return { salaNome: existingSala.nome, itemsAdded: items.length, message: 'Itens adicionados com sucesso.' };
+    } else {
+      logger.info(`Nenhum item novo foi adicionado à sala ${existingSala.nome}.`);
+      return { salaNome: existingSala.nome, itemsAdded: 0, message: 'Nenhum item novo para adicionar.' };
+    }
+  }
+
+
   // Métodos privados
+
+  private async saveUniqueItems(itemDataList: any[], sala: Sala): Promise<any[]> {
+    const uniqueItems = [];
+
+    for (const itemData of itemDataList) {
+      const existingItem = await this.itemRepository.findOne({
+        where: { externalId: itemData.id },
+      });
+
+      if (!existingItem) {
+        const newItem = this.createItem(itemData, sala);
+        uniqueItems.push(await this.itemRepository.save(newItem));
+      }
+    }
+
+    return uniqueItems;
+  }
 
   private createSala(data: any): Sala {
     return this.salaRepository.create({
@@ -48,9 +88,5 @@ export class SeedService {
       dataDeIncorporacao: itemData.dataDeIncorporacao as Date,
       sala: sala,
     });
-  }
-
-  private logSalaCreation(sala: Sala): void {
-    logger.info(`Sala ${sala.nome} criada com sucesso.`);
   }
 }
