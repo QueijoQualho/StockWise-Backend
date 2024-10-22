@@ -374,6 +374,25 @@ paths:
           description: Usuário deletado com sucesso
         "404":
           description: Usuário não encontrado
+  /seed/createItens:
+    post:
+      summary: Upload Image
+      tags:
+        - Seed
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: arquivo csv ou xlsx com os novos itens
+      responses:
+        "201":
+          description: itens criados com sucesso
 components:
   schemas:
     Item:
