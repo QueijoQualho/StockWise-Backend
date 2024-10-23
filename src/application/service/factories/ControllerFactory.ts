@@ -4,6 +4,7 @@ import { SalaController } from "@controller/salaController";
 import { SeedController } from "@controller/seedController";
 import { UserController } from "@controller/userController";
 import { getItemRepository, ItemRepositoryType } from "@infra/repository/itemRepository";
+import { getRelatorioRepository, RelatorioRepositoryType } from "@infra/repository/relatorioRepository";
 import { getSalaRepository, SalaRepositoryType } from "@infra/repository/salaRepository";
 import { getUserRepository, UserRepositoryType } from "@infra/repository/userRepository";
 import { AuthService } from "@service/authService";
@@ -17,7 +18,8 @@ class ControllerFactory {
   constructor(
     private readonly itemRepository: ItemRepositoryType,
     private readonly salaRepository: SalaRepositoryType,
-    private readonly userRepository: UserRepositoryType
+    private readonly userRepository: UserRepositoryType,
+    private readonly relatorioRepository: RelatorioRepositoryType
   ) { }
 
   createItemController(): ItemController {
@@ -33,7 +35,7 @@ class ControllerFactory {
   createSalaController(): SalaController {
     const uploadService = new UploadService();
 
-    const salaService = new SalaService(this.salaRepository, uploadService);
+    const salaService = new SalaService(this.salaRepository, this.relatorioRepository, uploadService);
     return new SalaController(salaService);
   }
 
@@ -59,9 +61,11 @@ class ControllerFactory {
 const itemRepository = getItemRepository();
 const salaRepository = getSalaRepository();
 const userRepository = getUserRepository();
+const relatorioRepository = getRelatorioRepository();
 
 export const controllerFactory = new ControllerFactory(
   itemRepository,
   salaRepository,
-  userRepository
+  userRepository,
+  relatorioRepository
 );

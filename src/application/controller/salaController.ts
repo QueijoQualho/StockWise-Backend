@@ -1,6 +1,6 @@
 import { SalaService } from "@service/salaService";
 import { BadRequestError, NotFoundError } from "@utils/errors";
-import { ok } from "@utils/errors/httpErrors";
+import { noContent, ok } from "@utils/errors/httpErrors";
 import { PaginationParams } from "@utils/interfaces";
 import { NextFunction, Request, Response } from "express";
 
@@ -69,29 +69,13 @@ export class SalaController {
   //   }
   // }
 
-  // async deleteSala(
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction,
-  // ): Promise<void> {
-  //   const salaId = this.extractSalaId(req.params.id);
-  //   if (!salaId) return next(new BadRequestError("Invalid sala ID"));
-
-  //   try {
-  //     await this.salaService.delete(salaId);
-  //     return noContent(res);
-  //   } catch (error: any) {
-  //     next(error);
-  //   }
-  // }
-
   async getItensSala(
     req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<void> {
-    const salaLocalizacao = this.extractSalaId(req.params.id);
-    if (!salaLocalizacao) return next(new BadRequestError("Invalid sala ID"));
+    const localizacao = this.extractSalaId(req.params.id);
+    if (!localizacao) return next(new BadRequestError("Invalid sala ID"));
 
     try {
       const pagination: PaginationParams = {
@@ -100,10 +84,27 @@ export class SalaController {
       };
 
       const itens = await this.salaService.getPaginatedItensSala(
-        salaLocalizacao,
+        localizacao,
         pagination,
       );
       return ok(res, itens);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async getSalaWithRelatorios(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const localizacao = this.extractSalaId(req.params.id);
+    if (!localizacao) return next(new BadRequestError("Invalid sala ID"));
+
+    try {
+      const sala = await this.salaService.getSalaWithRelatorios(localizacao)
+
+      return ok(res, sala)
     } catch (error: any) {
       next(error);
     }
@@ -122,6 +123,22 @@ export class SalaController {
       return ok(res, "PDF sent successfully")
     } catch (error) {
       next(error)
+    }
+  }
+
+  async deleteSala(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    const salaId = this.extractSalaId(req.params.id);
+    if (!salaId) return next(new BadRequestError("Invalid sala ID"));
+
+    try {
+      await this.salaService.delete(salaId);
+      return noContent(res);
+    } catch (error: any) {
+      next(error);
     }
   }
 
