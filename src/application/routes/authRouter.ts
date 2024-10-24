@@ -1,6 +1,5 @@
 import { controllerFactory } from "@service/factories/ControllerFactory";
-import { validateCreateUser } from "@utils/validation/createUserValidation";
-import { validateLogin } from "@utils/validation/loginValidation";
+import { validateCreateUser, validateLogin } from "@utils/validation/validateDTO";
 import { NextFunction, Request, Response, Router } from "express";
 
 export default (router: Router): void => {

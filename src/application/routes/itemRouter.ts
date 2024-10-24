@@ -1,6 +1,6 @@
 import upload from "@config/multer";
 import { controllerFactory } from "@service/factories/ControllerFactory";
-import { validateUpdateItem } from "@utils/validation/ItemValidation";
+import { validateUpdateItem } from "@utils/validation/validateDTO";
 import { NextFunction, Request, Response, Router } from "express";
 
 export default (router: Router): void => {
