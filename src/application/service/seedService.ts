@@ -45,7 +45,9 @@ export class SeedService {
   }
 
 
-  // Métodos privados
+  // ======================================
+  // = HELPER METHODS =
+  // ======================================
 
   private async saveUniqueItems(itemDataList: any[], sala: Sala): Promise<any[]> {
     const uniqueItems = [];

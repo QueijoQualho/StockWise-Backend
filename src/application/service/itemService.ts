@@ -12,7 +12,7 @@ export class ItemService {
     private readonly repository: ItemRepositoryType,
     private readonly salaRepository: SalaRepositoryType,
     private readonly uploadService: UploadService
-  ) {}
+  ) { }
 
   async findAll(): Promise<Item[]> {
     return this.repository.find({
@@ -63,7 +63,7 @@ export class ItemService {
     return this.createPageable(items, total, page, limit);
   }
 
-  async uploadImage(itemId: number, file: Express.Multer.File) : Promise<void> {
+  async uploadImage(itemId: number, file: Express.Multer.File): Promise<void> {
     const item = await this.getItemOrThrow(itemId);
 
     item.url = await this.uploadService.uploadFile(file, item.url);
@@ -71,7 +71,9 @@ export class ItemService {
     await this.repository.save(item);
   }
 
-  // Métodos privados
+  // ======================================
+  // = HELPER METHODS =
+  // ======================================
 
   private async getItemOrThrow(id: number): Promise<Item> {
     const item = await this.findOne(id);

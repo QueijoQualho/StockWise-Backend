@@ -50,6 +50,10 @@ export class UserService {
     await this.userRepository.remove(user);
   }
 
+  // ======================================
+  // = HELPER METHODS =
+  // ======================================
+
   private createPageable<T>(
     data: T[],
     totalItems: number,

@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 
 import { Item } from "./itemEntity";
+import { Relatorio } from "./relatorioEntity";
 
 @Entity("salas")
 export class Sala {
@@ -23,11 +24,11 @@ export class Sala {
   @Column({ name: "qtd_itens", default: 0 })
   quantidadeDeItens: number;
 
-  @Column({ name: "pdf_url", nullable: true})
-  pdfUrl?: string;
-
   @OneToMany(() => Item, (item) => item.sala)
   itens: Item[];
+
+  @OneToMany(() => Relatorio, (documento) => documento.sala)
+  relatorios: Relatorio[]
 
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;

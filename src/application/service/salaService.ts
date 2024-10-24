@@ -5,11 +5,13 @@ import { Sala } from "@model/salaEntity";
 import { NotFoundError } from "@utils/errors";
 import { Pageable, PaginationParams } from "@utils/interfaces";
 import { UploadService } from "./uploadService";
+import { RelatorioRepositoryType } from "@infra/repository/relatorioRepository";
 
 export class SalaService {
 
   constructor(
     private readonly salaRepository: SalaRepositoryType,
+    private readonly relatorioRepository: RelatorioRepositoryType,
     private readonly uploadService: UploadService
   ) { }
 
@@ -27,10 +29,10 @@ export class SalaService {
   //   await this.salaRepository.update(id, updatedSala);
   // }
 
-  // async delete(id: number): Promise<void> {
-  //   const sala = await this.getSalaOrThrow(id);
-  //   await this.salaRepository.delete(sala.id);
-  // }
+  async delete(id: number): Promise<void> {
+    const sala = await this.getSalaOrThrow(id);
+    await this.salaRepository.delete(sala.id);
+  }
 
   async getPaginatedSalas(
     pagination: PaginationParams,
@@ -59,12 +61,28 @@ export class SalaService {
     );
   }
 
-  async uploadPDF(salaLocalizacao: number, file: Express.Multer.File) {
-    const sala = await this.getSalaOrThrow(salaLocalizacao);
+  async uploadPDF(localizacao: number, file: Express.Multer.File) {
+    const sala = await this.getSalaOrThrow(localizacao);
+    const pdfUrl = await this.uploadService.uploadPdf(file);
 
-    sala.pdfUrl = await this.uploadService.uploadPdf(file, sala.pdfUrl)
+    const pdf = await this.relatorioRepository.save({
+      nome: file.originalname,
+      url: pdfUrl,
+      sala: sala
+    });
 
-    await this.salaRepository.save(sala)
+    return pdf;
+  }
+
+  async getRelatoriosSala(
+    localizacao: number,
+  ) {
+    const sala = await this.salaRepository.findOne({
+      where: { localizacao: localizacao },
+      relations: ['relatorios'],
+    });
+
+    return sala.relatorios
   }
 
   // ======================================

@@ -30,16 +30,22 @@ export default (router: Router): void => {
   //     salaController.updateSala(req, res, next),
   // );
 
-  // router.delete(
-  //   "/salas/:id",
-  //   (req: Request, res: Response, next: NextFunction) =>
-  //     salaController.deleteSala(req, res, next),
-  // );
+  router.delete(
+    "/salas/:id",
+    (req: Request, res: Response, next: NextFunction) =>
+      salaController.deleteSala(req, res, next),
+  );
 
   router.post(
     "/salas/:id/upload-pdf",
     upload.single("file"),
     (req: Request, res: Response, next: NextFunction) =>
       salaController.uploadPDF(req, res, next),
+  );
+
+  router.get(
+    "/salas/:id/relatorios",
+    (req: Request, res: Response, next: NextFunction) =>
+      salaController.getRelatoriosSala(req, res, next),
   );
 };
