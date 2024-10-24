@@ -257,6 +257,32 @@ paths:
           description: Upload Successful
         "404":
           description: Sala not found
+  /salas/{localizacao}/relatorios:
+    get:
+      summary: Retrieve all relatorios/pdfs for a specific sala
+      tags:
+        - Salas
+      parameters:
+        - in: path
+          name: localizacao
+          required: true
+          schema:
+            type: integer
+          description: Localização da sala
+      responses:
+        "200":
+          description: List of relatorios/pdf for the specified sala
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+        "400":
+          description: Invalid localizacao parameter
+        "404":
+          description: Sala not found
+
   /auth/login:
     post:
       summary: Realiza o login do usuário
