@@ -93,7 +93,7 @@ export class SalaController {
     }
   }
 
-  async getSalaWithRelatorios(
+  async getRelatoriosSala(
     req: Request,
     res: Response,
     next: NextFunction,
@@ -102,7 +102,7 @@ export class SalaController {
     if (!localizacao) return next(new BadRequestError("Invalid sala ID"));
 
     try {
-      const sala = await this.salaService.getSalaWithRelatorios(localizacao)
+      const sala = await this.salaService.getRelatoriosSala(localizacao)
 
       return ok(res, sala)
     } catch (error: any) {

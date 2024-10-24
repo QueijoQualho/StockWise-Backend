@@ -74,15 +74,15 @@ export class SalaService {
     return pdf;
   }
 
-  async getSalaWithRelatorios(
+  async getRelatoriosSala(
     localizacao: number,
   ) {
     const sala = await this.salaRepository.findOne({
       where: { localizacao: localizacao },
-      relations: ['relatorios'], // Carrega a relação com os relatórios
+      relations: ['relatorios'],
     });
 
-    return sala
+    return sala.relatorios
   }
 
   // ======================================

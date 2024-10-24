@@ -46,6 +46,6 @@ export default (router: Router): void => {
   router.get(
     "/salas/:id/relatorios",
     (req: Request, res: Response, next: NextFunction) =>
-      salaController.getSalaWithRelatorios(req, res, next),
+      salaController.getRelatoriosSala(req, res, next),
   );
 };
