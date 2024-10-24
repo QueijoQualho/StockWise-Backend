@@ -102,9 +102,9 @@ export class SalaController {
     if (!localizacao) return next(new BadRequestError("Invalid sala ID"));
 
     try {
-      const sala = await this.salaService.getRelatoriosSala(localizacao)
+      const relatorios = await this.salaService.getRelatoriosSala(localizacao)
 
-      return ok(res, sala)
+      return (relatorios && relatorios.length > 0) ? ok(res, relatorios) : noContent(res);
     } catch (error: any) {
       next(error);
     }

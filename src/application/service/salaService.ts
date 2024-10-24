@@ -80,7 +80,12 @@ export class SalaService {
     const sala = await this.salaRepository.findOne({
       where: { localizacao: localizacao },
       relations: ['relatorios'],
+      order: {
+        id: 'ASC',
+      }
     });
+
+    if (!sala) throw new NotFoundError("Sala not found");
 
     return sala.relatorios
   }
