@@ -12,7 +12,7 @@ export default async function runPythonScript(
 ): Promise<any> {
   try {
     const command =
-      env.nodeEnv !== "production"
+      env.nodeEnv === "production"
         ? "/usr/src/app/python/venv/bin/python"
         : "python\\venv\\Scripts\\python";
 
