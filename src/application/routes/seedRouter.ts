@@ -9,10 +9,10 @@ export default (router: Router): void => {
     seedController.seedSalas(req, res, next),
   );
 
-  router.post("/seed/createItens",
+  router.post(
+    "/seed/createItens",
     upload.single("file"),
     (req: Request, res: Response, next: NextFunction) =>
       seedController.createItemsFromFile(req, res, next),
   );
-
 };

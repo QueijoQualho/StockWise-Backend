@@ -28,7 +28,7 @@ export class Sala {
   itens: Item[];
 
   @OneToMany(() => Relatorio, (documento) => documento.sala)
-  relatorios: Relatorio[]
+  relatorios: Relatorio[];
 
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;

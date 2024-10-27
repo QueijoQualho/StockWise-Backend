@@ -1,9 +1,5 @@
 import { UserRole } from "@model/enum/roles";
-import {
-  IsEmail,
-  IsEnum,
-  IsOptional,
-} from "class-validator";
+import { IsEmail, IsEnum, IsOptional } from "class-validator";
 
 export class UserUpdateDTO {
   @IsOptional()

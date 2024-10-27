@@ -8,7 +8,7 @@ const execPromise = promisify(exec);
 
 export default async function runPythonScript(
   scriptPath: string,
-  file?: Express.Multer.File
+  file?: Express.Multer.File,
 ): Promise<any> {
   try {
     const command =
@@ -28,7 +28,9 @@ export default async function runPythonScript(
       fs.writeFileSync(filePath, file.buffer);
     }
 
-    const { stdout, stderr } = await execPromise(`${command} ${scriptPath} ${filePath}`);
+    const { stdout, stderr } = await execPromise(
+      `${command} ${scriptPath} ${filePath}`,
+    );
 
     if (stderr) {
       throw new Error(`stderr: ${stderr}`);
