@@ -257,9 +257,10 @@ paths:
           description: Upload Successful
         "404":
           description: Sala not found
+
   /salas/{localizacao}/relatorios:
     get:
-      summary: Retrieve all relatorios/pdfs for a specific sala
+      summary: Retrieve all relatorios/pdfs paginated for a specific sala
       tags:
         - Salas
       parameters:
@@ -269,6 +270,13 @@ paths:
           schema:
             type: integer
           description: Localização da sala
+        - in: query
+          name: dataLimite
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Data limite para filtrar os relatórios no formato YYYY-MM-DD
       responses:
         "200":
           description: List of relatorios/pdf for the specified sala
@@ -277,9 +285,9 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Item"
+                  $ref: "#/components/schemas/Relatorio"
         "400":
-          description: Invalid localizacao parameter
+          description: Invalid localizacao parameter or invalid date format
         "404":
           description: Sala not found
 
@@ -584,3 +592,27 @@ components:
             - ADMIN
             - USER
             - MODERATOR
+
+    Relatorio:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identificador único do relatório.
+        nome:
+          type: string
+          description: Nome do relatório.
+        url:
+          type: string
+          description: URL do relatório.
+        dataCriacao:
+          type: string
+          format: date-time
+          description: Data de criação do relatório.
+      required:
+        - id
+        - nome
+        - url
+        - sala
+        - dataCriacao
