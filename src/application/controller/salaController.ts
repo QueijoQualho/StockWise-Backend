@@ -97,6 +97,20 @@ export class SalaController {
     }
   }
 
+  async getAllRelatorios(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const pagination = this.extractPaginationParams(req.query);
+      const salas = await this.salaService.getAllRelatoriosSala(pagination);
+      ok(res, salas);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async uploadPDF(
     req: Request,
     res: Response,

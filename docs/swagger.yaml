@@ -343,7 +343,7 @@ paths:
       tags:
         - Users
       responses:
-        "201":
+        "200":
           description: lista dos users
           content:
             application/json:
@@ -427,6 +427,20 @@ paths:
       responses:
         "201":
           description: itens criados com sucesso
+
+  /relatorios:
+    get:
+      summary: Retorna uma lista de relatorios paginado
+      tags:
+        - Relatorio
+      responses:
+        "200":
+          description: lista dos relatorios
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Relatorio"
+
 components:
   schemas:
     Item:

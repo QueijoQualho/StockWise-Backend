@@ -50,4 +50,11 @@ export default (router: Router): void => {
     (req: Request, res: Response, next: NextFunction) =>
       salaController.getRelatoriosSala(req, res, next),
   );
+
+  //RELATORIO
+  router.get(
+    "/relatorios",
+    (req: Request, res: Response, next: NextFunction) =>
+      salaController.getAllRelatorios(req, res, next),
+  );
 };

@@ -18,7 +18,7 @@ export class SalaService {
     private readonly salaRepository: SalaRepositoryType,
     private readonly relatorioRepository: RelatorioRepositoryType,
     private readonly uploadService: UploadService,
-  ) {}
+  ) { }
 
   async findAll(): Promise<Sala[]> {
     return this.salaRepository.find();
@@ -81,9 +81,29 @@ export class SalaService {
     // TODO caso tenha q mudar a logica
     const relatorios = dataLimite
       ? sala.relatorios.filter(
-          (relatorio) => new Date(relatorio.dataCriacao) >= dataLimite,
-        )
+        (relatorio) => new Date(relatorio.dataCriacao) >= dataLimite,
+      )
       : sala.relatorios;
+
+    const paginatedReports = paginateArray(relatorios, pagination);
+
+    return createPageable(
+      paginatedReports,
+      relatorios.length,
+      pagination.page,
+      pagination.limit,
+    );
+  }
+
+  async getAllRelatoriosSala(
+    pagination: PaginationParams,
+  ): Promise<Pageable<Relatorio>> {
+
+    const salas = await this.salaRepository.find({
+      relations: ["relatorios"],
+    });
+
+    const relatorios: Relatorio[] = salas.flatMap(sala => sala.relatorios);
 
     const paginatedReports = paginateArray(relatorios, pagination);
 
