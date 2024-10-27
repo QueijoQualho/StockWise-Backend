@@ -4,16 +4,21 @@ import { Item } from "@model/itemEntity";
 import { Sala } from "@model/salaEntity";
 import { NotFoundError } from "@utils/errors";
 import { Pageable, PaginationParams } from "@utils/interfaces";
-import { UploadService } from "./uploadService";
 import { RelatorioRepositoryType } from "@infra/repository/relatorioRepository";
+import { Relatorio } from "@model/relatorioEntity";
+import { UploadService } from "@service/uploadService";
+import {
+  calculateOffset,
+  createPageable,
+  paginateArray,
+} from "@utils/helpers/paginationUtil";
 
 export class SalaService {
-
   constructor(
     private readonly salaRepository: SalaRepositoryType,
     private readonly relatorioRepository: RelatorioRepositoryType,
-    private readonly uploadService: UploadService
-  ) { }
+    private readonly uploadService: UploadService,
+  ) {}
 
   async findAll(): Promise<Sala[]> {
     return this.salaRepository.find();
@@ -22,12 +27,6 @@ export class SalaService {
   async findOne(localizacao: number): Promise<Sala | null> {
     return this.salaRepository.findOneBy({ localizacao }) || null;
   }
-
-  // async update(id: number, updatedSalaDTO: SalaUpdateDTO): Promise<void> {
-  //   const sala = await this.getSalaOrThrow(id);
-  //   const updatedSala = this.mapDTOToEntity(sala, updatedSalaDTO);
-  //   await this.salaRepository.update(id, updatedSala);
-  // }
 
   async delete(id: number): Promise<void> {
     const sala = await this.getSalaOrThrow(id);
@@ -39,11 +38,11 @@ export class SalaService {
   ): Promise<Pageable<Sala>> {
     const { page, limit } = pagination;
     const [salas, total] = await this.salaRepository.findAndCount({
-      skip: this.calculateOffset(page, limit),
+      skip: calculateOffset(page, limit),
       take: limit,
     });
 
-    return this.createPageable(salas, total, page, limit);
+    return createPageable(salas, total, page, limit);
   }
 
   async getPaginatedItensSala(
@@ -51,10 +50,10 @@ export class SalaService {
     pagination: PaginationParams,
   ): Promise<Pageable<Item>> {
     const sala = await this.getSalaWithItemsOrThrow(localizacao);
-    const itensPagina = this.paginateArray(sala.itens, pagination);
+    const paginatedItems = paginateArray(sala.itens, pagination);
 
-    return this.createPageable(
-      itensPagina,
+    return createPageable(
+      paginatedItems,
       sala.itens.length,
       pagination.page,
       pagination.limit,
@@ -65,29 +64,35 @@ export class SalaService {
     const sala = await this.getSalaOrThrow(localizacao);
     const pdfUrl = await this.uploadService.uploadPdf(file);
 
-    const pdf = await this.relatorioRepository.save({
+    return this.relatorioRepository.save({
       nome: file.originalname,
       url: pdfUrl,
-      sala: sala
+      sala: sala,
     });
-
-    return pdf;
   }
 
   async getRelatoriosSala(
     localizacao: number,
-  ) {
-    const sala = await this.salaRepository.findOne({
-      where: { localizacao: localizacao },
-      relations: ['relatorios'],
-      order: {
-        id: 'ASC',
-      }
-    });
+    pagination: PaginationParams,
+    dataLimite?: Date,
+  ): Promise<Pageable<Relatorio>> {
+    const sala = await this.getSalaWithRelatoriosOrThrow(localizacao);
 
-    if (!sala) throw new NotFoundError("Sala not found");
+    // TODO caso tenha q mudar a logica
+    const relatorios = dataLimite
+      ? sala.relatorios.filter(
+          (relatorio) => new Date(relatorio.dataCriacao) >= dataLimite,
+        )
+      : sala.relatorios;
 
-    return sala.relatorios
+    const paginatedReports = paginateArray(relatorios, pagination);
+
+    return createPageable(
+      paginatedReports,
+      relatorios.length,
+      pagination.page,
+      pagination.limit,
+    );
   }
 
   // ======================================
@@ -95,8 +100,7 @@ export class SalaService {
   // ======================================
 
   private mapDTOToEntity(sala: Sala, salaDTO: Partial<SalaDTO>): Sala {
-    Object.assign(sala, salaDTO);
-    return sala;
+    return Object.assign(sala, salaDTO);
   }
 
   private async getSalaOrThrow(localizacao: number): Promise<Sala> {
@@ -109,36 +113,21 @@ export class SalaService {
     const sala = await this.salaRepository.findOne({
       where: { localizacao },
       relations: ["itens"],
-      order: {
-        id: 'ASC',
-      }
+      order: { id: "ASC" },
     });
     if (!sala) throw new NotFoundError("Sala not found");
     return sala;
   }
 
-  private calculateOffset(page: number, limit: number): number {
-    return (page - 1) * limit;
-  }
-
-  private paginateArray<T>(items: T[], pagination: PaginationParams): T[] {
-    const { page, limit } = pagination;
-    const startIndex = this.calculateOffset(page, limit);
-    const endIndex = Math.min(startIndex + limit, items.length);
-    return items.slice(startIndex, endIndex);
-  }
-
-  private createPageable<T>(
-    data: T[],
-    totalItems: number,
-    currentPage: number,
-    limit: number,
-  ): Pageable<T> {
-    return {
-      data,
-      totalItems,
-      totalPages: Math.ceil(totalItems / limit),
-      currentPage,
-    };
+  private async getSalaWithRelatoriosOrThrow(
+    localizacao: number,
+  ): Promise<Sala> {
+    const sala = await this.salaRepository.findOne({
+      where: { localizacao: localizacao },
+      relations: ["relatorios"],
+      order: { id: "ASC" },
+    });
+    if (!sala) throw new NotFoundError("Sala not found");
+    return sala;
   }
 }

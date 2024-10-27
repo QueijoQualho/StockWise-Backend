@@ -21,7 +21,7 @@ interface Sala {
 type Output = Record<string, Sala>;
 
 export class SeedController {
-  constructor(private readonly seedService: SeedService) { }
+  constructor(private readonly seedService: SeedService) {}
 
   async seedSalas(
     _: Request,
@@ -42,16 +42,13 @@ export class SeedController {
         }
       }
 
-      return created(res, "Tabela povoada")
+      return created(res, "Tabela povoada");
     } catch (error: any) {
       next(error);
     }
   }
 
-  async createItemsFromFile(
-    req: Request,
-    res: Response,
-    next: NextFunction,) {
+  async createItemsFromFile(req: Request, res: Response, next: NextFunction) {
     try {
       const scriptPath = path.resolve(
         __dirname + "../../../../python/model.py",
@@ -67,7 +64,7 @@ export class SeedController {
         }
       }
 
-      return created(res, "Itens criados com sucesso")
+      return created(res, "Itens criados com sucesso");
     } catch (error: any) {
       next(error);
     }
