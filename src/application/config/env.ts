@@ -12,7 +12,7 @@ const {
   TYPEORM_PORT,
   TYPEORM_URL,
   AZURE_STORAGE_URL,
-  AZURE_STORAGE_TOKEN
+  AZURE_STORAGE_TOKEN,
 } = process.env;
 
 const env = {
@@ -29,7 +29,7 @@ const env = {
   azure: {
     url: String(AZURE_STORAGE_URL),
     token: String(AZURE_STORAGE_TOKEN),
-  }
+  },
 };
 
 export default env;

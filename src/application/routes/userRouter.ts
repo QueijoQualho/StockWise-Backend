@@ -6,17 +6,26 @@ export default (router: Router): void => {
 
   router.get("/users", (req: Request, res: Response, next: NextFunction) => {
     userController.getUsersPaginated(req, res, next);
-  })
+  });
 
-  router.get("/users/:id", (req: Request, res: Response, next: NextFunction) => {
-    userController.getUserById(req, res, next);
-  })
+  router.get(
+    "/users/:id",
+    (req: Request, res: Response, next: NextFunction) => {
+      userController.getUserById(req, res, next);
+    },
+  );
 
-  router.patch("/users/:id", (req: Request, res: Response, next: NextFunction) => {
-    userController.updateUser(req, res, next);
-  })
+  router.patch(
+    "/users/:id",
+    (req: Request, res: Response, next: NextFunction) => {
+      userController.updateUser(req, res, next);
+    },
+  );
 
-  router.delete("/users/:id", (req: Request, res: Response, next: NextFunction) => {
-    userController.deleteUser(req, res, next);
-  })
-}
+  router.delete(
+    "/users/:id",
+    (req: Request, res: Response, next: NextFunction) => {
+      userController.deleteUser(req, res, next);
+    },
+  );
+};

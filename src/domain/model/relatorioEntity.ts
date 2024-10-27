@@ -1,4 +1,10 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Sala } from "./salaEntity";
 
 @Entity("Relatorios")
@@ -12,9 +18,9 @@ export class Relatorio {
   @Column()
   url: string;
 
-  @ManyToOne(() => Sala, (sala) => sala.relatorios, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Sala, (sala) => sala.relatorios, { onDelete: "CASCADE" })
   sala: Sala;
 
-  @CreateDateColumn({ name: 'data_criacao' })
+  @CreateDateColumn({ name: "data_criacao" })
   dataCriacao: Date;
 }

@@ -10,7 +10,9 @@ const RelatorioRepository: RelatorioRepositoryType = databaseInstance
   .getRepository(Relatorio)
   .extend({});
 
-export function getRelatorioRepository(manager?: EntityManager): Repository<Relatorio> {
+export function getRelatorioRepository(
+  manager?: EntityManager,
+): Repository<Relatorio> {
   if (manager) {
     return manager.withRepository(RelatorioRepository);
   }

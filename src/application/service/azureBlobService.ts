@@ -1,9 +1,11 @@
 import blobServiceClient from "@config/azureBlobClient";
 import logger from "@config/logger";
 
-
 // Função para fazer upload de um arquivo para o Azure Blob Storage
-export const uploadToAzure = async (file: Express.Multer.File, containerName: string): Promise<string> => {
+export const uploadToAzure = async (
+  file: Express.Multer.File,
+  containerName: string,
+): Promise<string> => {
   try {
     const containerClient = blobServiceClient.getContainerClient(containerName);
 
@@ -20,7 +22,10 @@ export const uploadToAzure = async (file: Express.Multer.File, containerName: st
 };
 
 // Função para deletar um arquivo do Azure Blob Storage
-export const deleteFromAzure = async (fileUrl: string, containerName: string): Promise<void> => {
+export const deleteFromAzure = async (
+  fileUrl: string,
+  containerName: string,
+): Promise<void> => {
   try {
     const blobName = fileUrl.split("/").pop();
     if (!blobName) throw new Error("Nome do blob inválido");

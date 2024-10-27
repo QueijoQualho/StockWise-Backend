@@ -9,8 +9,10 @@ export default (router: Router): void => {
     salaController.getSalas(req, res, next),
   );
 
-  router.get("/salas/paged", (req: Request, res: Response,  next: NextFunction) =>
-    salaController.getSalasPaginated(req, res, next),
+  router.get(
+    "/salas/paged",
+    (req: Request, res: Response, next: NextFunction) =>
+      salaController.getSalasPaginated(req, res, next),
   );
 
   router.get("/salas/:id", (req: Request, res: Response, next: NextFunction) =>

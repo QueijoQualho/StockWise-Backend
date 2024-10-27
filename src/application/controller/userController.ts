@@ -8,13 +8,13 @@ import { NextFunction, Request, Response } from "express";
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  async getUsersPaginated(req: Request, res: Response, next: NextFunction) {
+  async getUsersPaginated(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
-      const pagination: PaginationParams = {
-        page: parseInt(req.query.page as string, 10) || 1,
-        limit: parseInt(req.query.limit as string, 10) || 10,
-      };
-
+      const pagination = this.getPaginationParams(req);
       const users = await this.userService.getUsersPaginated(pagination);
       return ok(res, users);
     } catch (error) {
@@ -22,11 +22,15 @@ export class UserController {
     }
   }
 
-  async getUserById(req: Request, res: Response, next: NextFunction) {
-    try {
-      const userId = this.extractUserId(req.params.id)
-      if (!userId) return next(new NotFoundError("Invalid user ID"));
+  async getUserById(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    const userId = this.extractUserId(req.params.id);
+    if (!userId) return next(new NotFoundError("Invalid user ID"));
 
+    try {
       const user = await this.userService.getUserById(userId);
       return ok(res, user);
     } catch (error) {
@@ -34,13 +38,17 @@ export class UserController {
     }
   }
 
-  async updateUser(req: Request, res: Response, next: NextFunction) {
+  async updateUser(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    const userId = this.extractUserId(req.params.id);
+    if (!userId) return next(new NotFoundError("Invalid user ID"));
+
+    const updateData = this.getUpdateData(req.body);
+
     try {
-      const userId = this.extractUserId(req.params.id)
-      if (!userId) return next(new NotFoundError("Invalid user ID"));
-
-      const updateData = Object.assign(new UserUpdateDTO(), req.body);
-
       await this.userService.updateUser(userId, updateData);
       return noContent(res);
     } catch (error) {
@@ -48,11 +56,15 @@ export class UserController {
     }
   }
 
-  async deleteUser(req: Request, res: Response, next: NextFunction) {
-    try {
-      const userId  = this.extractUserId(req.params.id)
-      if (!userId) return next(new NotFoundError("Invalid user ID"));
+  async deleteUser(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    const userId = this.extractUserId(req.params.id);
+    if (!userId) return next(new NotFoundError("Invalid user ID"));
 
+    try {
       await this.userService.deleteUser(userId);
       return noContent(res);
     } catch (error) {
@@ -60,6 +72,22 @@ export class UserController {
     }
   }
 
-  private extractUserId = (id: string): number | null =>
-    !isNaN(Number(id)) ? parseInt(id, 10) : null;
+  // ======================================
+  // = HELPER METHODS =
+  // ======================================
+
+  private extractUserId(id: string): number | null {
+    return !isNaN(Number(id)) ? parseInt(id, 10) : null;
+  }
+
+  private getPaginationParams(req: Request): PaginationParams {
+    return {
+      page: parseInt(req.query.page as string, 10) || 1,
+      limit: parseInt(req.query.limit as string, 10) || 10,
+    };
+  }
+
+  private getUpdateData(data: any): UserUpdateDTO {
+    return Object.assign(new UserUpdateDTO(), data);
+  }
 }

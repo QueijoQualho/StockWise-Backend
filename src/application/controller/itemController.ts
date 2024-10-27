@@ -6,7 +6,7 @@ import { PaginationParams } from "@utils/interfaces";
 import { NextFunction, Request, Response } from "express";
 
 export class ItemController {
-  constructor(private readonly itemService: ItemService) { }
+  constructor(private readonly itemService: ItemService) {}
 
   // ======================================
   // = CRUD =
@@ -18,14 +18,10 @@ export class ItemController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const pagination: PaginationParams = {
-        page: parseInt(req.query.page as string, 10) || 1,
-        limit: parseInt(req.query.limit as string, 10) || 10,
-      };
-
+      const pagination = this.getPaginationParams(req);
       const items = await this.itemService.getPaginatedItems(pagination);
       return ok(res, items);
-    } catch (error: any) {
+    } catch (error) {
       next(error);
     }
   }
@@ -41,7 +37,7 @@ export class ItemController {
     try {
       const item = await this.itemService.findOne(itemId);
       return item ? ok(res, item) : next(new NotFoundError("Item not found"));
-    } catch (error: any) {
+    } catch (error) {
       next(error);
     }
   }
@@ -54,12 +50,12 @@ export class ItemController {
     const itemId = this.extractItemId(req.params.id);
     if (!itemId) return next(new BadRequestError("Invalid item ID"));
 
-    const updatedItemDTO = Object.assign(new ItemUpdateDTO(), req.body);
+    const updatedItemDTO = this.getUpdatedItemDTO(req.body);
 
     try {
       await this.itemService.update(itemId, updatedItemDTO);
       return noContent(res);
-    } catch (error: any) {
+    } catch (error) {
       next(error);
     }
   }
@@ -75,7 +71,7 @@ export class ItemController {
     try {
       await this.itemService.delete(itemId);
       return noContent(res);
-    } catch (error: any) {
+    } catch (error) {
       next(error);
     }
   }
@@ -85,14 +81,13 @@ export class ItemController {
     res: Response,
     next: NextFunction,
   ): Promise<void> {
-
     const itemId = this.extractItemId(req.params.id);
     if (!itemId) return next(new BadRequestError("Invalid item ID"));
 
     try {
       await this.itemService.uploadImage(itemId, req.file);
       return ok(res, "Image sent successfully");
-    } catch (error: any) {
+    } catch (error) {
       next(error);
     }
   }
@@ -101,6 +96,18 @@ export class ItemController {
   // = HELPER METHODS =
   // ======================================
 
-  private extractItemId = (id: string): number | null =>
-    !isNaN(Number(id)) ? parseInt(id, 10) : null;
+  private extractItemId(id: string): number | null {
+    return !isNaN(Number(id)) ? parseInt(id, 10) : null;
+  }
+
+  private getPaginationParams(req: Request): PaginationParams {
+    return {
+      page: parseInt(req.query.page as string, 10) || 1,
+      limit: parseInt(req.query.limit as string, 10) || 10,
+    };
+  }
+
+  private getUpdatedItemDTO(data: any): ItemUpdateDTO {
+    return Object.assign(new ItemUpdateDTO(), data);
+  }
 }

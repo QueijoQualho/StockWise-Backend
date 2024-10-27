@@ -5,12 +5,12 @@ import { BadRequestError } from "@utils/errors";
 export class UploadService {
   constructor(
     private readonly containerNameItens = "imagens",
-    private readonly containerNamePdf = "pdfs"
-  ) { }
+    private readonly containerNamePdf = "pdfs",
+  ) {}
 
   async uploadFile(
     file: Express.Multer.File,
-    existingFileUrl?: string
+    existingFileUrl?: string,
   ): Promise<string> {
     try {
       const fileUrl = await uploadToAzure(file, this.containerNameItens);
@@ -27,7 +27,7 @@ export class UploadService {
 
   async uploadPdf(
     file: Express.Multer.File,
-    existingFileUrl?: string
+    existingFileUrl?: string,
   ): Promise<string> {
     try {
       const fileUrl = await uploadToAzure(file, this.containerNamePdf);

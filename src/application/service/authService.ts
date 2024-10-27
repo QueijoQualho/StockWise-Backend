@@ -7,7 +7,7 @@ import { BadRequestError } from "@utils/errors";
 import * as bcrypt from "bcrypt";
 
 export class AuthService {
-  constructor(private readonly userRepository: UserRepositoryType) { }
+  constructor(private readonly userRepository: UserRepositoryType) {}
 
   async signup(signupDTO: SignupDTO): Promise<UserResponseDTO> {
     await this.ensureEmailIsUnique(signupDTO.email);
@@ -55,7 +55,7 @@ export class AuthService {
 
   private async verifyPasswordOrFail(
     plainPassword: string,
-    hashedPassword: string
+    hashedPassword: string,
   ): Promise<void> {
     const isPasswordValid = await bcrypt.compare(plainPassword, hashedPassword);
     if (!isPasswordValid) {

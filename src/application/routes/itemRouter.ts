@@ -33,6 +33,4 @@ export default (router: Router): void => {
     (req: Request, res: Response, next: NextFunction) =>
       itemController.uploadImageItem(req, res, next),
   );
-
-
 };

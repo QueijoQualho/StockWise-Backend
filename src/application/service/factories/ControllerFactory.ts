@@ -3,10 +3,22 @@ import { ItemController } from "@controller/itemController";
 import { SalaController } from "@controller/salaController";
 import { SeedController } from "@controller/seedController";
 import { UserController } from "@controller/userController";
-import { getItemRepository, ItemRepositoryType } from "@infra/repository/itemRepository";
-import { getRelatorioRepository, RelatorioRepositoryType } from "@infra/repository/relatorioRepository";
-import { getSalaRepository, SalaRepositoryType } from "@infra/repository/salaRepository";
-import { getUserRepository, UserRepositoryType } from "@infra/repository/userRepository";
+import {
+  getItemRepository,
+  ItemRepositoryType,
+} from "@infra/repository/itemRepository";
+import {
+  getRelatorioRepository,
+  RelatorioRepositoryType,
+} from "@infra/repository/relatorioRepository";
+import {
+  getSalaRepository,
+  SalaRepositoryType,
+} from "@infra/repository/salaRepository";
+import {
+  getUserRepository,
+  UserRepositoryType,
+} from "@infra/repository/userRepository";
 import { AuthService } from "@service/authService";
 import { ItemService } from "@service/itemService";
 import { SalaService } from "@service/salaService";
@@ -19,15 +31,15 @@ class ControllerFactory {
     private readonly itemRepository: ItemRepositoryType,
     private readonly salaRepository: SalaRepositoryType,
     private readonly userRepository: UserRepositoryType,
-    private readonly relatorioRepository: RelatorioRepositoryType
-  ) { }
+    private readonly relatorioRepository: RelatorioRepositoryType,
+  ) {}
 
   createItemController(): ItemController {
     const uploadService = new UploadService();
     const itemService = new ItemService(
       this.itemRepository,
       this.salaRepository,
-      uploadService
+      uploadService,
     );
     return new ItemController(itemService);
   }
@@ -35,14 +47,18 @@ class ControllerFactory {
   createSalaController(): SalaController {
     const uploadService = new UploadService();
 
-    const salaService = new SalaService(this.salaRepository, this.relatorioRepository, uploadService);
+    const salaService = new SalaService(
+      this.salaRepository,
+      this.relatorioRepository,
+      uploadService,
+    );
     return new SalaController(salaService);
   }
 
   createSeedController(): SeedController {
     const seedService = new SeedService(
       this.itemRepository,
-      this.salaRepository
+      this.salaRepository,
     );
     return new SeedController(seedService);
   }
@@ -67,5 +83,5 @@ export const controllerFactory = new ControllerFactory(
   itemRepository,
   salaRepository,
   userRepository,
-  relatorioRepository
+  relatorioRepository,
 );
