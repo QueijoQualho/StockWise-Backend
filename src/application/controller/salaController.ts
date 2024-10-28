@@ -84,7 +84,7 @@ export class SalaController {
 
     try {
       const pagination = this.extractPaginationParams(req.query);
-      const dataLimite = this.extractDateParam(req.query.dataLimite as string);
+      const dataLimite = this.extractDateParam(req.query.dataCriacao as string);
 
       const relatorios = await this.salaService.getRelatoriosSala(
         localizacao,
@@ -103,9 +103,12 @@ export class SalaController {
     next: NextFunction,
   ): Promise<void> {
     try {
+
       const pagination = this.extractPaginationParams(req.query);
-      const salas = await this.salaService.getAllRelatoriosSala(pagination);
-      ok(res, salas);
+      const dataLimite = this.extractDateParam(req.query.dataCriacao as string);
+
+      const relatorios = await this.salaService.getAllRelatoriosSala(pagination, dataLimite);
+      return relatorios.data.length > 0 ? ok(res, relatorios) : noContent(res);
     } catch (error) {
       next(error);
     }

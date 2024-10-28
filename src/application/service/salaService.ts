@@ -97,13 +97,19 @@ export class SalaService {
 
   async getAllRelatoriosSala(
     pagination: PaginationParams,
+    dataLimite?: Date,
   ): Promise<Pageable<Relatorio>> {
-
     const salas = await this.salaRepository.find({
       relations: ["relatorios"],
     });
 
-    const relatorios: Relatorio[] = salas.flatMap(sala => sala.relatorios);
+    let relatorios: Relatorio[] = salas.flatMap((sala) => sala.relatorios);
+
+    if (dataLimite) {
+      relatorios = relatorios.filter(
+        (relatorio) => new Date(relatorio.dataCriacao) >= dataLimite,
+      );
+    }
 
     const paginatedReports = paginateArray(relatorios, pagination);
 
@@ -114,6 +120,7 @@ export class SalaService {
       pagination.limit,
     );
   }
+
 
   // ======================================
   // = HELPER METHODS =
