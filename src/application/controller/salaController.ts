@@ -84,12 +84,14 @@ export class SalaController {
 
     try {
       const pagination = this.extractPaginationParams(req.query);
-      const dataLimite = this.extractDateParam(req.query.dataCriacao as string);
+      const dataInicio = this.extractDateParam(req.query.dataCriacao as string);
+      const dataLimite = this.extractDateParam(req.query.dataFinal as string);
 
       const relatorios = await this.salaService.getRelatoriosSala(
         localizacao,
         pagination,
-        dataLimite,
+        dataInicio,
+        dataLimite
       );
       return relatorios.data.length > 0 ? ok(res, relatorios) : noContent(res);
     } catch (error) {
@@ -105,9 +107,10 @@ export class SalaController {
     try {
 
       const pagination = this.extractPaginationParams(req.query);
-      const dataLimite = this.extractDateParam(req.query.dataCriacao as string);
+      const dataInicio = this.extractDateParam(req.query.dataCriacao as string);
+      const dataLimite = this.extractDateParam(req.query.dataFinal as string);
 
-      const relatorios = await this.salaService.getAllRelatoriosSala(pagination, dataLimite);
+      const relatorios = await this.salaService.getAllRelatoriosSala(pagination, dataInicio, dataLimite );
       return relatorios.data.length > 0 ? ok(res, relatorios) : noContent(res);
     } catch (error) {
       next(error);
@@ -169,7 +172,9 @@ export class SalaController {
         "Invalid date format for dataLimite. Use YYYY-MM-DD",
       );
     }
-    date.setHours(0, 0, 0, 0);
+    console.log(date);
+
+    date.setHours(23, 59, 59, 999);
     return date;
   }
 }

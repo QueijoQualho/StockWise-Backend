@@ -74,16 +74,13 @@ export class SalaService {
   async getRelatoriosSala(
     localizacao: number,
     pagination: PaginationParams,
-    dataLimite?: Date,
+    dataInicio?: Date,
+    dataLimite?: Date
   ): Promise<Pageable<Relatorio>> {
     const sala = await this.getSalaWithRelatoriosOrThrow(localizacao);
 
-    // TODO caso tenha q mudar a logica
-    const relatorios = dataLimite
-      ? sala.relatorios.filter(
-        (relatorio) => new Date(relatorio.dataCriacao) >= dataLimite,
-      )
-      : sala.relatorios;
+    // Aplica o filtro usando a função auxiliar
+    const relatorios = this.filterRelatoriosByDate(sala.relatorios, dataInicio, dataLimite);
 
     const paginatedReports = paginateArray(relatorios, pagination);
 
@@ -97,19 +94,15 @@ export class SalaService {
 
   async getAllRelatoriosSala(
     pagination: PaginationParams,
-    dataLimite?: Date,
+    dataInicio?: Date,
+    dataLimite?: Date
   ): Promise<Pageable<Relatorio>> {
     const salas = await this.salaRepository.find({
       relations: ["relatorios"],
     });
 
     let relatorios: Relatorio[] = salas.flatMap((sala) => sala.relatorios);
-
-    if (dataLimite) {
-      relatorios = relatorios.filter(
-        (relatorio) => new Date(relatorio.dataCriacao) >= dataLimite,
-      );
-    }
+    relatorios = this.filterRelatoriosByDate(relatorios, dataInicio, dataLimite);
 
     const paginatedReports = paginateArray(relatorios, pagination);
 
@@ -120,7 +113,6 @@ export class SalaService {
       pagination.limit,
     );
   }
-
 
   // ======================================
   // = HELPER METHODS =
@@ -156,5 +148,19 @@ export class SalaService {
     });
     if (!sala) throw new NotFoundError("Sala not found");
     return sala;
+  }
+
+  private filterRelatoriosByDate(
+    relatorios: Relatorio[],
+    dataInicio?: Date,
+    dataLimite?: Date
+  ): Relatorio[] {
+    return relatorios.filter((relatorio) => {
+      const dataCriacao = new Date(relatorio.dataCriacao);
+      return (
+        (!dataInicio || dataCriacao >= dataInicio) &&
+        (!dataLimite || dataCriacao <= dataLimite)
+      );
+    });
   }
 }
