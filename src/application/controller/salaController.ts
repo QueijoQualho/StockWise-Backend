@@ -172,7 +172,6 @@ export class SalaController {
         "Invalid date format for dataLimite. Use YYYY-MM-DD",
       );
     }
-    console.log(date);
 
     date.setHours(23, 59, 59, 999);
     return date;
