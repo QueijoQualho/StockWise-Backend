@@ -102,6 +102,7 @@ export class SalaService {
     });
 
     let relatorios: Relatorio[] = salas.flatMap((sala) => sala.relatorios);
+
     relatorios = this.filterRelatoriosByDate(relatorios, dataInicio, dataLimite);
 
     const paginatedReports = paginateArray(relatorios, pagination);
@@ -157,6 +158,8 @@ export class SalaService {
   ): Relatorio[] {
     return relatorios.filter((relatorio) => {
       const dataCriacao = new Date(relatorio.dataCriacao);
+      dataCriacao.setUTCHours(0, 0, 0, 0);
+
       return (
         (!dataInicio || dataCriacao >= dataInicio) &&
         (!dataLimite || dataCriacao <= dataLimite)
