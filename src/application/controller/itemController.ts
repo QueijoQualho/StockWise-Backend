@@ -18,7 +18,7 @@ export class ItemController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const pagination = this.getPaginationParams(req);
+      const pagination = this.extractPaginationParams(req);
       const items = await this.itemService.getPaginatedItems(pagination);
       return ok(res, items);
     } catch (error) {
@@ -100,7 +100,7 @@ export class ItemController {
     return !isNaN(Number(id)) ? parseInt(id, 10) : null;
   }
 
-  private getPaginationParams(req: Request): PaginationParams {
+  private extractPaginationParams(req: Request): PaginationParams {
     return {
       page: parseInt(req.query.page as string, 10) || 1,
       limit: parseInt(req.query.limit as string, 10) || 10,

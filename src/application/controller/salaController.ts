@@ -64,9 +64,12 @@ export class SalaController {
 
     try {
       const pagination = this.extractPaginationParams(req.query);
+      const itemName = req.query.itemName as string || null
+
       const itens = await this.salaService.getPaginatedItensSala(
         localizacao,
         pagination,
+        itemName
       );
       ok(res, itens);
     } catch (error) {

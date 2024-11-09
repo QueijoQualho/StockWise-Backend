@@ -48,13 +48,21 @@ export class SalaService {
   async getPaginatedItensSala(
     localizacao: number,
     pagination: PaginationParams,
+    itemName?: string
   ): Promise<Pageable<Item>> {
     const sala = await this.getSalaWithItemsOrThrow(localizacao);
-    const paginatedItems = paginateArray(sala.itens, pagination);
+
+    const filteredItems = itemName
+    ? sala.itens.filter(item =>
+        item.nome.toLowerCase().includes(itemName.toLowerCase())
+      )
+    : sala.itens;
+
+    const paginatedItems = paginateArray(filteredItems, pagination);
 
     return createPageable(
       paginatedItems,
-      sala.itens.length,
+      filteredItems.length,
       pagination.page,
       pagination.limit,
     );
