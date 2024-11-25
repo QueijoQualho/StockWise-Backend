@@ -3,7 +3,7 @@ import { SalaRepositoryType } from "@infra/repository/salaRepository";
 import { Item } from "@model/itemEntity";
 import { Sala } from "@model/salaEntity";
 import { NotFoundError } from "@utils/errors";
-import { Pageable, PaginationParams } from "@utils/interfaces";
+import { itemFilters, Pageable, PaginationParams } from "@utils/interfaces";
 import { RelatorioRepositoryType } from "@infra/repository/relatorioRepository";
 import { Relatorio } from "@model/relatorioEntity";
 import { UploadService } from "@service/uploadService";
@@ -48,24 +48,32 @@ export class SalaService {
   async getPaginatedItensSala(
     localizacao: number,
     pagination: PaginationParams,
-    itemName?: string
+    filters?: itemFilters
   ): Promise<Pageable<Item>> {
-    const sala = await this.getSalaWithItemsOrThrow(localizacao);
+    await this.getSalaOrThrow(localizacao);
 
-    const filteredItems = itemName
-    ? sala.itens.filter(item =>
-        item.nome.toLowerCase().includes(itemName.toLowerCase())
-      )
-    : sala.itens;
+    const query = this.salaRepository
+      .createQueryBuilder("sala")
+      .leftJoinAndSelect("sala.itens", "item")
+      .where("sala.localizacao = :localizacao", { localizacao });
 
-    const paginatedItems = paginateArray(filteredItems, pagination);
+    if (filters?.search) {
+      query.andWhere("LOWER(item.nome) LIKE LOWER(:search)", {
+        search: `%${filters.search.toLowerCase()}%`,
+      });
+    }
 
-    return createPageable(
-      paginatedItems,
-      filteredItems.length,
-      pagination.page,
-      pagination.limit,
-    );
+    if (filters?.status) {
+      query.andWhere("LOWER(item.status) = LOWER(:status)", {
+        status: filters.status.toLowerCase(),
+      });
+    }
+
+    const [salaWithItems] = await query.getManyAndCount();
+    const items = salaWithItems?.[0]?.itens ?? [];
+
+    const paginatedItens = paginateArray(items, pagination)
+    return createPageable(paginatedItens, items.length, pagination.page, pagination.limit);
   }
 
   async uploadPDF(localizacao: number, file: Express.Multer.File) {
@@ -133,16 +141,6 @@ export class SalaService {
 
   private async getSalaOrThrow(localizacao: number): Promise<Sala> {
     const sala = await this.findOne(localizacao);
-    if (!sala) throw new NotFoundError("Sala not found");
-    return sala;
-  }
-
-  private async getSalaWithItemsOrThrow(localizacao: number): Promise<Sala> {
-    const sala = await this.salaRepository.findOne({
-      where: { localizacao },
-      relations: ["itens"],
-      order: { id: "ASC" },
-    });
     if (!sala) throw new NotFoundError("Sala not found");
     return sala;
   }

@@ -9,3 +9,8 @@ export interface Pageable<T> {
   totalPages: number;
   currentPage: number;
 }
+
+export interface itemFilters {
+  search?: string,
+  status?: string
+}
