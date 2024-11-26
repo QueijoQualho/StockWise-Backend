@@ -217,11 +217,17 @@ paths:
             type: integer
           description: Localização da sala
         - in: path
-          name: itemName
+          name: search
           required: false
           schema:
             type: string
           description: Nome do item
+        - in: path
+          name: status
+          required: false
+          schema:
+            type: string
+          description: Status do item
       responses:
         "200":
           description: List of items for the specified sala
