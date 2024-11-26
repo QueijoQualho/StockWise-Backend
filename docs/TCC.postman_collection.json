@@ -1,0 +1,502 @@
+{
+	"info": {
+		"_postman_id": "838876ae-9e6e-422f-af2d-4f188fd7c182",
+		"name": "TCC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28919659"
+	},
+	"item": [
+		{
+			"name": "Itens",
+			"item": [
+				{
+					"name": "GET itens",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/itens?page=483",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"itens"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "483"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/itens/101",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"itens",
+								"101"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH itens",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/Pedro/Pictures/weapon-or-meister-v0-cj4grh7bx8jc1.png",
+									"disabled": true
+								},
+								{
+									"key": "nome",
+									"value": "MESA EM L COM DIVISÓRIA MALIBU - DC 1693",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3000/api/itens/1218140",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"itens",
+								"1218140"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE itens",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/itens/1221588",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"itens",
+								"1221588"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPLOAD Image",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/Pedro/Downloads/TRABALHO DE PESQUISA SOBRE REQUISITOS FUNCIONAIS.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3000/api/itens/1221588/upload-image",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"itens",
+								"1221588",
+								"upload-image"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Salas",
+			"item": [
+				{
+					"name": "GET salas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://tcc-senai.onrender.com/api/salas",
+							"protocol": "https",
+							"host": [
+								"tcc-senai",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"salas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET PAGED salas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/salas/paged",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"salas",
+								"paged"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Localizacao salas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/salas/21080043",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"salas",
+								"21080043"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET itens sala",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/salas/21080043/itens",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"salas",
+								"21080043",
+								"itens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPLOAD pdf",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/Pedro/Downloads/Relatorio_Jornada_1 (20).pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3000/api/salas/21080002/upload-pdf",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"salas",
+								"21080002",
+								"upload-pdf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET relatorios sala",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/salas/21080001/relatorios?dataCriacao=2024-10-25&dataFinal=2024-10-25",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"salas",
+								"21080001",
+								"relatorios"
+							],
+							"query": [
+								{
+									"key": "dataCriacao",
+									"value": "2024-10-25"
+								},
+								{
+									"key": "dataFinal",
+									"value": "2024-10-25"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL relatorios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/relatorios",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"relatorios"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"João Silva\",\r\n  \"email\": \"joao.silva@exampltet.com\",\r\n  \"senha\": \"senha123\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/auth/signup",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "GET users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/users?page=1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ID user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://tcc-senai.onrender.com/api/users/2",
+							"protocol": "https",
+							"host": [
+								"tcc-senai",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"users",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH User",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"role\": \"ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://tcc-senai.onrender.com/api/users/2",
+							"protocol": "https",
+							"host": [
+								"tcc-senai",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"users",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/users/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SEED",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/seed",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"seed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MODEL itens",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/Pedro/Desktop/Seila/TCC-Senai/python/data/PATRIMONIO 12 2023.xlsx"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/api/seed/createItens",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"seed",
+						"createItens"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
