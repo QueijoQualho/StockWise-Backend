@@ -1,9 +1,8 @@
-import { SalaDTO } from "@dto/index";
 import { SalaRepositoryType } from "@infra/repository/salaRepository";
-import { Item } from "@model/itemEntity";
+import { Item, Status } from "@model/itemEntity";
 import { Sala } from "@model/salaEntity";
-import { NotFoundError } from "@utils/errors";
-import { Pageable, PaginationParams } from "@utils/interfaces";
+import { BadRequestError, NotFoundError } from "@utils/errors";
+import { itemFilters, Pageable, PaginationParams } from "@utils/interfaces";
 import { RelatorioRepositoryType } from "@infra/repository/relatorioRepository";
 import { Relatorio } from "@model/relatorioEntity";
 import { UploadService } from "@service/uploadService";
@@ -18,7 +17,11 @@ export class SalaService {
     private readonly salaRepository: SalaRepositoryType,
     private readonly relatorioRepository: RelatorioRepositoryType,
     private readonly uploadService: UploadService,
-  ) { }
+  ) {}
+
+  // ===========================
+  // Public Methods
+  // ===========================
 
   async findAll(): Promise<Sala[]> {
     return this.salaRepository.find();
@@ -37,6 +40,7 @@ export class SalaService {
     pagination: PaginationParams,
   ): Promise<Pageable<Sala>> {
     const { page, limit } = pagination;
+
     const [salas, total] = await this.salaRepository.findAndCount({
       skip: calculateOffset(page, limit),
       take: limit,
@@ -48,34 +52,23 @@ export class SalaService {
   async getPaginatedItensSala(
     localizacao: number,
     pagination: PaginationParams,
-    itemName?: string
+    filters?: itemFilters,
   ): Promise<Pageable<Item>> {
-    const sala = await this.getSalaWithItemsOrThrow(localizacao);
+    const sala = await this.getSalaOrThrow(localizacao);
+    const items = await this.fetchFilteredItems(sala.localizacao, filters);
+    const paginatedItems = paginateArray(items, pagination);
 
-    const filteredItems = itemName
-    ? sala.itens.filter(item =>
-        item.nome.toLowerCase().includes(itemName.toLowerCase())
-      )
-    : sala.itens;
-
-    const paginatedItems = paginateArray(filteredItems, pagination);
-
-    return createPageable(
-      paginatedItems,
-      filteredItems.length,
-      pagination.page,
-      pagination.limit,
-    );
+    return createPageable(paginatedItems, items.length, pagination.page, pagination.limit);
   }
 
-  async uploadPDF(localizacao: number, file: Express.Multer.File) {
+  async uploadPDF(localizacao: number, file: Express.Multer.File): Promise<Relatorio> {
     const sala = await this.getSalaOrThrow(localizacao);
     const pdfUrl = await this.uploadService.uploadPdf(file);
 
     return this.relatorioRepository.save({
       nome: file.originalname,
       url: pdfUrl,
-      sala: sala,
+      sala,
     });
   }
 
@@ -83,36 +76,81 @@ export class SalaService {
     localizacao: number,
     pagination: PaginationParams,
     dataInicio?: Date,
-    dataLimite?: Date
+    dataLimite?: Date,
   ): Promise<Pageable<Relatorio>> {
     const sala = await this.getSalaWithRelatoriosOrThrow(localizacao);
+    const filteredRelatorios = this.filterRelatoriosByDate(sala.relatorios, dataInicio, dataLimite);
 
-    // Aplica o filtro usando a função auxiliar
-    const relatorios = this.filterRelatoriosByDate(sala.relatorios, dataInicio, dataLimite);
-
-    const paginatedReports = paginateArray(relatorios, pagination);
-
-    return createPageable(
-      paginatedReports,
-      relatorios.length,
-      pagination.page,
-      pagination.limit,
-    );
+    return this.paginateRelatorios(filteredRelatorios, pagination);
   }
 
   async getAllRelatoriosSala(
     pagination: PaginationParams,
     dataInicio?: Date,
-    dataLimite?: Date
+    dataLimite?: Date,
   ): Promise<Pageable<Relatorio>> {
-    const salas = await this.salaRepository.find({
-      relations: ["relatorios"],
-    });
+    const relatorios = await this.fetchAllRelatorios(dataInicio, dataLimite);
+    return this.paginateRelatorios(relatorios, pagination);
+  }
 
-    let relatorios: Relatorio[] = salas.flatMap((sala) => sala.relatorios);
+  // ===========================
+  // Private Helper Methods
+  // ===========================
 
-    relatorios = this.filterRelatoriosByDate(relatorios, dataInicio, dataLimite);
+  private async fetchFilteredItems(
+    localizacao: number,
+    filters?: itemFilters,
+  ): Promise<Item[]> {
+    const query = this.salaRepository
+      .createQueryBuilder("sala")
+      .leftJoinAndSelect("sala.itens", "item")
+      .where("sala.localizacao = :localizacao", { localizacao });
 
+    this.applyItemFilters(query, filters);
+
+    const [salaWithItems] = await query.getManyAndCount();
+    return salaWithItems?.[0]?.itens ?? [];
+  }
+
+  private applyItemFilters(query: any, filters?: itemFilters): void {
+    if (filters?.search) {
+      query.andWhere("LOWER(item.nome) LIKE LOWER(:search)", {
+        search: `%${filters.search.toLowerCase()}%`,
+      });
+    }
+
+    if (filters?.status) {
+      const normalizedStatus = this.normalizeStatus(filters.status);
+      query.andWhere("item.status = :status", { status: normalizedStatus });
+    }
+  }
+
+  private normalizeStatus(status: string): Status {
+    const statusMap: Record<string, Status> = {
+      DISPONIVEL: Status.DISPONIVEL,
+      BAIXA: Status.BAIXA,
+      EM_MANUTENCAO: Status.EM_MANUTENCAO,
+    };
+
+    const normalizedStatus = statusMap[status.toUpperCase()];
+    if (!normalizedStatus) {
+      throw new BadRequestError(`Invalid status value: ${status}`);
+    }
+
+    return normalizedStatus;
+  }
+
+  private async fetchAllRelatorios(dataInicio?: Date, dataLimite?: Date): Promise<Relatorio[]> {
+    const salas = await this.salaRepository.find({ relations: ["relatorios"] });
+    const relatorios = salas.flatMap((sala) => sala.relatorios);
+
+    return this.filterRelatoriosByDate(relatorios, dataInicio, dataLimite);
+  }
+
+  private paginateRelatorios(
+    relatorios: Relatorio[],
+    pagination: PaginationParams,
+  ): Pageable<Relatorio> {
     const paginatedReports = paginateArray(relatorios, pagination);
 
     return createPageable(
@@ -123,27 +161,11 @@ export class SalaService {
     );
   }
 
-  // ======================================
-  // = HELPER METHODS =
-  // ======================================
-
-  private mapDTOToEntity(sala: Sala, salaDTO: Partial<SalaDTO>): Sala {
-    return Object.assign(sala, salaDTO);
-  }
-
   private async getSalaOrThrow(localizacao: number): Promise<Sala> {
     const sala = await this.findOne(localizacao);
-    if (!sala) throw new NotFoundError("Sala not found");
-    return sala;
-  }
-
-  private async getSalaWithItemsOrThrow(localizacao: number): Promise<Sala> {
-    const sala = await this.salaRepository.findOne({
-      where: { localizacao },
-      relations: ["itens"],
-      order: { id: "ASC" },
-    });
-    if (!sala) throw new NotFoundError("Sala not found");
+    if (!sala) {
+      throw new NotFoundError("Sala not found");
+    }
     return sala;
   }
 
@@ -151,23 +173,22 @@ export class SalaService {
     localizacao: number,
   ): Promise<Sala> {
     const sala = await this.salaRepository.findOne({
-      where: { localizacao: localizacao },
+      where: { localizacao },
       relations: ["relatorios"],
-      order: { id: "ASC" },
     });
-    if (!sala) throw new NotFoundError("Sala not found");
+    if (!sala) {
+      throw new NotFoundError("Sala not found");
+    }
     return sala;
   }
 
   private filterRelatoriosByDate(
     relatorios: Relatorio[],
     dataInicio?: Date,
-    dataLimite?: Date
+    dataLimite?: Date,
   ): Relatorio[] {
     return relatorios.filter((relatorio) => {
       const dataCriacao = new Date(relatorio.dataCriacao);
-      dataCriacao.setUTCHours(0, 0, 0, 0);
-
       return (
         (!dataInicio || dataCriacao >= dataInicio) &&
         (!dataLimite || dataCriacao <= dataLimite)

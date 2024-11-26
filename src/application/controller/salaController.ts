@@ -63,14 +63,21 @@ export class SalaController {
     if (!localizacao) return next(new BadRequestError("Invalid sala ID"));
 
     try {
+      const { search, status } = req.query;
+
+      const filters = {
+        search: search?.toString(),
+        status: status?.toString(),
+      };
+
       const pagination = this.extractPaginationParams(req.query);
-      const itemName = req.query.itemName as string || null
 
       const itens = await this.salaService.getPaginatedItensSala(
         localizacao,
         pagination,
-        itemName
+        filters
       );
+
       ok(res, itens);
     } catch (error) {
       next(error);
