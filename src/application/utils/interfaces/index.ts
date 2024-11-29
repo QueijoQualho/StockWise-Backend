@@ -12,5 +12,6 @@ export interface Pageable<T> {
 
 export interface itemFilters {
   search?: string,
-  status?: string
+  status?: string,
+  itemId?: number
 }

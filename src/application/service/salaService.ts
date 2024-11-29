@@ -124,6 +124,11 @@ export class SalaService {
       const normalizedStatus = this.normalizeStatus(filters.status);
       query.andWhere("item.status = :status", { status: normalizedStatus });
     }
+
+    if (filters?.itemId) {
+      query.andWhere("item.externalId = :externalId", { externalId: filters.itemId });
+    }
+
   }
 
   private normalizeStatus(status: string): Status {
