@@ -1,5 +1,5 @@
 import { SalaRepositoryType } from "@infra/repository/salaRepository";
-import { Item, Status } from "@model/itemEntity";
+import { Item } from "@model/itemEntity";
 import { Sala } from "@model/salaEntity";
 import { BadRequestError, NotFoundError } from "@utils/errors";
 import { itemFilters, Pageable, PaginationParams } from "@utils/interfaces";
@@ -11,6 +11,7 @@ import {
   createPageable,
   paginateArray,
 } from "@utils/helpers/paginationUtil";
+import { Status } from "@model/enum/status";
 
 export class SalaService {
   constructor(

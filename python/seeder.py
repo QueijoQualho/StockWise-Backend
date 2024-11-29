@@ -34,12 +34,10 @@ def processar_dados(df_items, df_salas):
     result = {}
     for localizacao, grupo in groupLocalizacao:
         items = grupo[["Id", "Denominacao", "Incorporacao em"]].to_dict("records")
-        quantidade_inventario = int(grupo["Id"].count())
         sala = ", ".join(grupo["Ambiente"].unique())
 
         result[localizacao] = {
             "localizacao": localizacao,
-            "quantidade de itens": quantidade_inventario,
             "Sala": sala,
             "items": [
                 {

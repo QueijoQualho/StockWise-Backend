@@ -21,9 +21,6 @@ export class Sala {
   @Column({ name: "nome" })
   nome: string;
 
-  @Column({ name: "qtd_itens", default: 0 })
-  quantidadeDeItens: number;
-
   @OneToMany(() => Item, (item) => item.sala)
   itens: Item[];
 

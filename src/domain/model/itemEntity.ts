@@ -8,12 +8,7 @@ import {
 } from "typeorm";
 
 import { Sala } from "./salaEntity";
-
-export enum Status {
-  DISPONIVEL = "Disponivel",
-  BAIXA = "Baixa",
-  EM_MANUTENCAO = "Em manutenção",
-}
+import { Status } from "./enum/status";
 
 @Entity("itens")
 export class Item {

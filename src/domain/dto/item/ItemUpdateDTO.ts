@@ -1,7 +1,7 @@
 import { IsString, IsOptional, IsInt, IsEnum } from "class-validator";
 import { Type } from "class-transformer";
 import { IsDateFormat } from "../../decorator/isDateFormat";
-import { Status } from "@model/itemEntity";
+import { Status } from "@model/enum/status";
 
 export class ItemUpdateDTO {
   @IsOptional()
