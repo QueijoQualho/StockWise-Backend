@@ -1,5 +1,5 @@
 import upload from "@config/multer";
-import { controllerFactory } from "@service/factories/ControllerFactory";
+import { controllerFactory } from "@service/factories/controllerFactory";
 import { validateUpdateItem } from "@utils/validation/validateDTO";
 import { NextFunction, Request, Response, Router } from "express";
 

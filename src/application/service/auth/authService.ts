@@ -5,9 +5,12 @@ import { User } from "@model/userEntity";
 import { UserService } from "@service/userService";
 import { BadRequestError } from "@utils/errors";
 import * as bcrypt from "bcrypt";
+import { JwtService } from "./jwtService";
 
 export class AuthService {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService,
+    private readonly jwtService: JwtService
+  ) { }
 
   async signup(signupDTO: SignupDTO): Promise<UserResponseDTO> {
     const hashedPassword = await this.hashPassword(signupDTO.senha);
@@ -18,17 +21,29 @@ export class AuthService {
     return savedUser;
   }
 
-  async login(loginDTO: LoginDTO): Promise<UserResponseDTO> {
-    const user = await this.validateUser(loginDTO.email,loginDTO.senha)
+  async login(loginDTO: LoginDTO): Promise<any> {
+    const user = await this.validateUser(loginDTO.email, loginDTO.senha)
 
     if (!user) {
       throw new BadRequestError('Invalid email or password')
     }
 
-    return new UserResponseDTO(user);
+    const payload = {
+      id: user.id,
+      nome: user.nome,
+      email: user.email,
+      role: user.role,
+    };
+
+    const token = this.jwtService.generateToken(payload);
+
+    return {
+      token,
+      user: new UserResponseDTO(user)
+    };
   }
 
-  async validateUser(email: string, pass: string): Promise<any> {
+  async validateUser(email: string, pass: string): Promise<User | null> {
     const user = await this.userService.getUserbyEmail(email);
 
     const isPasswordValid = this.verifyPasswordOrFail(pass, user.senha)

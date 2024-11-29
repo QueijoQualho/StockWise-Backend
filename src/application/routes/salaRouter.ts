@@ -1,5 +1,5 @@
 import upload from "@config/multer";
-import { controllerFactory } from "@service/factories/ControllerFactory";
+import { controllerFactory } from "@service/factories/controllerFactory";
 import { NextFunction, Request, Response, Router } from "express";
 
 export default (router: Router): void => {

@@ -19,10 +19,8 @@ export class UserLoginStrategy {
         async (req: Request, email: string, password: string, done: any) => {
           try {
             const user = await this.authService.validateUser(email, password);
-            if (!user) {
-              return done(null, false, { message: 'Invalid email or password' });
-            }
-            return done(null, user);
+
+            return user ? done(null, user) : done(null, false, { message: 'Invalid email or password' })
           } catch (error) {
             return done(error, false);
           }

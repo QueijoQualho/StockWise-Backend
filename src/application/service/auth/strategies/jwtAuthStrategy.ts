@@ -1,35 +1,34 @@
 import { Strategy as JwtStrategy, ExtractJwt, StrategyOptions } from 'passport-jwt';
 import passport from 'passport';
-import env from '@config/env';
+import { UserRole } from '@model/enum/roles';
 
 export class JwtAuthStrategy {
   private readonly secretKey: string;
 
-  constructor() {
-    this.secretKey = env.jwt_secret;
-    this.configureStrategy();
+  constructor(secretKey: string) {
+    this.secretKey = secretKey
   }
 
-  private configureStrategy() {
+  configureStrategy() {
     const options: StrategyOptions = {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: this.secretKey,
     };
 
     passport.use(
-      new JwtStrategy(options, async (payload, done) => {
+      new JwtStrategy(options, async (payload: UserPayload, done) => {
         try {
+          console.log("Payload recebido:", payload);
+          if (!payload || !payload.id || !payload.role) {
+            return done(null, false, { message: 'Invalid token payload' });
+          }
           const user = {
             id: payload.id,
-            username: payload.username,
+            name: payload.name,
+            email: payload.email,
             role: payload.role,
           };
-
-          if (user) {
-            return done(null, user);
-          } else {
-            return done(null, false);
-          }
+          return done(null, user);
         } catch (error) {
           return done(error, false);
         }
@@ -44,4 +43,11 @@ export class JwtAuthStrategy {
   authenticate() {
     return passport.authenticate('jwt', { session: false });
   }
+}
+
+export interface UserPayload {
+  id: number,
+  name: string,
+  email: string,
+  role: UserRole,
 }

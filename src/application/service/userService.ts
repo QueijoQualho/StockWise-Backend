@@ -34,16 +34,19 @@ export class UserService {
   }
 
   async createUser(createData: SignupDTO): Promise<UserResponseDTO> {
-    const user = await this.getUserbyEmail(createData.email)
+    const existingUser = await this.getUserbyEmail(createData.email);
 
-    if (user) {
-      throw new BadRequestError("Email already exists")
+    if (existingUser) {
+      throw new BadRequestError("Email already exists");
     }
-    Object.assign(user, createData)
-    this.userRepository.save(user);
 
-    return new UserResponseDTO(user)
+    const newUser = this.userRepository.create(createData);
+
+    const savedUser = await this.userRepository.save(newUser);
+
+    return new UserResponseDTO(savedUser);
   }
+
 
 
   async updateUser(userId: number, updateData: UserUpdateDTO): Promise<void> {

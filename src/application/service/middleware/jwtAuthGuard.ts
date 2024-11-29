@@ -1,32 +1,32 @@
-import { JwtService } from '@service/auth/jwtService';
-import { Request, Response, NextFunction } from 'express';
-import { isPublicRoute } from './isPublicRoute';
+import passport from "passport";
+import { Request, Response, NextFunction } from "express";
+import { isPublicRoute } from "./isPublicRoute";
+import { unauthorized } from "@utils/errors/httpErrors";
+import { UnauthorizedError } from "@utils/errors";
 
 export class JwtAuthGuard {
-
-  constructor(private readonly jwtService: JwtService) { }
-
   canActivate() {
     return (req: Request, res: Response, next: NextFunction) => {
       if (isPublicRoute(req)) {
-        return next();
+        return next(); // Libera rotas públicas
       }
 
-      const authHeader = req.headers.authorization;
+      // Usa o Passport para autenticar com a JwtStrategy
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      passport.authenticate("jwt", { session: false }, (err: any, user: Express.User, info: any) => {
+        if (err) {
+          return unauthorized(res, new UnauthorizedError("Erro interno"));
+        }
+        if (!user) {
+          return unauthorized(res, new UnauthorizedError("invalid token"));
+        }
 
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ message: 'Token de autorização não fornecido' });
-      }
+        // Adiciona o usuário à requisição
+        req.user = user;
 
-      const token = authHeader.split(' ')[1];
-
-      try {
-        const decoded = this.jwtService.verifyToken(token);
-        req.user = decoded;
+        // Passa para o próximo middleware
         next();
-      } catch (error) {
-        next(error);
-      }
+      })(req, res, next);
     };
   }
 }
