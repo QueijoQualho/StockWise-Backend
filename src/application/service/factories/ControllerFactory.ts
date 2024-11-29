@@ -3,23 +3,11 @@ import { ItemController } from "@controller/itemController";
 import { SalaController } from "@controller/salaController";
 import { SeedController } from "@controller/seedController";
 import { UserController } from "@controller/userController";
-import {
-  getItemRepository,
-  ItemRepositoryType,
-} from "@infra/repository/itemRepository";
-import {
-  getRelatorioRepository,
-  RelatorioRepositoryType,
-} from "@infra/repository/relatorioRepository";
-import {
-  getSalaRepository,
-  SalaRepositoryType,
-} from "@infra/repository/salaRepository";
-import {
-  getUserRepository,
-  UserRepositoryType,
-} from "@infra/repository/userRepository";
-import { AuthService } from "@service/authService";
+import { getItemRepository, ItemRepositoryType } from "@infra/repository/itemRepository";
+import { getRelatorioRepository, RelatorioRepositoryType } from "@infra/repository/relatorioRepository";
+import { getSalaRepository, SalaRepositoryType } from "@infra/repository/salaRepository";
+import { getUserRepository, UserRepositoryType } from "@infra/repository/userRepository";
+import { AuthService } from "@service/auth/authService";
 import { ItemService } from "@service/itemService";
 import { SalaService } from "@service/salaService";
 import { SeedService } from "@service/seedService";
@@ -32,7 +20,7 @@ class ControllerFactory {
     private readonly salaRepository: SalaRepositoryType,
     private readonly userRepository: UserRepositoryType,
     private readonly relatorioRepository: RelatorioRepositoryType,
-  ) {}
+  ) { }
 
   createItemController(): ItemController {
     const uploadService = new UploadService();
@@ -64,7 +52,9 @@ class ControllerFactory {
   }
 
   createAuthController(): AuthController {
-    const authService = new AuthService(this.userRepository);
+    const userRepository = getUserRepository();
+    const userService = new UserService(userRepository);
+    const authService = new AuthService(userService);
     return new AuthController(authService);
   }
 
