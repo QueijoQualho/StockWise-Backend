@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://index.docker.io/v1/
-        username: ${{ secrets.AzureAppService_ContainerUsername_e527cb880c2149feb60139ca335d33d3 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_6b755f556e054dd8b08e64482eeede07 }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_f4ac2945396b462f80c6e6ed48faadd1 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_097965fb7a704ff58ea3a14a14669e4f }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_e527cb880c2149feb60139ca335d33d3 }}/stockwise-backend:${{ github.sha }}
+        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_f4ac2945396b462f80c6e6ed48faadd1 }}/stockwise-backend:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'StockWise-backend'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_13025a29d32d42d98da87f6273714ca5 }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_e527cb880c2149feb60139ca335d33d3 }}/sonosapatinho/stockwise-backend:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_7148d01d8c0a4bc69abcac754a3de034 }}
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_f4ac2945396b462f80c6e6ed48faadd1 }}/stockwise-backend:${{ github.sha }}'
