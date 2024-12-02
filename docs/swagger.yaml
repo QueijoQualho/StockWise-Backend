@@ -228,6 +228,12 @@ paths:
           schema:
             type: string
           description: Status do item
+        - in: path
+          name: itemId
+          required: false
+          schema:
+            type: number
+          description: Id do item
       responses:
         "200":
           description: List of items for the specified sala
