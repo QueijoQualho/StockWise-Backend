@@ -1,4 +1,4 @@
-import { controllerFactory } from "@service/factories/controllerFactory";
+import { controllerFactory } from "@service/factories/ControllerFactory";
 import { NextFunction, Router, Request, Response } from "express";
 
 export default (router: Router): void => {

@@ -5,7 +5,7 @@ import express from "express";
 import helmet from "helmet";
 import { setupSwagger } from "./swagger";
 import { errorHandlerMiddleware } from "@service/middleware/erroHandleMiddleware";
-import { authMiddlewareFactory } from "@service/factories/AuthMiddlewareFactory";
+import { authMiddlewareFactory } from "@service/factories/authMiddlewareFactory";
 
 const app = express();
 
