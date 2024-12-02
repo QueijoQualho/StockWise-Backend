@@ -87,7 +87,6 @@ export class SeedService {
   private createSala(data: any): Sala {
     return this.salaRepository.create({
       localizacao: data.localizacao,
-      quantidadeDeItens: data["quantidade de itens"],
       nome: data.Sala,
     });
   }
