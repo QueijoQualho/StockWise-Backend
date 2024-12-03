@@ -1,6 +1,5 @@
 import { IsString, IsOptional, IsInt, IsEnum } from "class-validator";
 import { Type } from "class-transformer";
-import { IsDateFormat } from "../../decorator/isDateFormat";
 import { Status } from "@model/enum/status";
 
 export class ItemUpdateDTO {
@@ -9,9 +8,6 @@ export class ItemUpdateDTO {
   nome?: string;
 
   @IsOptional()
-  @IsDateFormat("DD-MM-YYYY", {
-    message: "A dataDeIncorporacao deve estar no formato DD-MM-YYYY",
-  })
   dataDeIncorporacao?: Date;
 
   @IsOptional()

@@ -18,7 +18,6 @@ export class JwtAuthStrategy {
     passport.use(
       new JwtStrategy(options, async (payload: UserPayload, done) => {
         try {
-          console.log("Payload recebido:", payload);
           if (!payload || !payload.id || !payload.role) {
             return done(null, false, { message: 'Invalid token payload' });
           }

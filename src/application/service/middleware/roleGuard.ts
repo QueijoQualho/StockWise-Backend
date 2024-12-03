@@ -1,12 +1,13 @@
+import { UserRole } from '@model/enum/roles';
 import { UserPayload } from '@service/auth/strategies/jwtAuthStrategy';
 import { ForbiddenError, UnauthorizedError } from '@utils/errors';
 import { forbidden, unauthorized } from '@utils/errors/httpErrors';
 import { Request, Response, NextFunction } from 'express';
 
-export class RoleGuard {
-  private requiredRole: string;
+class RoleGuard {
+  private requiredRole: UserRole;
 
-  constructor(requiredRole: string) {
+  constructor(requiredRole: UserRole) {
     this.requiredRole = requiredRole;
   }
 
@@ -19,10 +20,13 @@ export class RoleGuard {
       }
 
       if (user.role !== this.requiredRole) {
-        return forbidden(res, new ForbiddenError("Acess denied"));
+        return forbidden(res, new ForbiddenError("Access denied"));
       }
 
       next();
     };
   }
 }
+
+export const adminGuard = new RoleGuard(UserRole.ADMIN)
+export const userGuard = new RoleGuard(UserRole.USER)

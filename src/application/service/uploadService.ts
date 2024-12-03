@@ -20,7 +20,7 @@ export class UploadService {
       }
 
       return fileUrl;
-    } catch (error: any) {
+    } catch (error) {
       throw new BadRequestError("Error processing file upload");
     }
   }
@@ -37,7 +37,7 @@ export class UploadService {
       }
 
       return fileUrl;
-    } catch (error: any) {
+    } catch (error) {
       throw new BadRequestError("Error processing PDF upload");
     }
   }
@@ -45,7 +45,7 @@ export class UploadService {
   async deleteFile(fileUrl: string): Promise<void> {
     try {
       await deleteFromAzure(fileUrl, this.containerNameItens);
-    } catch (error: any) {
+    } catch (error) {
       throw new BadRequestError("Error deleting file");
     }
   }
@@ -53,7 +53,7 @@ export class UploadService {
   async deletePdf(fileUrl: string): Promise<void> {
     try {
       await deleteFromAzure(fileUrl, this.containerNamePdf);
-    } catch (error: any) {
+    } catch (error) {
       throw new BadRequestError("Error deleting PDF");
     }
   }
