@@ -1,56 +1,66 @@
 import { LoginDTO } from "@dto/user/loginDTO";
 import { SignupDTO } from "@dto/user/signupDTO";
 import { UserResponseDTO } from "@dto/user/userResponseDTO";
-import { UserRepositoryType } from "@infra/repository/userRepository";
 import { User } from "@model/userEntity";
+import { UserService } from "@service/userService";
 import { BadRequestError } from "@utils/errors";
 import * as bcrypt from "bcrypt";
+import { JwtService } from "./jwtService";
 
 export class AuthService {
-  constructor(private readonly userRepository: UserRepositoryType) {}
+  constructor(private readonly userService: UserService,
+    private readonly jwtService: JwtService
+  ) { }
 
   async signup(signupDTO: SignupDTO): Promise<UserResponseDTO> {
-    await this.ensureEmailIsUnique(signupDTO.email);
     const hashedPassword = await this.hashPassword(signupDTO.senha);
-
     const newUser = this.buildUserEntity(signupDTO, hashedPassword);
-    const savedUser = await this.userRepository.save(newUser);
 
-    return new UserResponseDTO(savedUser);
+    const savedUser = await this.userService.createUser(newUser);
+
+    return savedUser;
   }
 
-  async login(loginDTO: LoginDTO): Promise<UserResponseDTO> {
-    const user = await this.findUserByEmailOrFail(loginDTO.email);
-    await this.verifyPasswordOrFail(loginDTO.senha, user.senha);
+  async login(loginDTO: LoginDTO): Promise<any> {
+    const user = await this.validateUser(loginDTO.email, loginDTO.senha)
 
-    return new UserResponseDTO(user);
+    if (!user) {
+      throw new BadRequestError('Invalid email or password')
+    }
+
+    const payload = {
+      id: user.id,
+      nome: user.nome,
+      email: user.email,
+      role: user.role,
+    };
+
+    const token = this.jwtService.generateToken(payload);
+
+    return {
+      token,
+      user: new UserResponseDTO(user)
+    };
+  }
+
+  async validateUser(email: string, pass: string): Promise<User | null> {
+    const user = await this.userService.getUserbyEmail(email);
+
+    const isPasswordValid = this.verifyPasswordOrFail(pass, user.senha)
+
+    return isPasswordValid ? user : null
   }
 
   // ======================================
   // = HELPER METHODS =
   // ======================================
 
-  private async ensureEmailIsUnique(email: string): Promise<void> {
-    const userExists = await this.userRepository.findOneBy({ email });
-    if (userExists) {
-      throw new BadRequestError("The email is already in use");
-    }
-  }
-
   private buildUserEntity(signupDTO: SignupDTO, hashedPassword: string): User {
     return Object.assign(new User(), signupDTO, { senha: hashedPassword });
   }
 
   private async hashPassword(password: string): Promise<string> {
-    return bcrypt.hash(password, 10); //TODO colocar salt decente depois
-  }
-
-  private async findUserByEmailOrFail(email: string): Promise<User> {
-    const user = await this.userRepository.findOneBy({ email });
-    if (!user) {
-      throw new BadRequestError("Invalid credentials");
-    }
-    return user;
+    return bcrypt.hash(password, 10);
   }
 
   private async verifyPasswordOrFail(

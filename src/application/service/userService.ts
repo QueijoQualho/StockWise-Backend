@@ -1,8 +1,9 @@
+import { SignupDTO } from "@dto/user/signupDTO";
 import { UserResponseDTO } from "@dto/user/userResponseDTO";
 import { UserUpdateDTO } from "@dto/user/userUpdateDTO";
 import { UserRepositoryType } from "@infra/repository/userRepository";
 import { User } from "@model/userEntity";
-import { NotFoundError } from "@utils/errors";
+import { BadRequestError, NotFoundError } from "@utils/errors";
 import { calculateOffset, createPageable } from "@utils/helpers/paginationUtil";
 import { Pageable, PaginationParams } from "@utils/interfaces";
 
@@ -27,6 +28,26 @@ export class UserService {
     const user = await this.findUserOrThrow(userId);
     return new UserResponseDTO(user);
   }
+
+  async getUserbyEmail(email: string): Promise<User> {
+    return await this.userRepository.findOne({where: {email: email}})
+  }
+
+  async createUser(createData: SignupDTO): Promise<UserResponseDTO> {
+    const existingUser = await this.getUserbyEmail(createData.email);
+
+    if (existingUser) {
+      throw new BadRequestError("Email already exists");
+    }
+
+    const newUser = this.userRepository.create(createData);
+
+    const savedUser = await this.userRepository.save(newUser);
+
+    return new UserResponseDTO(savedUser);
+  }
+
+
 
   async updateUser(userId: number, updateData: UserUpdateDTO): Promise<void> {
     const user = await this.findUserOrThrow(userId);

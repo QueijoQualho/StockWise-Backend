@@ -43,7 +43,7 @@ export class SeedController {
       }
 
       return created(res, "Tabela povoada");
-    } catch (error: any) {
+    } catch (error) {
       next(error);
     }
   }
@@ -65,7 +65,7 @@ export class SeedController {
       }
 
       return created(res, "Itens criados com sucesso");
-    } catch (error: any) {
+    } catch (error) {
       next(error);
     }
   }

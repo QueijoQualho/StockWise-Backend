@@ -1,5 +1,6 @@
 import upload from "@config/multer";
 import { controllerFactory } from "@service/factories/ControllerFactory";
+import { adminGuard } from "@service/middleware/roleGuard";
 import { NextFunction, Request, Response, Router } from "express";
 
 export default (router: Router): void => {
@@ -25,15 +26,9 @@ export default (router: Router): void => {
       salaController.getItensSala(req, res, next),
   );
 
-  // router.patch(
-  //   "/salas/:id",
-  //   validateUpdateSala,
-  //   (req: Request, res: Response, next: NextFunction) =>
-  //     salaController.updateSala(req, res, next),
-  // );
-
   router.delete(
     "/salas/:id",
+    adminGuard.checkRole(),
     (req: Request, res: Response, next: NextFunction) =>
       salaController.deleteSala(req, res, next),
   );
@@ -45,15 +40,17 @@ export default (router: Router): void => {
       salaController.uploadPDF(req, res, next),
   );
 
+  //RELATORIO
   router.get(
     "/salas/:id/relatorios",
+    adminGuard.checkRole(),
     (req: Request, res: Response, next: NextFunction) =>
       salaController.getRelatoriosSala(req, res, next),
   );
 
-  //RELATORIO
   router.get(
     "/relatorios",
+    adminGuard.checkRole(),
     (req: Request, res: Response, next: NextFunction) =>
       salaController.getAllRelatorios(req, res, next),
   );

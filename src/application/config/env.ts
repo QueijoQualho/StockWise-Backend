@@ -13,6 +13,7 @@ const {
   TYPEORM_URL,
   AZURE_STORAGE_URL,
   AZURE_STORAGE_TOKEN,
+  JWT_SECRET
 } = process.env;
 
 const env = {
@@ -30,6 +31,7 @@ const env = {
     url: String(AZURE_STORAGE_URL),
     token: String(AZURE_STORAGE_TOKEN),
   },
+  jwt_secret: JWT_SECRET
 };
 
 export default env;

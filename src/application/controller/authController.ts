@@ -1,6 +1,6 @@
 import { LoginDTO } from "@dto/user/loginDTO";
 import { SignupDTO } from "@dto/user/signupDTO";
-import { AuthService } from "@service/authService";
+import { AuthService } from "@service/auth/authService";
 import { ok } from "@utils/errors/httpErrors";
 import { NextFunction, Request, Response } from "express";
 
