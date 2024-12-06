@@ -4,7 +4,7 @@ info:
   description: API for managing items and salas
   version: 1.0.0
 servers:
-  - url: https://tcc-senai.onrender.com/api
+  - url: https://stockwise-backend.azurewebsites.net/api
     description: Production server
   - url: http://localhost:3000/api
     description: Local server
