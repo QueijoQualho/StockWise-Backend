@@ -8,10 +8,9 @@ export class JwtAuthGuard {
   canActivate() {
     return (req: Request, res: Response, next: NextFunction) => {
       if (isPublicRoute(req)) {
-        return next(); // Libera rotas públicas
+        return next();
       }
 
-      // Usa o Passport para autenticar com a JwtStrategy
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       passport.authenticate("jwt", { session: false }, (err: any, user: Express.User, info: any) => {
         if (err) {
@@ -21,10 +20,7 @@ export class JwtAuthGuard {
           return unauthorized(res, new UnauthorizedError("invalid token"));
         }
 
-        // Adiciona o usuário à requisição
         req.user = user;
-
-        // Passa para o próximo middleware
         next();
       })(req, res, next);
     };
